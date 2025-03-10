@@ -1,0 +1,21 @@
+{
+  "name": "fizdalf/practicas-2025",
+  "description": "Prácticas Con Ángel y Samuel 2025",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "fizdalf",
+      "email": "email@example.com"
+    },
+    {
+      "name": "ghuali"
+    },
+    {
+      "name": "Saries"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^10.5"
+  }
+}
