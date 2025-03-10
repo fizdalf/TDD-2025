@@ -63,4 +63,22 @@ class BookLendingSystemTest extends PHPUnit\Framework\TestCase
         $sut->returnBook('someID4');
 
     }
+
+    #[Test]
+    public function it_should_add_a_user()
+    {
+        $sut = new BookLendingSystem();
+
+        $sut->addUser("Samuel", "Riveira", "samuelriveira@gmail.com");
+        $this->assertSame("samuelriveira@gmail.com", $sut->confirmUserExists("samuelriveira@gmail.com"));
+    }
+
+    #[Test]
+    public function it_should_throw_when_user_does_not_exists()
+    {
+        $sut = new BookLendingSystem();
+
+        $this->expectException(BookNotFoundException::class);
+        $sut
+    }
 }
