@@ -11,7 +11,7 @@ We need to allow to create users (firstName, lastName, email)
 We need to allow to retrieve user (with their email)
 
 BookLendingSystem To User
-We need to allow to lend a book to a specific user (email, bookId)
+We need to allow to lend a book to a specific user (email, bookID)
 A book that is already borrowed, cannot be borrowed by another user
 A book can be only returned by the user who borrowed it.
 

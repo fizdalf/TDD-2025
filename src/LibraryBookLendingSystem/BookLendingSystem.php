@@ -8,7 +8,6 @@ require_once 'BookStatus.php';
 class BookLendingSystem
 {
     private array $bookStatuses = [];
-    private array $users = [];
 
     public function addBook(string $id): void
     {
@@ -27,6 +26,9 @@ class BookLendingSystem
         $this->confirmBookIsAvailableBetter($isBetterBorrowed);
 
         $this->bookStatuses[$id] = BookStatus::Borrowed;
+
+
+
         return 'libro Prestado ' . $id;
     }
 
@@ -60,22 +62,6 @@ class BookLendingSystem
     }
 
 
-    public function addUser(string $nombre, string $apellido, string $email): void
-    {
-        $this->users[$email] = $email;
-    }
 
-    /**
-     * @throws UserNotExistsException
-     */
-    public function confirmUserExists(string $email): string
-    {
-        if(!isset($this->users[$email])){
-            // Crear error propio para este
-            throw new BookNotFoundException();
-        }
-
-        return $email;
-    }
 
 }
