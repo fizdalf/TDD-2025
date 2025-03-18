@@ -23,31 +23,37 @@ class DungeonTreasureHunt
             return false;
         }
 
-        $row = $grid[0];
-        if (empty($row)) {
-            return false;
+        $playerPosition = null;
+
+        foreach ($grid as $y => $row){
+            $x = array_search(Tile::Player, $row);
+            if($x !== false){
+                $playerPosition = new Position((int)$x, $y);
+                break;
+            }
         }
 
-
-        $playerPosition = array_search(Tile::Player, $row);
-
-        if ($playerPosition === false) {
+        if ($playerPosition === null) {
             return false;
         }
 
         $visitedTracker = new VisitedTile();
-        $canReachTreasure = $this->canReachTreasureDirectionBetter(new Position($playerPosition), $row, $visitedTracker);
+        $canReachTreasure = $this->canReachTreasureDirectionBetter($playerPosition, $grid, $visitedTracker);
         return $canReachTreasure;
     }
 
-    private function canMakeMove(Position $playerPosition, Direction $direction, array $row, VisitedTile $visitedTile): bool
+    private function canMakeMove(Position $playerPosition, Direction $direction, array $grid, VisitedTile $visitedTile): bool
     {
         $playerNextPosition = $playerPosition->move($direction);
-        if ($playerNextPosition->x >= count($row) || $playerNextPosition->x < 0) {
+        $x = $playerNextPosition->x;
+        $y = $playerNextPosition->y;
+
+
+        if ($y >= count($grid) || $y < 0 || $x >= count($grid[$y]) || $x < 0) {
             return false;
         }
 
-        $nextTile = $row[$playerNextPosition->x];
+        $nextTile = $grid[$y][$x];
 
         if ($nextTile === Tile::Wall) {
             return false;
@@ -57,21 +63,22 @@ class DungeonTreasureHunt
             return false;
         }
 
-
         return true;
     }
 
-    private function possibleMovements(Position $playerPosition, array $row, VisitedTile $visitedTile): array
+    private function possibleMovements(Position $playerPosition, array $grid, VisitedTile $visitedTile): array
     {
         $possibleMovements = [];
 
         $possibleDirections = [
             Direction::Left,
             Direction::Right,
+            Direction::Up,
+            Direction::Down
         ];
 
         foreach ($possibleDirections as $direction) {
-            $canMakeMove = $this->canMakeMove($playerPosition, $direction, $row, $visitedTile);
+            $canMakeMove = $this->canMakeMove($playerPosition, $direction, $grid, $visitedTile);
             if (!$canMakeMove) {
                 continue;
             }
@@ -81,22 +88,23 @@ class DungeonTreasureHunt
         return $possibleMovements;
     }
 
-    private function isTreasure(Position $playerPosition, array $row): bool
+
+    private function isTreasure(Position $playerPosition, array $grid): bool
     {
-        return $row[$playerPosition->x] === Tile::Treasure;
+        return $grid[$playerPosition->y][$playerPosition->x] === Tile::Treasure;
     }
 
 
-    private function canReachTreasureDirectionBetter(Position $playerPosition, array $row, VisitedTile $visitedTracker): bool
+    private function canReachTreasureDirectionBetter(Position $playerPosition, array $grid, VisitedTile $visitedTracker): bool
     {
         $queue = new Queue();
 
         $currentTile = $playerPosition;
 
         do {
-            $isCurrentTileATreasure = $this->isTreasure($currentTile, $row);
+            $isCurrentTileATreasure = $this->isTreasure($currentTile, $grid);
 
-            $possibleMovements = $this->possibleMovements($currentTile, $row, $visitedTracker);
+            $possibleMovements = $this->possibleMovements($currentTile, $grid, $visitedTracker);
 
             $visitedTracker->markAsVisited($currentTile);
 

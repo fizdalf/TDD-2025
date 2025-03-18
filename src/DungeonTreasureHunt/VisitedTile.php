@@ -8,11 +8,17 @@ class VisitedTile
 
     public function hasVisited(Position $tile): bool
     {
-        return isset($this->visitedTiles[$tile->x]);
+        $section = $this->getPositionSection($tile);
+        return isset($this->visitedTiles[$section]);
     }
 
-    public function  markAsVisited(Position $tile): void
+    public function markAsVisited(Position $tile): void
     {
-        $this->visitedTiles[$tile->x] = true;
+        $section = $this->getPositionSection($tile);
+        $this->visitedTiles[$section] = true;
+    }
+
+    public function getPositionSection(Position $tile): string{
+        return $tile->x . ',' . $tile->y;
     }
 }

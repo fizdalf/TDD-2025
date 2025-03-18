@@ -2,8 +2,10 @@
 
 namespace DungeonTreasureHunt;
 
-enum Direction: int
+enum Direction
 {
-    case Left = -1;
-    case Right = 1;
+    case Left;
+    case Right;
+    case Up;
+    case Down;
 }
