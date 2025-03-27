@@ -349,7 +349,7 @@ document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solv
 })
 
 document.Tester.registerTest('[updateCell] it should update the grid correctly when a player moves', async function () {
-    const gridManager = new GridManager(3,3);
+    const gridManager = new GridManager(4,4);
 
     gridManager.updateCell(0,0, 'P');
 
@@ -369,3 +369,42 @@ document.Tester.registerTest('[updateCell] it should update the grid correctly w
     }
 })
 
+document.Tester.registerTest('[GameStateChange] it should update the game state when player and treasure exists', async function () {
+    const gridManager = new GridManager(4, 4);
+
+
+    gridManager.updateCell(0,0,'P');
+    gridManager.updateCell(3,3, 'T');
+
+    let gameStatedUpdated = false;
+    gridManager.addEventListener("gameStateChange", (state) => {
+        gameStatedUpdated = state;
+    });
+
+    gridManager.updateCell(0, 0, 'P'); 
+    gridManager.updateCell(0, 1, '#');
+    gridManager.updateCell(0, 2, '#');
+    gridManager.updateCell(0, 3, '#');
+
+    gridManager.updateCell(1, 0, '.');
+    gridManager.updateCell(1, 1, '#');
+    gridManager.updateCell(1, 2, '#');
+    gridManager.updateCell(1, 3, 'T');
+
+    gridManager.updateCell(2, 0, '.');
+    gridManager.updateCell(2, 1, '#');
+    gridManager.updateCell(2, 2, '#');
+    gridManager.updateCell(2, 3, '.');
+
+    gridManager.updateCell(3, 0, '.');
+    gridManager.updateCell(3, 1, '.');
+    gridManager.updateCell(3, 2, '.');
+    gridManager.updateCell(3, 3, '.');
+
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    if (!gameStatedUpdated) {
+        throw new Error("El estado del juego no se actualizo")
+    }
+});
