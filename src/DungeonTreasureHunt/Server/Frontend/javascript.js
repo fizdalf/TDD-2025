@@ -347,3 +347,25 @@ document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solv
     }
 
 })
+
+document.Tester.registerTest('[GridManager] it should update the grid correctly when a player moves', async function () {
+    const gridManager = new GridManager(3,3);
+
+    gridManager.updateCell(0,0, 'P');
+
+    const gridAfterPlayerMove = gridManager.getGrid();
+    if (gridAfterPlayerMove[0][0] !== 'P') {
+        throw new Error("El jugador no se ha actualizado")
+    }
+
+    gridManager.updateCell(1,1,'P');
+
+    if (gridAfterPlayerMove[1][1] !== 'P') {
+        throw new Error("No se movio al lugar correcto")
+    }
+
+    if (gridAfterPlayerMove[0][0] !== null) {
+        throw new Error("La posicion anterior no ha sido limpiada")
+    }
+})
+
