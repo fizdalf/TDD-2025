@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DungeonTreasureHunt;
+namespace DungeonTreasureHunt\Backend;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -189,6 +189,74 @@ class DungeonTreasureHuntTest extends TestCase
         $this->assertTrue($sut->canReachTreasure(
             [
                 [Tile::Treasure, Tile::Player, Tile::Path]
+            ]
+        ));
+    }
+
+    #[Test]
+    public function it_should_return_true_when_treasure_and_player_are_on_the_bottom_line()
+    {
+        $sut = new DungeonTreasureHunt();
+
+        $this->assertTrue($sut->canReachTreasure(
+            [
+                [Tile::Wall, Tile::Wall],
+                [Tile::Player, Tile::Treasure]
+            ]
+        ));
+
+        $this->assertTrue($sut->canReachTreasure(
+            [
+                [Tile::Wall, Tile::Wall],
+                [Tile::Player, Tile::Path, Tile::Treasure]
+            ]
+        ));
+    }
+
+    #[Test]
+    public function it_should_return_true_when_treasure_or_the_player_are_on_the_bottom()
+    {
+        $sut = new DungeonTreasureHunt();
+
+        $this->assertTrue($sut->canReachTreasure(
+            [
+                [Tile::Player],
+                [Tile::Treasure],
+            ]
+        ));
+
+        $this->assertTrue($sut->canReachTreasure(
+            [
+                [Tile::Treasure],
+                [Tile::Player],
+            ]
+        ));
+    }
+
+    #[Test]
+    public function it_should_return_true_when_treasure_is_two_tiles_below_and_one_tile_to_the_right_and_there_is_two_walls_on_the_right()
+    {
+        $sut = new DungeonTreasureHunt();
+
+        $this->assertTrue($sut->canReachTreasure(
+            [
+                [Tile::Player, Tile::Wall],
+                [Tile::Path, Tile::Wall],
+                [Tile::Path, Tile::Treasure],
+            ]
+        ));
+    }
+
+    #[Test]
+    public function it_should_return_true_when_treasure_is_two_tiles_below_and_one_tile_to_the_right_while_the_player_its_at_the_second_position_in_the_first_row()
+    {
+        $sut = new DungeonTreasureHunt();
+
+        $this->assertTrue($sut->canReachTreasure(
+            [
+                [Tile::Path, Tile::Player, Tile::Wall],
+                [Tile::Path, Tile::Wall, Tile::Wall],
+                [Tile::Path, Tile::Path, Tile::Treasure],
             ]
         ));
     }

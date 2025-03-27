@@ -1,6 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt;
+namespace DungeonTreasureHunt\Backend;
 
 class VisitedTile
 {

@@ -1,8 +1,7 @@
 <?php
 
-namespace DungeonTreasureHunt;
+namespace DungeonTreasureHunt\Backend;
 
-use SplQueue;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

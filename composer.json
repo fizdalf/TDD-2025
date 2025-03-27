@@ -17,5 +17,9 @@
   ],
   "require-dev": {
     "phpunit/phpunit": "^10.5"
+  },
+  "require": {
+    "ext-pdo": "*",
+    "firebase/php-jwt": "^6.11"
   }
 }

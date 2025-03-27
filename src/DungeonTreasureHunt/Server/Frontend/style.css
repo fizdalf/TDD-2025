@@ -1,0 +1,349 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: "Poppins", sans-serif;
+}
+
+body{
+    background-color: #1F2937;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+nav{
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    height: 13vh;
+}
+
+h1{
+    font-size: 48px;
+    color: white;
+    user-select: none;
+}
+
+.utiles{
+    font-size: 28px;
+    color: white;
+    background-color: rgb(44, 56, 68);
+    box-shadow: #000000 2.3px 2.3px 2.3px;
+    border-radius: 16px;
+    width: 40%;
+    height: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .2s ease;
+    user-select: none;
+}
+
+.util-seleccionado{
+    background-color: rgb(76, 92, 107);
+}
+
+.utiles:hover{
+    translate: 0px -5px;
+}
+
+#contenedor-utiles{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    box-shadow: #000000 2.3px 2.3px 2.3px;
+    background-color: #27303b;
+    border-radius: 16px;
+    width: 200px;
+    height: 475px;
+}
+
+h3{
+    font-size: 25px;
+    color: white;
+    margin-bottom: 2vh;
+    user-select: none;
+}
+
+#side-bar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    height: 100%;
+}
+
+#contenedor-juego{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10vh;
+}
+#contenedor-grid{
+    width: 100%;
+}
+
+#grid{
+    width: 78%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    border: solid 2px white;
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 500px;
+}
+
+.celda{
+    border: solid 2px white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 36px;
+    user-select: none;
+}
+
+#contenedor-boton{
+    width: 100%;
+    height: 180px;
+    max-height: 180px;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    align-items: center;
+    user-select: none;
+}
+
+.boton{
+    border: solid 2px white;
+    border-radius: 10px;
+    padding: 16px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: .2s ease;
+    background-color: #1F2937;
+}
+
+.boton:hover{
+    background-color: white;
+    color: black;
+}
+
+.boton:disabled{
+    border: solid 2px rgb(107, 107, 107);
+    color: rgb(107, 107, 107);
+    cursor: default;
+}
+
+.boton:disabled:hover{
+    background-color: #1F2937;
+    color: rgb(107, 107, 107);
+}
+
+.color{
+    background-color: rgb(49, 79, 36);
+}
+
+.botonLogin-popup{
+    position: absolute;
+    top: 3%;
+    right: 2%;
+    width: 130px;
+    height: 50px;
+    background-color: transparent;
+    border: 2px solid white;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: white;
+    font-weight: 500;
+    margin-left: 40px;
+    transition: 0.3s;
+}
+
+.botonLogin-popup:hover{
+    background-color: white;
+    color: #162938
+}
+
+.contenedor{
+    align-self: center;
+    position: fixed;
+    top: 25%;
+    right:40%;
+    width: 440px;
+    height: 440px;
+    background-color: rgba(46, 45, 45, 0.714);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 5px 10px rgb(133, 133, 133);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transform: scale(0);
+    transition: transform 0.2s ease-in , height 0.2s ease;
+    z-index: 9999999999999;
+}
+
+.contenedor.active-popup{
+    transform: scale(1);
+}
+
+.contenedor .forma-caja{
+    width: 100%;
+    padding: 40px;
+}
+
+.contenedor .forma-caja.login{
+    transition: transform .18s ease;
+    transform: translateX(0);
+}
+
+.contenedor.active .forma-caja.login{
+    transition: none;
+    transform: translateX(-400px);
+}
+
+.contenedor .forma-caja.register{
+    position: absolute;
+    transition: none;
+    transform: translateX(400px);
+}
+
+.contenedor.active .forma-caja.register{
+    transition: transform .18s ease;
+    transform: translateX(0);
+}
+
+.contenedor .icono-cierre{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    background: rgb(224, 224, 224);
+    font-size: 1.5em;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-bottom-left-radius: 20px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.forma-caja h2{
+    font-size: 1.5em;
+    color: rgb(224, 224, 224);
+    text-align: center;
+}
+
+.caja-input{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid rgb(224, 224, 224);
+    margin: 30px 0;
+}
+
+.caja-input label{
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    color: rgb(224, 224, 224);
+    font-weight: 500;
+    pointer-events: none;
+    transition: .3s;
+}
+
+.caja-input input:focus~label,
+.caja-input input:valid~label{
+    top: -5px;
+}
+
+.caja-input input{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    color: rgb(224, 224, 224);
+    font-weight: 600;
+    padding: 0 35px 0 5px;
+}
+
+.caja-input .icono{
+    position: absolute;
+    top: 12px;
+    right: 8px;
+    font-size: 1.2em;
+    color: rgb(235, 235, 235);
+}
+
+.recordar-olvidar{
+    font-size: .9em;
+    color:rgb(224, 224, 224);
+    font-weight: 500;
+    margin: -15px 0 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.recordar-olvidar label input{
+    accent-color: rgb(224, 224, 224);
+    margin-right: 3px;
+}
+
+.recordar-olvidar a{
+    color: rgb(240, 240, 240);
+    text-decoration: none;
+}
+
+.recordar-olvidar a:hover{
+    text-decoration: underline;
+}
+
+.boton-login{
+    width: 100%;
+    height: 45px;
+    background: rgb(224, 224, 224);
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    color: black;
+    font-weight: 500;
+}
+
+.login-register{
+    font-size: .9em;
+    color: rgb(224, 224, 224);
+    text-align: center;
+    font-weight: 500;
+    margin: 25px 0 10px;
+}
+
+.login-register p a{
+    color: rgb(223, 221, 221);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-register p a:hover{
+    text-decoration: underline;
+}
