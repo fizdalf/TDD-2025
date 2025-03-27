@@ -20,7 +20,7 @@ class DungeonTreasureHuntExplorer
     {
         $this->moveChecker = new MoveChecker();
     }
-
+    /** @return PossibleMovement[] */
     public function findPathToTreasure(array $grid): array
     {
         error_log("Grid recibido: " . print_r($grid, true));

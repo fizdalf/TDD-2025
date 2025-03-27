@@ -14,10 +14,12 @@ gridManager.addEventListener("gameStateChange", (state) => {
 gridManager.addEventListener("reset", resetGrid);
 
 let activeTool = null;
-let player = "P";
-let treasure = "T";
-let wall = "#";
-let path = ".";
+const Tile = {
+    player: 'P',
+    treasure: 'T',
+    wall: '#',
+    path: '.',
+}
 
 function updateCursor() {
     let cursorStyle = activeTool ? "pointer" : "default";
@@ -25,7 +27,7 @@ function updateCursor() {
 }
 
 function updateCell(value, row, col) {
-    index = columnNumber * row + col;
+    const index = columnNumber * row + col;
     let cell = document.querySelectorAll('.celda')[index];
     if (cell) {
         cell.querySelector('p').textContent = value;
@@ -48,37 +50,12 @@ document.querySelectorAll('.utiles').forEach(util => {
 })
 
 function resolveGrid(grid) {
-    console.log("Grid enviado:", grid);
-
     return fetch('/index.php?action=play', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(grid)
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor: ' + response.statusText);
-            }
-            return response.text(); // Obtener el contenido como texto para ver si está vacío
-        })
-        .then(responseText => {
-            if (responseText.trim() === "") {
-                throw new Error('La respuesta del servidor está vacía');
-            }
-            return JSON.parse(responseText); // Parsear el JSON si no está vacío
-        })
-        .then(movements => {
-            if (movements.length === 0) {
-                alert("No es posible llegar hasta el tesoro");
-                gridManager.resetGrid();
-                return;
-            }
-            applyColor(movements, 0);
-        })
-        .catch(error => {
-            console.error("Error en la resolución del grid:", error);
-            alert("Hubo un error en la resolución del grid.");
-        });
+        .then(response => response.json());
 }
 
 
@@ -104,21 +81,9 @@ document.querySelectorAll('.celda').forEach((celda, index) => {
 
     celda.addEventListener('click', function () {
         if (!activeTool) return;
-
-        let symbol = "";
-        switch (activeTool) {
-            case "player":
-                symbol = player;
-                break;
-            case "treasure":
-                symbol = treasure;
-                break;
-            case "wall":
-                symbol = wall;
-                break;
-            case "path":
-                symbol = path;
-                break;
+        const symbol = Tile[activeTool];
+        if (!symbol) {
+            throw new Error('Symbol not supported!');
         }
 
         gridManager.updateCell(row, col, symbol);
@@ -305,6 +270,80 @@ function saveGrid(grid) {
     }
 }
 
-function testResolveGrid() {
-    console.log('this tests the resolve grid from the server');
-}
+
+document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solved laberynth', async function () {
+    const grid = [
+        ['P', '#', '#', '#'],
+        ['.', '#', '#', 'T'],
+        ['.', '#', '#', '.'],
+        ['.', '.', '.', '.'],
+    ]
+    const result = await resolveGrid(grid);
+
+    const expected = [
+        {
+            playerPosition: {
+                x: 0,
+                y: 1
+            },
+            direction: 'Down',
+        },
+        {
+            playerPosition: {
+                x: 0,
+                y: 2
+            },
+            direction: 'Down',
+        },
+        {
+            playerPosition: {
+                x: 0,
+                y: 3
+            },
+            direction: 'Down',
+        },
+        {
+            playerPosition: {
+                x: 1,
+                y: 3
+            },
+            direction: 'Right',
+        },
+        {
+            playerPosition: {
+                x: 2,
+                y: 3
+            },
+            direction: 'Right',
+        },
+        {
+            playerPosition: {
+                x: 3,
+                y: 3
+            },
+            direction: 'Right',
+        },
+        {
+            playerPosition: {
+                x: 3,
+                y: 2
+            },
+            direction: 'Up',
+        },
+        {
+            playerPosition: {
+                x: 3,
+                y: 1
+            },
+            direction: 'Up',
+        },
+
+    ]
+
+    const expectedText = JSON.stringify(expected);
+    const resultText = JSON.stringify(result);
+    if (expectedText !== resultText) {
+        throw new Error(expectedText + ' is not equals to ' + resultText);
+    }
+
+})

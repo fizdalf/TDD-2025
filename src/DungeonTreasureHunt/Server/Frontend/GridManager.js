@@ -68,10 +68,10 @@ class GridManager {
                 if (cell === null) {
                     isFull = false;
                 }
-                if (cell === player) {
+                if (cell === Tile.player) {
                     hasPlayer = true;
                 }
-                if (cell === treasure) {
+                if (cell === Tile.treasure) {
                     hasTreasure = true;
                 }
             }
