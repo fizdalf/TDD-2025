@@ -348,7 +348,7 @@ document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solv
 
 })
 
-document.Tester.registerTest('[GridManager] it should update the grid correctly when a player moves', async function () {
+document.Tester.registerTest('[updateCell] it should update the grid correctly when a player moves', async function () {
     const gridManager = new GridManager(3,3);
 
     gridManager.updateCell(0,0, 'P');
