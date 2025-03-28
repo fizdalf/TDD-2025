@@ -118,7 +118,7 @@ document.Tester.registerTest('[GridManager][informCellChanges] it should clear p
         }
     });
 
-document.Tester.registerTest('[GirdManager][informReset] it should call informReset',async function () {
+document.Tester.registerTest('[GirdManager][informReset] it should call informReset when we reset the grid',async function () {
     const gridManager = new GridManager(4,4);
 
     gridManager.updateCell(0,0,'P');
@@ -135,5 +135,14 @@ document.Tester.registerTest('[GirdManager][informReset] it should call informRe
     if (!resetCalled) {
         throw new Error('No se informo al informReset')
     }
-})
+
+    const emptyGrid = gridManager.getGrid();
+    for (let row = 0; row < 4; row++) {
+        for (let col = 0; col < 4; col++) {
+            if (emptyGrid[row][col] !== null) {
+                throw new Error('El grid no se reinició correctamente');
+            }
+        }
+    }
+});
 
