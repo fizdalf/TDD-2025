@@ -1,5 +1,5 @@
 <!DOCTYPE html
-<html lang="en">
+        <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,111 +10,113 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
-    <nav>
-        <h1>Juego del laberinto</h1>
-    </nav>
-    <button class="botonLogin-popup" onclick="abrir()">Iniciar sesión</button>
-    <article id="contenedor-juego">
-        <div id="side-bar">
-            <h3>Herramientas</h3>
-            <div id="contenedor-utiles">
-                <div class="utiles" data-tool="player">P</div>
-                <div class="utiles" data-tool="treasure">T</div>
-                <div class="utiles" data-tool="wall">#</div>
-                <div class="utiles" data-tool="path">.</div>
-            </div>
-        </div>
-        
-        <div id="contenedor-grid">
-            <div id="grid">
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-                <div class="celda"><p></p></div>
-            </div>
-        </div>
-    </article>
-
-    <article id="contenedor-boton">
-        <button id="restablecer" class="boton">
-            <p>Restablecer</p>
-        </button>
-
-        <button id="comprobar" class="boton" onclick="printGrid(); responseGrid()" disabled>
-            <p>Comprobar</p>
-        </button>
-
-        <button class="boton" onclick="saveGrid()">
-            <p>Guardar</p>
-        </button>
-    </article>
-    <div class="contenedor">
-        <span class="icono-cierre" onclick="cerrar()"><ion-icon name="close-outline"></ion-icon></span>
-        <div class="forma-caja login">
-            <h2>Iniciar sesión</h2>
-            <form action="#">
-                <div class="caja-input">
-                    <span class="icono"><ion-icon name="person"></ion-icon></span>
-                    <input type="text" required autocomplete="current-username">
-                    <label>Nombre de usuario</label>
-                </div>
-                <div class="caja-input">
-                    <span class="icono"><ion-icon name="lock-closed"></ion-icon></span>
-                    <input type="password" required autocomplete="current-password">
-                    <label>Contraseña</label>
-                </div>
-                <div class="recordar-olvidar">
-                    <label><input type="checkbox">Recordarme</label>
-                    <a href="#">Olvidaste la contraseña?</a>
-                </div>
-                <button type="submit" class="boton-login">Iniciar sesión</button>
-                <div class="login-register">
-                    <p>No tienes una cuenta? <a href="#" onclick="activar()">Registrarse</a></p>
-                </div>
-
-            </form>
-        </div>
-
-        <!-- Registro -->
-
-        <div class="forma-caja register">
-            <h2>Registrarse</h2>
-            <form action="#">
-                <div class="caja-input">
-                    <span class="icono"><ion-icon name="person"></ion-icon></span>
-                    <input type="text" required autocomplete="current-username">
-                    <label>Usuario</label>
-                </div>
-                <div class="caja-input">
-                    <span class="icono"><ion-icon name="lock-closed"></ion-icon></span>
-                    <input type="password" required autocomplete="current-password">
-                    <label>Contraseña</label>
-                </div>
-                <div class="recordar-olvidar">
-                    <label><input type="checkbox">Acepto los términos y condiciones</label>
-                </div>
-                <button type="submit" class="boton-login">Registrarse</button>
-                <div class="login-register">
-                    <p>Ya tienes una cuenta? <a href="#" onclick="desactivar()">Iniciar sesión</a></p>
-                </div>
-
-            </form>
+<nav>
+    <h1>Juego del laberinto</h1>
+</nav>
+<button id="iniciar-sesion" class="botonLogin-popup" onclick="abrir()">Iniciar sesión</button>
+<button id="cerrar-sesion" class="botonLogin-popup" onclick="cerrar_sesion()">Cerrar sesión</button>
+<article id="contenedor-juego">
+    <div id="side-bar">
+        <h3>Herramientas</h3>
+        <div id="contenedor-utiles">
+            <div class="utiles" data-tool="player">P</div>
+            <div class="utiles" data-tool="treasure">T</div>
+            <div class="utiles" data-tool="wall">#</div>
+            <div class="utiles" data-tool="path">.</div>
         </div>
     </div>
-    <script src="tester.js"></script>
-    <script src="GridManager.js"></script>
-    <script src="javascript.js"></script>
+
+    <div id="contenedor-grid">
+        <div id="grid">
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+            <div class="celda"><p></p></div>
+        </div>
+    </div>
+</article>
+
+<article id="contenedor-boton">
+    <button id="restablecer" class="boton">
+        <p>Restablecer</p>
+    </button>
+
+    <button id="comprobar" class="boton" onclick="printGrid(); responseGrid()" disabled>
+        <p>Comprobar</p>
+    </button>
+
+    <button class="boton" onclick="saveGrid()">
+        <p>Guardar</p>
+    </button>
+</article>
+<div class="contenedor">
+    <span class="icono-cierre" onclick="cerrar()"><ion-icon name="close-outline"></ion-icon></span>
+    <div class="forma-caja login">
+        <h2>Iniciar sesión</h2>
+        <form action="#">
+            <div class="caja-input">
+                <span class="icono"><ion-icon name="person"></ion-icon></span>
+                <input type="text" required autocomplete="current-username">
+                <label>Nombre de usuario</label>
+            </div>
+            <div class="caja-input">
+                <span class="icono"><ion-icon name="lock-closed"></ion-icon></span>
+                <input type="password" required autocomplete="current-password">
+                <label>Contraseña</label>
+            </div>
+            <div class="recordar-olvidar">
+                <label><input type="checkbox">Recordarme</label>
+                <a href="#">Olvidaste la contraseña?</a>
+            </div>
+            <button type="submit" class="boton-login">Iniciar sesión</button>
+            <div class="login-register">
+                <p>No tienes una cuenta? <a href="#" onclick="activar()">Registrarse</a></p>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Registro -->
+
+    <div class="forma-caja register">
+        <h2>Registrarse</h2>
+        <form action="#">
+            <div class="caja-input">
+                <span class="icono"><ion-icon name="person"></ion-icon></span>
+                <input type="text" required autocomplete="current-username">
+                <label>Usuario</label>
+            </div>
+            <div class="caja-input">
+                <span class="icono"><ion-icon name="lock-closed"></ion-icon></span>
+                <input type="password" required autocomplete="current-password">
+                <label>Contraseña</label>
+            </div>
+            <div class="recordar-olvidar">
+                <label><input type="checkbox">Acepto los términos y condiciones</label>
+            </div>
+            <button type="submit" class="boton-login">Registrarse</button>
+            <div class="login-register">
+                <p>Ya tienes una cuenta? <a href="#" onclick="desactivar()">Iniciar sesión</a></p>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script src="tester.js"></script>
+<script src="GridManager.js"></script>
+<script src="GridManagerTest.js"></script>
+<script src="javascript.js"></script>
 </body>
 </html>

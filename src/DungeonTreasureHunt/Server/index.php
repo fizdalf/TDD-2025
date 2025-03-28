@@ -7,16 +7,14 @@ require __DIR__ . '/Backend/JWT.php';
 
 header("Content-Type: application/json");
 
-$database = new PDO(
-    "mysql:host=localhost;port=3307;dbname=samu",
-    "root",
-    "=%@T,|Jr=/>b[Ze7ry=uHoHRms[k(ldb"
-);
-$queryResult = $database->query('SELECT CURRENT_TIMESTAMP;');
-$queryResult->execute();
+//$database = new PDO(
+//    "mysql:host=localhost;port=3307;dbname=samu",
+//    "root",
+//    "=%@T,|Jr=/>b[Ze7ry=uHoHRms[k(ldb"
+//);
+//$queryResult = $database->query('SELECT CURRENT_TIMESTAMP;');
+//$queryResult->execute();
 
-session_start();
-$_SESSION["name"] = "Samu";
 ini_set('html_errors', false);
 
 

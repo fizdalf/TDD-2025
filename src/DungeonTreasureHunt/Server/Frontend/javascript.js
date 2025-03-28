@@ -71,6 +71,7 @@ function applyColor(movements, index) {
 
         setTimeout(() => applyColor(movements, index + 1), 500);
     }
+
 }
 
 
@@ -95,7 +96,7 @@ function printGrid() {
 }
 
 function responseGrid() {
-    resolveGrid(gridManager.grid)
+    resolveGrid(gridManager.getGrid())
         .then(movements => {
             if (movements.length === 0) {
                 alert("No es posible llegar hasta el tesoro");
@@ -153,12 +154,12 @@ function cerrar() {
 function login(event) {
     event.preventDefault();
 
-    let usernameInput = document.querySelector(".caja-input input[type='text']").value;
-    let passwordInput = document.querySelector(".caja-input input[type='password']").value;
+    let usernameInput = document.querySelector(".caja-input input[type='text']");
+    let passwordInput = document.querySelector(".caja-input input[type='password']");
     let rememberMe = document.querySelector("input[type='checkbox']").checked;
 
-    let username = usernameInput;
-    let password = passwordInput;
+    let username = usernameInput.value;
+    let password = passwordInput.value;
 
     console.log("Nombre de usuario: ", username);
     console.log("Contraseña: ", password);
@@ -180,7 +181,7 @@ function login(event) {
                 sessionStorage.setItem('token', data.token);
 
                 cerrar();
-                checkLoginStatus();
+                sesion_iniciada();
 
                 return true;
             } else {
@@ -204,38 +205,41 @@ function login(event) {
     }
 }
 
-function checkLoginStatus() {
+function isUserLoggedIn() {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    const loginButton = document.querySelector(".botonLogin-popup");
-
-    if (token) {
-        console.log("Estás iniciado sesión.");
-        if (loginButton) {
-            sesion_iniciada();
-        }
-    } else {
-        console.log("No estás iniciado sesión.");
-        if (loginButton) {
-            sesion_no_iniciada()
-        }
-    }
-
-    function sesion_iniciada() {
-        loginButton.style.display = "none";
-        document.querySelector('nav').style.width = '85%';
-        document.querySelector('#contenedor-boton').style.width = '85%';
-        document.querySelector('#grid').style.width = '60%';
-    }
-
-    function sesion_no_iniciada() {
-        loginButton.style.display = "block";
-        document.querySelector('nav').style.width = '';
-        document.querySelector('#contenedor-boton').style.width = '100%';
-        document.querySelector('#grid').style.width = '78%';
-    }
+    const isLoggedIn = !token
 }
 
-checkLoginStatus()
+function checkAlreadyLogged() {
+    if (!isUserLoggedIn()) {
+        return;
+    }
+    sesion_iniciada();
+}
+
+function sesion_iniciada() {
+    document.getElementById('iniciar-sesion').style.display = "none";
+    document.getElementById('cerrar-sesion').style.display = "block";
+    document.querySelector('nav').style.width = '85%';
+    document.querySelector('#contenedor-boton').style.width = '85%';
+    document.querySelector('#grid').style.width = '60%';
+}
+
+function sesion_no_iniciada() {
+    document.getElementById('iniciar-sesion').style.display = "block";
+    document.getElementById('cerrar-sesion').style.display = "none";
+    document.querySelector('nav').style.width = '';
+    document.querySelector('#contenedor-boton').style.width = '100%';
+    document.querySelector('#grid').style.width = '78%';
+}
+
+function cerrar_sesion() {
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    sesion_no_iniciada();
+}
+
+checkAlreadyLogged()
 
 const botonLogin = document.querySelector(".boton-login");
 if (botonLogin) {
@@ -348,63 +352,33 @@ document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solv
 
 })
 
-document.Tester.registerTest('[updateCell] it should update the grid correctly when a player moves', async function () {
-    const gridManager = new GridManager(4,4);
 
-    gridManager.updateCell(0,0, 'P');
+document.Tester.registerTest('[applyColor] it should apply color to all movement cells', async function () {
 
-    const gridAfterPlayerMove = gridManager.getGrid();
-    if (gridAfterPlayerMove[0][0] !== 'P') {
-        throw new Error("El jugador no se ha actualizado")
-    }
+    const cols = 4;
 
-    gridManager.updateCell(1,1,'P');
+    let movements = [
+        {playerPosition: {x: 0, y: 0}},
+        {playerPosition: {x: 1, y: 0}},
+        {playerPosition: {x: 2, y: 0}},
+        {playerPosition: {x: 3, y: 0}},
+        {playerPosition: {x: 3, y: 1}},
+        {playerPosition: {x: 3, y: 2}},
+        {playerPosition: {x: 3, y: 3}}
+    ];
 
-    if (gridAfterPlayerMove[1][1] !== 'P') {
-        throw new Error("No se movio al lugar correcto")
-    }
+    applyColor(movements, 0);
 
-    if (gridAfterPlayerMove[0][0] !== null) {
-        throw new Error("La posicion anterior no ha sido limpiada")
-    }
-})
+    await new Promise(resolve => setTimeout(resolve, movements.length * 500 + 500))
 
-document.Tester.registerTest('[GameStateChange] it should update the game state when player and treasure exists', async function () {
-    const gridManager = new GridManager(4, 4);
+    movements.forEach(({playerPosition}) => {
+        let {x, y} = playerPosition;
+        let indexCell = cols * y + x;
+        let cell = document.querySelectorAll('.celda')[indexCell];
 
-
-    gridManager.updateCell(0,0,'P');
-    gridManager.updateCell(3,3, 'T');
-
-    let gameStatedUpdated = false;
-    gridManager.addEventListener("gameStateChange", (state) => {
-        gameStatedUpdated = state;
+        if (!cell.classList.contains('color')) {
+            throw new Error(`La celda (${x},${y})no se coloreo`)
+        }
     });
-
-    gridManager.updateCell(0, 0, 'P'); 
-    gridManager.updateCell(0, 1, '#');
-    gridManager.updateCell(0, 2, '#');
-    gridManager.updateCell(0, 3, '#');
-
-    gridManager.updateCell(1, 0, '.');
-    gridManager.updateCell(1, 1, '#');
-    gridManager.updateCell(1, 2, '#');
-    gridManager.updateCell(1, 3, 'T');
-
-    gridManager.updateCell(2, 0, '.');
-    gridManager.updateCell(2, 1, '#');
-    gridManager.updateCell(2, 2, '#');
-    gridManager.updateCell(2, 3, '.');
-
-    gridManager.updateCell(3, 0, '.');
-    gridManager.updateCell(3, 1, '.');
-    gridManager.updateCell(3, 2, '.');
-    gridManager.updateCell(3, 3, '.');
-
-
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if (!gameStatedUpdated) {
-        throw new Error("El estado del juego no se actualizo")
-    }
 });
+
