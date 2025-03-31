@@ -1,4 +1,7 @@
+import {resolveGrid,applyColor} from "./main.js";
+
 document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solved laberynth', async function () {
+
     const grid = [
         ['P', '#', '#', '#'],
         ['.', '#', '#', 'T'],
