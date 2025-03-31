@@ -14,7 +14,7 @@
     <h1>Juego del laberinto</h1>
 </nav>
 <button id="iniciar-sesion" class="botonLogin-popup" onclick="abrir()">Iniciar sesión</button>
-<button id="cerrar-sesion" class="botonLogin-popup" onclick="cerrar_sesion()">Cerrar sesión</button>
+<button id="cerrar-sesion" class="botonLogin-popup">Cerrar sesión</button>
 <article id="contenedor-juego">
     <div id="side-bar">
         <h3>Herramientas</h3>
@@ -72,7 +72,7 @@
                 <label>Nombre de usuario</label>
             </div>
             <div class="caja-input">
-                <span class="icono"><ion-icon name="lock-closed"></ion-icon></span>
+                <span class="icono"><ion-icon name="lock-closed-outline"></ion-icon></span>
                 <input type="password" required autocomplete="current-password">
                 <label>Contraseña</label>
             </div>
@@ -115,9 +115,8 @@
     </div>
 </div>
 <script src="tester.js"></script>
-<script src="GridManager.js"></script>
-<script src="GridManagerTest.js"></script>
-<script src="main.js"></script>
+<script src="GridManagerTest.js" type="module"></script>
+<script src="main.js" type="module"></script>
 <script src="Container.js"></script>
 </body>
 </html>

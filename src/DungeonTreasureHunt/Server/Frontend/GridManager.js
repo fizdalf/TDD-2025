@@ -1,6 +1,9 @@
-class GridManager {
+import {Tile} from './Tile.js';
+
+export class GridManager {
     #grid;
     #eventListeners = {};
+
     constructor(rows, cols) {
         this.rows = rows;
         this.cols = cols;
@@ -29,10 +32,10 @@ class GridManager {
         if (value === "P") {
             for (let r = 0; r < this.rows; r++) {
                 for (let c = 0; c < this.cols; c++) {
-                    if (this.#grid[r][c] === "P" ) {
-                    // && (
-                    //         row === r && col !== c || row !== r && col === c || row !== r && col !== c
-                    //     )
+                    if (this.#grid[r][c] === "P") {
+                        // && (
+                        //         row === r && col !== c || row !== r && col === c || row !== r && col !== c
+                        //     )
                         this.#grid[r][c] = null;
                         this.#informCellChanges(null, r, c);
                         break;

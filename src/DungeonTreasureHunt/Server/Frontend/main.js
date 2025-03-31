@@ -1,7 +1,10 @@
+import {GridManager} from "./GridManager.js";
+import {isUserLoggedIn, cerrarSesion, doLogin} from './Login.js';
+import {Tile} from './Tile.js';
+
 const columnNumber = 4
+
 const rowNumber = 4
-
-
 
 const gridManager = new GridManager(rowNumber, columnNumber);
 const button = document.getElementById('comprobar');
@@ -14,12 +17,7 @@ gridManager.addEventListener("gameStateChange", (state) => {
 gridManager.addEventListener("reset", resetGrid);
 
 let activeTool = null;
-const Tile = {
-    player: 'P',
-    treasure: 'T',
-    wall: '#',
-    path: '.',
-}
+
 
 function updateCursor() {
     let cursorStyle = activeTool ? "pointer" : "default";
@@ -130,73 +128,45 @@ document.getElementById('restablecer').addEventListener('click', function () {
 })
 
 
-function login(event) {
-    event.preventDefault();
-
-    let usernameInput = document.querySelector(".caja-input input[type='text']");
-    let passwordInput = document.querySelector(".caja-input input[type='password']");
-    let rememberMe = document.querySelector("input[type='checkbox']").checked;
-
-    let username = usernameInput.value;
-    let password = passwordInput.value;
-
-    console.log("Nombre de usuario: ", username);
-    console.log("Contraseña: ", password);
-
-    return fetch('/index.php?action=login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({username, password})
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.token) {
-
-                if (rememberMe) {
-                    localStorage.setItem('token', data.token);
-                }
-                sessionStorage.setItem('token', data.token);
-
-                cerrar();
-                sesion_iniciada();
-
-                return true;
-            } else {
-                alert('Credenciales incorrectas');
-                return false;
-            }
-        })
-        .catch(error => {
-            console.error('Error en la solicitud de login:', error);
-            alert('Hubo un error al intentar iniciar sesión');
-            return false;
-        })
-
-        .finally(() => {
-            clearInputs();
-        });
-
-    function clearInputs() {
-        usernameInput.value = "";
-        passwordInput.value = "";
-    }
-}
-
-function isUserLoggedIn() {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    const isLoggedIn = !token
-}
-
 function checkAlreadyLogged() {
-    if (!isUserLoggedIn()) {
-        return;
+    if (isUserLoggedIn()) {
+        sesionIniciada();
     }
-    sesion_iniciada();
 }
 
-function sesion_iniciada() {
+checkAlreadyLogged();
+
+const botonLogin = document.querySelector(".boton-login");
+if (botonLogin) {
+    botonLogin.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const usernameInput = document.querySelector(".caja-input input[type='text']");
+        const passwordInput = document.querySelector(".caja-input input[type='password']");
+        const rememberMeInput = document.querySelector("input[type='checkbox']")
+
+        const rememberMe = rememberMeInput.checked;
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+
+        doLogin(username, password, rememberMe)
+            .then(() => {
+                sesionIniciada();
+                cerrar();
+            })
+            .catch(error => {
+                alert('Hubo un error al intentar iniciar sesión: ' + error);
+            })
+            .finally(() => {
+                usernameInput.value = "";
+                passwordInput.value = "";
+                rememberMeInput.checked = false;
+            });
+
+    });
+}
+
+function sesionIniciada() {
     document.getElementById('iniciar-sesion').style.display = "none";
     document.getElementById('cerrar-sesion').style.display = "block";
     document.querySelector('nav').style.width = '85%';
@@ -204,53 +174,18 @@ function sesion_iniciada() {
     document.querySelector('#grid').style.width = '60%';
 }
 
-function sesion_no_iniciada() {
+document.getElementById('cerrar-sesion').addEventListener("click", () => {
+    cerrarSesion();
+    sesionNoIniciada();
+});
+
+
+function sesionNoIniciada() {
     document.getElementById('iniciar-sesion').style.display = "block";
     document.getElementById('cerrar-sesion').style.display = "none";
     document.querySelector('nav').style.width = '';
     document.querySelector('#contenedor-boton').style.width = '100%';
     document.querySelector('#grid').style.width = '78%';
-}
-
-function cerrar_sesion() {
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-    sesion_no_iniciada();
-}
-
-checkAlreadyLogged()
-
-const botonLogin = document.querySelector(".boton-login");
-if (botonLogin) {
-    botonLogin.addEventListener("click", login)
-}
-
-function saveGrid(grid) {
-
-    {
-        const token = localStorage.getItem('token');
-
-
-        return fetch('/index.php?action=save-grid', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({grid: grid})
-        }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Grid guardado exitosamente');
-                } else {
-                    alert('Error al guardar el grid');
-                }
-            })
-            .catch(error => {
-                console.error('Error al intentar guardar el grid:', error);
-                alert('Hubo un error al guardar el grid');
-            });
-    }
 }
 
 
