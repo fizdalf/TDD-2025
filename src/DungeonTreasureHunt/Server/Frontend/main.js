@@ -2,36 +2,18 @@ import {GridManager} from "./GridManager.js";
 import {isUserLoggedIn, cerrarSesion, doLogin} from './Login.js';
 import {Tile} from './Tile.js';
 
-const columnNumber = 4
-
-const rowNumber = 4
-
+const columnNumber = 4;
+const rowNumber = 4;
 const gridManager = new GridManager(rowNumber, columnNumber);
 const button = document.getElementById('comprobar');
 
+let activeTool = null;
 gridManager.createEmptyGrid();
-gridManager.addEventListener("cellChange", updateCell);
+gridManager.addEventListener("cellChange", (value, row, col) => updateCell(value, row, col, columnNumber));
 gridManager.addEventListener("gameStateChange", (state) => {
     button.disabled = !state;
 });
-gridManager.addEventListener("reset", resetGrid);
-
-let activeTool = null;
-
-
-function updateCursor() {
-    let cursorStyle = activeTool ? "pointer" : "default";
-    document.querySelectorAll('.celda').forEach(c => c.style.cursor = cursorStyle);
-}
-
-function updateCell(value, row, col) {
-    const index = columnNumber * row + col;
-    let cell = document.querySelectorAll('.celda')[index];
-    if (cell) {
-        cell.querySelector('p').textContent = value;
-    }
-}
-
+gridManager.addEventListener("reset", resetGridUI);
 
 document.querySelectorAll('.utiles').forEach(util => {
     util.addEventListener('click', function () {
@@ -43,38 +25,11 @@ document.querySelectorAll('.utiles').forEach(util => {
             activeTool = this.dataset.tool;
             this.classList.add('util-seleccionado');
         }
-        updateCursor();
-    })
-})
-
-export function resolveGrid(grid) {
-    return fetch('/index.php?action=play', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(grid)
-    })
-        .then(response => response.json());
-}
-
-
-export function applyColor(movements, index) {
-    if (index < movements.length) {
-        let {x, y} = movements[index].playerPosition;
-        let indexCell = gridManager.cols * y + x;
-        let cell = document.querySelectorAll('.celda')[indexCell];
-
-        if (cell) {
-            cell.classList.add('color');
-        }
-
-        setTimeout(() => applyColor(movements, index + 1), 500);
-    }
-
-}
-
+        updateCursor(activeTool);
+    });
+});
 
 document.querySelectorAll('.celda').forEach((celda, index) => {
-
     const row = Math.floor(index / gridManager.cols);
     const col = index % gridManager.cols;
 
@@ -84,66 +39,34 @@ document.querySelectorAll('.celda').forEach((celda, index) => {
         if (!symbol) {
             throw new Error('Symbol not supported!');
         }
-
         gridManager.updateCell(row, col, symbol);
-    })
-})
-
-function printGrid() {
-    console.log(gridManager.getGrid());
-}
-
-function responseGrid() {
-    resolveGrid(gridManager.getGrid())
-        .then(movements => {
-            if (movements.length === 0) {
-                alert("No es posible llegar hasta el tesoro");
-                gridManager.resetGrid();
-                return;
-            }
-            applyColor(movements, 0);
-        })
-        .catch(error => {
-            console.error("Error en la resolución del grid:", error);
-            alert("Hubo un error en la resolución del grid.");
-        });
-}
-
-function resetGrid() {
-    printGrid();
-    document.querySelectorAll('.celda p').forEach(p => p.textContent = "");
-
-    document.querySelectorAll('.utiles').forEach(u => u.classList.remove('util-seleccionado'))
-    activeTool = null;
-    updateCursor();
-
-    document.querySelectorAll('.color').forEach(element => {
-        element.classList.remove('color');
-    })
-}
+    });
+});
 
 document.getElementById('restablecer').addEventListener('click', function () {
     gridManager.resetGrid();
-    resetGrid();
-})
-
+    resetGridUI();
+});
 
 function checkAlreadyLogged() {
     if (isUserLoggedIn()) {
         sesionIniciada();
     }
 }
-
 checkAlreadyLogged();
+
+document.getElementById('cerrar-sesion').addEventListener("click", () => {
+    cerrarSesion();
+    sesionNoIniciada();
+});
 
 const botonLogin = document.querySelector(".boton-login");
 if (botonLogin) {
     botonLogin.addEventListener("click", (event) => {
         event.preventDefault();
-
         const usernameInput = document.querySelector(".caja-input input[type='text']");
         const passwordInput = document.querySelector(".caja-input input[type='password']");
-        const rememberMeInput = document.querySelector("input[type='checkbox']")
+        const rememberMeInput = document.querySelector("input[type='checkbox']");
 
         const rememberMe = rememberMeInput.checked;
         const username = usernameInput.value;
@@ -159,10 +82,52 @@ if (botonLogin) {
             })
             .finally(() => {
                 usernameInput.value = "";
-                passwordInput.value = "";
-                rememberMeInput.checked = false;
+                passwordInput.checked = false;
             });
+    });
+}
 
+function updateCursor(activeTool) {
+    let cursorStyle = activeTool ? "pointer" : "default";
+    document.querySelectorAll('.celda').forEach(c => c.style.cursor = cursorStyle);
+}
+
+function updateCell(value, row, col, columnNumber) {
+    const index = columnNumber * row + col;
+    let cell = document.querySelectorAll('.celda')[index];
+    if (cell) {
+        cell.querySelector('p').textContent = value;
+    }
+}
+
+export function getColorIndices(movements, gridManager) {
+    return movements.map(({ playerPosition }) => {
+        let { x, y } = playerPosition;
+        return gridManager.cols * y + x;
+    });
+}
+
+function applyColor(movements, index, gridManager) {
+    const indices = getColorIndices(movements, gridManager);
+
+    function colorStep(i) {
+        if (i < indices.length) {
+            let cell = document.querySelectorAll('.celda')[indices[i]];
+            if (cell) {
+                cell.classList.add('color');
+            }
+            setTimeout(() => colorStep(i + 1), 500);
+        }
+    }
+
+    colorStep(index);
+}
+
+function resetGridUI() {
+    document.querySelectorAll('.celda p').forEach(p => p.textContent = "");
+    document.querySelectorAll('.utiles').forEach(u => u.classList.remove('util-seleccionado'));
+    document.querySelectorAll('.color').forEach(element => {
+        element.classList.remove('color');
     });
 }
 
@@ -174,12 +139,6 @@ function sesionIniciada() {
     document.querySelector('#grid').style.width = '60%';
 }
 
-document.getElementById('cerrar-sesion').addEventListener("click", () => {
-    cerrarSesion();
-    sesionNoIniciada();
-});
-
-
 function sesionNoIniciada() {
     document.getElementById('iniciar-sesion').style.display = "block";
     document.getElementById('cerrar-sesion').style.display = "none";
@@ -187,5 +146,3 @@ function sesionNoIniciada() {
     document.querySelector('#contenedor-boton').style.width = '100%';
     document.querySelector('#grid').style.width = '78%';
 }
-
-
