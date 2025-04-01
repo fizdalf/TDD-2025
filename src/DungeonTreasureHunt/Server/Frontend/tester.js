@@ -5,8 +5,9 @@ class Tester {
         this.tests[description] = testFn;
     }
 
-    async runTests() {
-        const testDescriptions = Object.keys(this.tests);
+    async runTests(pattern = ".*") {
+        const regex = new RegExp(pattern);
+        const testDescriptions = Object.keys(this.tests).filter(desc => regex.test(desc));
         console.log(testDescriptions);
 
         return Promise.all(
@@ -32,7 +33,6 @@ class Tester {
                 });
             })
         );
-
     }
 }
 
