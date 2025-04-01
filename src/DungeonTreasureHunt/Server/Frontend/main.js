@@ -1,6 +1,9 @@
 import {GridManager} from "./GridManager.js";
 import {isUserLoggedIn, cerrarSesion, doLogin} from './Login.js';
 import {Tile} from './Tile.js';
+import {resolveGrid} from "./GameLogic.js";
+import {pathCellPainter} from "./PathCellPainter.js";
+
 
 const columnNumber = 4;
 const rowNumber = 4;
@@ -86,6 +89,22 @@ if (botonLogin) {
             });
     });
 }
+function responseGrid() {
+    resolveGrid(gridManager.getGrid())
+        .then(movements => {
+            if (movements.length === 0) {
+                alert("No es posible llegar hasta el tesoro");
+                gridManager.resetGrid();
+                return;
+            }
+
+            pathCellPainter(movements, gridManager);
+        })
+        .catch(error => {
+            console.error("Error en la resolución del grid:", error);
+            alert("Hubo un error en la resolución del grid.");
+        });
+}
 
 function updateCursor(activeTool) {
     let cursorStyle = activeTool ? "pointer" : "default";
@@ -100,28 +119,8 @@ function updateCell(value, row, col, columnNumber) {
     }
 }
 
-export function getColorIndices(movements, gridManager) {
-    return movements.map(({ playerPosition }) => {
-        let { x, y } = playerPosition;
-        return gridManager.cols * y + x;
-    });
-}
 
-function applyColor(movements, index, gridManager) {
-    const indices = getColorIndices(movements, gridManager);
 
-    function colorStep(i) {
-        if (i < indices.length) {
-            let cell = document.querySelectorAll('.celda')[indices[i]];
-            if (cell) {
-                cell.classList.add('color');
-            }
-            setTimeout(() => colorStep(i + 1), 500);
-        }
-    }
-
-    colorStep(index);
-}
 
 function resetGridUI() {
     document.querySelectorAll('.celda p').forEach(p => p.textContent = "");
