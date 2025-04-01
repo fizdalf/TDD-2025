@@ -52,7 +52,7 @@ document.getElementById('restablecer').addEventListener('click', function () {
     resetGridUI();
 });
 
-document.getElementsByClassName('icono-cierre').addEventListener('click', function () {
+document.getElementById('cierre').addEventListener('click', function () {
     cerrar();
 });
 
