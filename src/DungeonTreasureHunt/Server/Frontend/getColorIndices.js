@@ -4,3 +4,7 @@ export function getColorIndices(movements, gridManager) {
         return gridManager.cols * y + x;
     });
 }
+
+export function getLinearIndexFrom2DGrid(x, y, cols){
+    return cols * y + x;
+}

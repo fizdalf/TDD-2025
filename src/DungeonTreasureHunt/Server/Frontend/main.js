@@ -9,9 +9,10 @@ const columnNumber = 4;
 const rowNumber = 4;
 const gridManager = new GridManager(rowNumber, columnNumber);
 const button = document.getElementById('comprobar');
-
 let activeTool = null;
+
 gridManager.createEmptyGrid();
+
 gridManager.addEventListener("cellChange", (value, row, col) => updateCell(value, row, col, columnNumber));
 gridManager.addEventListener("gameStateChange", (state) => {
     button.disabled = !state;
@@ -51,12 +52,13 @@ document.getElementById('restablecer').addEventListener('click', function () {
     resetGridUI();
 });
 
-function checkAlreadyLogged() {
-    if (isUserLoggedIn()) {
-        sesionIniciada();
-    }
-}
-checkAlreadyLogged();
+document.getElementsByClassName('icono-cierre').addEventListener('click', function () {
+    cerrar();
+});
+
+document.getElementById('comprobar').addEventListener('click', function () {
+    responseGrid();
+});
 
 document.getElementById('cerrar-sesion').addEventListener("click", () => {
     cerrarSesion();
@@ -89,6 +91,14 @@ if (botonLogin) {
             });
     });
 }
+
+function checkAlreadyLogged() {
+    if (isUserLoggedIn()) {
+        sesionIniciada();
+    }
+}
+checkAlreadyLogged();
+
 function responseGrid() {
     resolveGrid(gridManager.getGrid())
         .then(movements => {
@@ -118,9 +128,6 @@ function updateCell(value, row, col, columnNumber) {
         cell.querySelector('p').textContent = value;
     }
 }
-
-
-
 
 function resetGridUI() {
     document.querySelectorAll('.celda p').forEach(p => p.textContent = "");

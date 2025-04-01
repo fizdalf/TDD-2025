@@ -14,9 +14,10 @@ class Tester {
             testDescriptions.map(key => {
                 let testFn = this.tests[key];
                 if (testFn[Symbol.toStringTag] !== 'AsyncFunction') {
+                    const originalFunction = testFn;
                     testFn = () => new Promise((resolve, reject) => {
                         try {
-                            testFn();
+                            originalFunction();
                             resolve();
                         } catch (error) {
                             reject(error);
