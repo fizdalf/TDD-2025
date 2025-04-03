@@ -2,7 +2,7 @@
 const storageKey = "token";
 
 export function doLogin(username, password, rememberMe) {
-    return fetch('/index.php?action=login', {
+    return fetch('/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({username, password})

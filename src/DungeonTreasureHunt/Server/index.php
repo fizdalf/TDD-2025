@@ -5,16 +5,6 @@ use DungeonTreasureHunt\Backend\DungeonTreasureHuntExplorer;
 require_once __DIR__ . '/Backend/DungeonTreasureHuntExplorer.php';
 require __DIR__ . '/Backend/JWT.php';
 
-header("Content-Type: application/json");
-
-//$database = new PDO(
-//    "mysql:host=localhost;port=3307;dbname=samu",
-//    "root",
-//    "=%@T,|Jr=/>b[Ze7ry=uHoHRms[k(ldb"
-//);
-//$queryResult = $database->query('SELECT CURRENT_TIMESTAMP;');
-//$queryResult->execute();
-
 ini_set('html_errors', false);
 
 
@@ -31,7 +21,8 @@ $users = [
 ];
 
 
-if ($method === "POST" && $action === "login") {
+if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/login") {
+    header("Content-Type: application/json");
     if (!isset($data['username']) || !isset($data['password'])) {
         echo json_encode(["error" => "Faltan datos"]);
         exit;
@@ -51,27 +42,8 @@ if ($method === "POST" && $action === "login") {
 }
 
 
-if ($method === "GET" && $action === "verify") {
-    $headers = getallheaders();
-    if (!isset($headers['Authorization'])) {
-        echo json_encode(["error" => "Token no proporcionado"]);
-        exit;
-    }
-
-    $token = str_replace("Bearer ", "", $headers['Authorization']);
-    $userData = JwtHandler::verifyToken($token);
-
-    if (!$userData) {
-        echo json_encode(["error" => "Token inválido o expirado"]);
-        exit;
-    }
-
-    echo json_encode(["message" => "Token válido", "user" => $userData]);
-    exit;
-}
-
-
-if ($method === "POST" && $action === "play") {
+if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/play") {
+    header("Content-Type: application/json");
     if (!$data) {
         error_log("Error al decodificar el JSON recibido: " . $input);
         echo json_encode(['error' => 'No se pudo procesar el grid']);
