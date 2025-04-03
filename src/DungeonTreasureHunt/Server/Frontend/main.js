@@ -62,8 +62,6 @@ document.getElementById('comprobar').addEventListener('click', function () {
     getStoredGrids();
 });
 
-
-
 document.getElementById('SaveGrid').addEventListener('click', function () {
     SaveCurrentGrid();
 });
@@ -124,6 +122,25 @@ function responseGrid() {
         });
 }
 
+function SaveCurrentGrid() {
+    const grid = gridManager.getGrid()
+
+    SaveGrid(grid)
+        .then(response => {
+            if (response.error) {
+                console.error("Error al guardar el grid: ", response.error);
+                alert("hubo un error en el grid");
+            } else {
+                alert("Se guardo el grid")
+            }
+
+        })
+        .catch(error => {
+            console.error(error)
+            alert("Hubo un error en la solicitud")
+        })
+}
+
 function getStoredGrids() {
 
     const token = localStorage.getItem("token") || sessionStorage.getItem("token")
@@ -159,25 +176,6 @@ function getStoredGrids() {
         });
 }
 
-function SaveCurrentGrid() {
-    const grid = gridManager.getGrid()
-
-    SaveGrid(grid)
-        .then(response => {
-            if (response.error) {
-                console.error("Error al guardar el grid: ", response.error);
-                alert("hubo un error en el grid");
-            } else {
-                alert("Se guardo el grid")
-            }
-
-        })
-        .catch(error => {
-            console.error(error)
-            alert("Hubo un error en la solicitud")
-        })
-}
-
 function updateCursor(activeTool) {
     let cursorStyle = activeTool ? "pointer" : "default";
     document.querySelectorAll('.celda').forEach(c => c.style.cursor = cursorStyle);
@@ -200,17 +198,17 @@ function resetGridUI() {
 }
 
 function sesionIniciada() {
+    document.getElementById('contenedor-laberintos').querySelectorAll('p').forEach(p => p.remove());
     document.getElementById('iniciar-sesion').style.display = "none";
     document.getElementById('cerrar-sesion').style.display = "block";
-    document.querySelector('nav').style.width = '85%';
-    document.querySelector('#contenedor-boton').style.width = '85%';
-    document.querySelector('#grid').style.width = '60%';
+    document.getElementById('SaveGrid').disabled = false;
 }
 
 function sesionNoIniciada() {
+    const parrafo = document.createElement('p');
+    parrafo.textContent = "Inicia sesión para poder guardar laberintos";
     document.getElementById('iniciar-sesion').style.display = "block";
     document.getElementById('cerrar-sesion').style.display = "none";
-    document.querySelector('nav').style.width = '';
-    document.querySelector('#contenedor-boton').style.width = '100%';
-    document.querySelector('#grid').style.width = '78%';
+    document.getElementById('contenedor-laberintos').appendChild(parrafo);
+    document.getElementById('SaveGrid').disabled = true;
 }

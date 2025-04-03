@@ -6,8 +6,6 @@
     <title>Juego del laberinto</title>
     <link rel="shortcut icon" href="imagenes/laberinto2.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
 <nav>
@@ -46,6 +44,10 @@
             <div class="celda"><p></p></div>
         </div>
     </div>
+
+    <div id="contenedor-laberintos">
+        <p>Inicia sesión para poder guardar laberintos</p>
+    </div>
 </article>
 
 <article id="contenedor-boton">
@@ -57,22 +59,22 @@
         <p>Comprobar</p>
     </button>
 
-    <button class="boton" id="SaveGrid" >
+    <button class="boton" id="SaveGrid" disabled>
         <p>Guardar</p>
     </button>
 </article>
 <div class="contenedor">
-    <span id="cierre" class="icono-cierre"><ion-icon name="close-outline"></ion-icon></span>
+    <span id="cierre" class="icono-cierre"><img class="iconCierre" src="iconos/close-outline.svg" alt="cierre"></span>
     <div class="forma-caja login">
         <h2>Iniciar sesión</h2>
         <form action="#">
             <div class="caja-input">
-                <span class="icono"><ion-icon name="person"></ion-icon></span>
+                <span class="icono"><img class="iconPerson" src="iconos/person.svg" alt="user"></span>
                 <input type="text" required autocomplete="current-username">
                 <label>Nombre de usuario</label>
             </div>
             <div class="caja-input">
-                <span class="icono"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                <span class="icono"><img class="lockClosed" src="iconos/lock-closed.svg" alt="lock-closed"></ion-icon></span>
                 <input type="password" required autocomplete="current-password">
                 <label>Contraseña</label>
             </div>
@@ -94,12 +96,12 @@
         <h2>Registrarse</h2>
         <form action="#">
             <div class="caja-input">
-                <span class="icono"><ion-icon name="person"></ion-icon></span>
+                <span class="icono"><img class="iconPerson" src="iconos/person.svg" alt="user"></span>
                 <input type="text" required autocomplete="current-username">
                 <label>Usuario</label>
             </div>
             <div class="caja-input">
-                <span class="icono"><ion-icon name="lock-closed"></ion-icon></span>
+                <span class="icono"><img class="lockClosed" src="iconos/lock-closed.svg" alt="lock-closed"></ion-icon></span>
                 <input type="password" required autocomplete="current-password">
                 <label>Contraseña</label>
             </div>
