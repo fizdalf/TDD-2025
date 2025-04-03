@@ -59,6 +59,7 @@ document.getElementById('cierre').addEventListener('click', function () {
 
 document.getElementById('comprobar').addEventListener('click', function () {
     responseGrid();
+    getStoredGrids();
 });
 
 
@@ -120,6 +121,41 @@ function responseGrid() {
         .catch(error => {
             console.error("Error en la resolución del grid:", error);
             alert("Hubo un error en la resolución del grid.");
+        });
+}
+
+function getStoredGrids() {
+
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token")
+    if (!token) {
+        console.error("No se encontró el token de autenticación.");
+        return;
+    }
+
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization' : `Bearer ${token}`
+    };
+
+
+    fetch('/get-grid', {
+        method: 'GET',
+        headers: headers
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+
+                console.log("Grids almacenados:", data.grids);
+            } else {
+
+                console.error("Error al obtener los grids:", data.error);
+            }
+        })
+        .catch(error => {
+
+            console.error("Error en la solicitud:", error);
         });
 }
 

@@ -107,3 +107,41 @@ if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/save-grid") {
     exit;
 }
 
+if ($method === "GET" && $_SERVER['REQUEST_URI'] === "/get-grid") {
+    header("Content-Type: application/json");
+    $headers = getallheaders();
+
+    if (!isset($headers['Authorization'])) {
+        echo json_encode(["error" => "Token no proporcionado"]);
+        exit;
+    }
+
+    $token = str_replace("Bearer ", "", $headers['Authorization']);
+    $userData = JwtHandler::verifyToken($token);
+
+    if (!$userData) {
+        echo json_encode(["error" => "Token inválido o expirado"]);
+        exit;
+    }
+
+
+
+    $path = __DIR__ . "{$userData['username']}_gridSaved.txt";
+
+    if (!file_exists($path)) {
+        echo json_encode(["error" => "Archivo de grids no encontrado"]);
+        exit;
+    }
+
+
+    $fileContent = file_get_contents($path);
+    $grids = json_decode($fileContent, true);
+
+    if ($grids === null) {
+        echo json_encode(["error" => "Error al leer el contenido del archivo"]);
+        exit;
+    }
+
+    echo json_encode(["success" => true, "grids" => $grids]);
+    exit;
+}
