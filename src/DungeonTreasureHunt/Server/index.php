@@ -85,12 +85,25 @@ if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/save-grid") {
 
     $path = __DIR__ . "{$userData['username']}_gridSaved.txt";
 
-    $gridContent = json_encode($grid);
+    $Grids = [];
+    if (file_exists($path)) {
+        $content = file_get_contents($path);
+        $Grids = json_decode($content, true) ?: [];
+    }
 
-    if (file_put_contents($path, $gridContent)) {
-        echo json_encode(["success" => true, "message" => "Grid guardado correctamente en el archivo"]);
+    $nextId = count($Grids) > 0 ? (max(array_keys($Grids)) + 1) : 1;
+
+    $Grids[$nextId] = $grid;
+
+    if (file_put_contents($path, json_encode($Grids, JSON_PRETTY_PRINT))) {
+        echo json_encode([
+            "success" => true,
+            "message" => "Grid guardado correctamente",
+            "id" => $nextId
+        ]);
     } else {
-        echo json_encode(["error" => "Error al guardar el grid en el archivo"]);
+        echo json_encode(["error" => "Error al guardar el grid"]);
     }
     exit;
 }
+
