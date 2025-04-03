@@ -3,6 +3,7 @@ import {isUserLoggedIn, cerrarSesion, doLogin} from './Login.js';
 import {Tile} from './Tile.js';
 import {resolveGrid} from "./GameLogic.js";
 import {pathCellPainter} from "./PathCellPainter.js";
+import {SaveGrid} from "./SaveGrid.js";
 
 
 const columnNumber = 4;
@@ -60,6 +61,12 @@ document.getElementById('comprobar').addEventListener('click', function () {
     responseGrid();
 });
 
+
+
+document.getElementById('SaveGrid').addEventListener('click', function () {
+    SaveCurrentGrid();
+});
+
 document.getElementById('cerrar-sesion').addEventListener("click", () => {
     cerrarSesion();
     sesionNoIniciada();
@@ -114,6 +121,25 @@ function responseGrid() {
             console.error("Error en la resolución del grid:", error);
             alert("Hubo un error en la resolución del grid.");
         });
+}
+
+function SaveCurrentGrid() {
+    const grid = gridManager.getGrid()
+
+    SaveGrid(grid)
+        .then(response => {
+            if (response.error) {
+                console.error("Error al guardar el grid: ", response.error);
+                alert("hubo un error en el grid");
+            } else {
+                alert("Se guardo el grid")
+            }
+
+        })
+        .catch(error => {
+            console.error(error)
+            alert("Hubo un error en la solicitud")
+        })
 }
 
 function updateCursor(activeTool) {

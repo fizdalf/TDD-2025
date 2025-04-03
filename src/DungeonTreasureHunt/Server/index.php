@@ -57,8 +57,11 @@ if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/play") {
 }
 
 
-if ($method === "POST" && $action === "save-grid") {
+if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/save-grid") {
+    header("Content-Type: application/json");
     $headers = getallheaders();
+
+    error_log("Input recibido: ".$input);
     if (!isset($headers['Authorization'])) {
         echo json_encode(["error" => "Token no proporcionado"]);
         exit;
@@ -74,12 +77,13 @@ if ($method === "POST" && $action === "save-grid") {
     $data = json_decode($input, true);
     if (!isset($data['grid'])) {
         echo json_encode(["error" => "Grid no proporcionado"]);
+        error_log("Datos recibidos: ".$data );
         exit;
     }
 
     $grid = $data['grid'];
 
-    $path = __DIR__ . "/Server/{$userData['username']}_gridSaved.txt";
+    $path = __DIR__ . "{$userData['username']}_gridSaved.txt";
 
     $gridContent = json_encode($grid);
 
