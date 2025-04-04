@@ -57,11 +57,11 @@ if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/play") {
 }
 
 
-if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/save-grid") {
+if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/grids") {
     header("Content-Type: application/json");
     $headers = getallheaders();
 
-    error_log("Input recibido: ".$input);
+    error_log("Input recibido: " . $input);
     if (!isset($headers['Authorization'])) {
         echo json_encode(["error" => "Token no proporcionado"]);
         exit;
@@ -107,7 +107,7 @@ if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/save-grid") {
     exit;
 }
 
-if ($method === "GET" && $_SERVER['REQUEST_URI'] === "/get-grid") {
+if ($method === "GET" && $_SERVER['REQUEST_URI'] === "/grids") {
     header("Content-Type: application/json");
     $headers = getallheaders();
 
@@ -125,11 +125,10 @@ if ($method === "GET" && $_SERVER['REQUEST_URI'] === "/get-grid") {
     }
 
 
-
     $path = __DIR__ . "{$userData['username']}_gridSaved.txt";
 
     if (!file_exists($path)) {
-        echo json_encode(["error" => "Archivo de grids no encontrado"]);
+        echo json_encode(["success" => true, "grids" => []]);
         exit;
     }
 

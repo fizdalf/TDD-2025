@@ -1,7 +1,7 @@
 export function SaveGrid(grid) {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token")
 
-    return fetch('/save-grid', {
+    return fetch('/grids', {
         method: 'POST',
         headers: {'Content-Type': 'application/json',
             'Authorization' : `Bearer ${token}`
