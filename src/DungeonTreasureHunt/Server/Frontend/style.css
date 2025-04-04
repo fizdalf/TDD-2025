@@ -465,26 +465,47 @@ h3{
 }
 
 .laberinto-guardado p{
-    margin-right: 55%;
-    font-size: 24px;
+    order: -1;
+    margin-right: auto;
+    margin-left: 16px;
+    font-size: 20px;
 }
 
 .edit img{
-    width: 19.2px;
-    height: 19.2px;
-    margin-right: 16px;
+    width: 25px;
+    height: 25px;
     filter: invert(1);
 }
 
-/*.edit img:hover{*/
-/*    background-color: #27303b;*/
-/*}*/
+.edit{
+    border-radius: 100%;
+    padding: 8px;
+    order: 1;
+}
+
+.edit:hover{
+    box-shadow: #000000 2.3px 2.3px 2.3px;
+}
+
+.vacio{
+    padding: 8px;
+    order: 1;
+}
 
 .delete img{
-    width: 19.2px;
-    height: 19.2px;
-    margin-right: 16px;
+    width: 25px;
+    height: 25px;
     filter: invert(1);
+}
+
+.delete{
+    border-radius: 100%;
+    padding: 8px;
+    order: 1;
+}
+
+.delete:hover{
+    box-shadow: #000000 2.3px 2.3px 2.3px;
 }
 
 #contenedor-laberintos-guardados{
@@ -512,8 +533,4 @@ h3{
 
 #contenedor-laberintos-guardados::-webkit-scrollbar-track {
     background-color: #27303b;
-}
-
-.laberinto-guardado p{
-    font-size: 16px;
 }

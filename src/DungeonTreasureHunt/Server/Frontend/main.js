@@ -75,9 +75,7 @@ const boton_comprobar_input = document.querySelector(".boton-comprobar-input");
 if(boton_comprobar_input){
     boton_comprobar_input.addEventListener("click", (event) => {
         event.preventDefault();
-        console.log("Boton Pulsado")
         const name = document.querySelector("#nombre-input input[type='text']");
-        console.log(name.value)
         SaveCurrentGrid(name.value);
     })
 }
