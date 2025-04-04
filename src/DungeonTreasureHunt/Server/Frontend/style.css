@@ -370,8 +370,9 @@ h3{
 #contenedor-laberintos{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+    overflow: hidden;
+    overflow-y: auto;
     box-shadow: #000000 2.3px 2.3px 2.3px;
     background-color: #27303b;
     border-radius: 16px;
@@ -381,3 +382,138 @@ h3{
     margin-top: 5vh;
 }
 
+#contenedor-laberintos h3{
+    font-size: 20px;
+    margin-left: 10%;
+}
+
+.contenedor-input{
+    align-self: center;
+    position: fixed;
+    top: 25%;
+    right:40%;
+    width: 440px;
+    height: 300px;
+    overflow: hidden;
+    background-color: rgba(46, 45, 45, 0.714);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 5px 10px rgb(133, 133, 133);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(0);
+    transition: transform 0.2s ease-in , height 0.2s ease;
+    z-index: 9999999999999;
+}
+
+.contenedor-input.active-popup{
+    transform: scale(1);
+}
+
+.boton-comprobar-input{
+    width: 100%;
+    height: 45px;
+    background: rgb(224, 224, 224);
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    color: black;
+    font-weight: 500;
+}
+
+.contenedor-input .icono-cierre{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    background: rgb(224, 224, 224);
+    font-size: 1.5em;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-bottom-left-radius: 20px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.laberinto-guardado{
+    font-size: 20px;
+    color: white;
+    background-color: rgb(44, 56, 68);
+    box-shadow: #000000 2.3px 2.3px 2.3px;
+    border-radius: 8px;
+    width: 80%;
+    height: 85px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    transition: .2s ease;
+    user-select: none;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+.laberinto-guardado:hover{
+    translate: 0px -5px;
+}
+
+.laberinto-guardado p{
+    margin-right: 55%;
+    font-size: 24px;
+}
+
+.edit img{
+    width: 19.2px;
+    height: 19.2px;
+    margin-right: 16px;
+    filter: invert(1);
+}
+
+/*.edit img:hover{*/
+/*    background-color: #27303b;*/
+/*}*/
+
+.delete img{
+    width: 19.2px;
+    height: 19.2px;
+    margin-right: 16px;
+    filter: invert(1);
+}
+
+#contenedor-laberintos-guardados{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    overflow: auto;
+    width: 97%;
+    height: 96%;
+}
+
+#contenedor-laberintos-guardados > * {
+    flex-shrink: 0;
+}
+
+#contenedor-laberintos-guardados::-webkit-scrollbar {
+    width: 8px;
+}
+
+#contenedor-laberintos-guardados::-webkit-scrollbar-thumb {
+    background: #1a1f25;
+    border-radius: 4px;
+}
+
+#contenedor-laberintos-guardados::-webkit-scrollbar-track {
+    background-color: #27303b;
+}
+
+.laberinto-guardado p{
+    font-size: 16px;
+}

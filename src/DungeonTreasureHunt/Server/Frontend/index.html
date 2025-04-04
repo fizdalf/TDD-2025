@@ -46,7 +46,12 @@
     </div>
 
     <div id="contenedor-laberintos">
-        <p>Inicia sesión para poder guardar laberintos</p>
+        <h3>Inicia sesión para poder guardar laberintos</h3>
+        <div id="contenedor-laberintos-guardados">
+            <div class="laberinto-guardado">
+                <p>Nombre Laberinto</p>
+            </div>
+        </div>
     </div>
 </article>
 
@@ -59,7 +64,7 @@
         <p>Comprobar</p>
     </button>
 
-    <button class="boton" id="SaveGrid" disabled>
+    <button class="boton" id="boton-input" onclick="abrir_input()" disabled>
         <p>Guardar</p>
     </button>
 </article>
@@ -116,6 +121,20 @@
         </form>
     </div>
 </div>
+
+<div class="contenedor-input">
+    <span id="cierre-input" class="icono-cierre"><img class="iconCierre" src="iconos/close-outline.svg" alt="cierre"></span>
+    <div class="forma-caja login">
+        <form action="#">
+            <div id="nombre-input" class="caja-input">
+                <span class="icono"><img class="iconPerson" src="iconos/person.svg" alt="name"></span>
+                <input type="text" required autocomplete="current-name">
+                <label>Nombre del laberinto</label>
+            </div>
+            <button type="submit" id="SaveGrid" class="boton-comprobar-input">Guardar</button>
+        </form>
+    </div>
+</div>
 <script src="tester.js"></script>
 <script src="GridManagerTest.js" type="module"></script>
 <script src="PathCellPainterTest.js" type="module"></script>
@@ -123,5 +142,6 @@
 <script src="getColorIndicesTest.js" type="module"></script>
 <script src="main.js" type="module"></script>
 <script src="Container.js"></script>
+<script src="Container-input.js"></script>
 </body>
 </html>

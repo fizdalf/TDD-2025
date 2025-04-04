@@ -17,6 +17,4 @@ function cerrar() {
     setTimeout(function () {
         contenedor.classList.remove("active");
     }, 500);
-
-
 }
