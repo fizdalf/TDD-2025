@@ -38,3 +38,15 @@ class Tester {
 }
 
 document.Tester = new Tester();
+
+// const Test = function (number) {
+//     const numberAsString = "my number is " + number;
+//     return function(){
+//             console.log(numberAsString);
+//     }
+// }
+// const invokableClass = Test(1);
+// const invokableClass2 = Test(2);
+//
+// invokableClass();
+// invokableClass2();

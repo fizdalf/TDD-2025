@@ -1,4 +1,3 @@
-
 const storageKey = "token";
 
 export function doLogin(username, password, rememberMe) {
@@ -22,7 +21,7 @@ export function doLogin(username, password, rememberMe) {
 
 
 export function isUserLoggedIn() {
-    return !!(localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey));
+    return !!(getCurrentToken());
 }
 
 
@@ -31,4 +30,10 @@ export function cerrarSesion() {
     sessionStorage.removeItem(storageKey);
 }
 
+/**
+ * @returns {string|null}
+ */
+export function getCurrentToken() {
+    return localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey)
+}
 

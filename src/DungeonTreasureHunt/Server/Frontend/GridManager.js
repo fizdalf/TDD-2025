@@ -111,4 +111,24 @@ export class GridManager {
         }
         this.#eventListeners[eventName].push(listener);
     }
+    setGrid(newGrid) {
+        if (!Array.isArray(newGrid) || !Array.isArray(newGrid[0])) {
+            console.error("El grid proporcionado no es válido");
+            return;
+        }
+
+        this.rows = newGrid.length;
+        this.cols = newGrid[0].length;
+        this.#grid = newGrid;
+
+
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                this.#informCellChanges(this.#grid[i][j], i, j);
+            }
+        }
+
+        this.#checkGameState();
+    }
 }
+
