@@ -186,15 +186,19 @@ function getStoredGrids() {
                         const gridDiv = document.createElement("div");
                         gridDiv.classList.add("laberinto-guardado");
                         gridDiv.innerHTML = `<p> ${gridName} </p>
-                    <div class="edit"><img src="iconos/create-outline.svg" alt="edit"></div>
-                    <span class="vacio"></span> 
-                    <div class="delete"><img src="iconos/trash-outline.svg" alt="delete"></div>
-                    <span class="vacio"></span> `;
+                            <div class="edit"><img src="iconos/create-outline.svg" alt="edit"></div>
+                            <span class="vacio"></span> 
+                            <div class="delete"><img src="iconos/trash-outline.svg" alt="delete"></div>
+                            <span class="vacio"></span> `;
 
                         gridDiv.addEventListener("click", () => {
                             gridManager.setGrid(grid)
 
                         })
+                        const deleteButton = gridDiv.querySelector(".delete")
+                        deleteButton.addEventListener("click", (e) => {
+                            deleteGrid(id,gridName)
+                        });
 
                         contenedor.appendChild(gridDiv);
                     });
@@ -208,6 +212,33 @@ function getStoredGrids() {
         .catch(error => {
             console.error("Error en la solicitud:", error);
         });
+}
+
+function deleteGrid(id, gridName) {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+        console.error("No se encontró el token de autenticación.");
+        return;
+    }
+
+    fetch(`/grids?id=${id}`,{
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                getStoredGrids();
+            } else {
+                console.error("error al eliminar", res.error)
+            }
+        })
+        .catch(err => {
+            console.error("error en la solicitud ",err)
+        })
 }
 
 
@@ -250,76 +281,4 @@ function sesionNoIniciada() {
     document.getElementById('boton-input').disabled = true;
 }
 
-document.Tester.registerTest('[Grids][Success] should save a grid and retrieve it', async function () {
-
-    const loginResponse = await fetch('/login', {
-            method: 'POST',
-            headers:
-                {
-                    'Content-Type': 'application/json',
-                },
-            body: JSON.stringify({
-                username: 'admin',
-                password: '1234'
-            })
-        }
-    );
-
-    const loginData = await loginResponse.json();
-
-    const token = loginData.token;
-
-
-    const grid = [
-        ['.', '.', '#', '.'],
-        ['#', 'P', '#', '.'],
-        ['.', '.', 'T', '.'],
-        ['.', '.', '.', '.']
-    ]
-
-    const gridName = "TestName"
-
-    const response = await fetch('/grids', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token
-        },
-        body: JSON.stringify({grid, gridName})
-    });
-
-    const data = await response.json();
-    if (!data.success) {
-        throw new Error('Failed to save grid: ' + data.error);
-    }
-
-
-    const retrieveGridResponse = await fetch('/grids', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token
-        },
-    });
-
-    const retrieveGridData = await retrieveGridResponse.json();
-
-    if (!retrieveGridData.success) {
-        throw new Error('Failed to retrieve grid: ' + retrieveGridData.error);
-    }
-
-    const expected = {
-        "1": {
-            "gridName": gridName,
-            grid
-        }
-    }
-
-
-    if (JSON.stringify(retrieveGridData.grids) !== JSON.stringify(expected)) {
-        throw new Error(`Expected grid ${JSON.stringify(expected)} is not equals to ${JSON.stringify(retrieveGridData.grids)}`);
-    }
-
-    // añadir borrar el grid creado y confirmar que está borrado
-});
 

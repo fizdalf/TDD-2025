@@ -177,3 +177,43 @@ if ($method === "GET" && $_SERVER['REQUEST_URI'] === "/grids") {
     echo json_encode(["success" => true, "grids" => $grids]);
     exit;
 }
+
+if ($method === "DELETE" && isset($_GET['id'])) {
+    header("Content-Type: application/json");
+    $headers = getallheaders();
+
+    if (!isset($headers['Authorization'])) {
+        echo json_encode(["error" => "Token no proporcionado"]);
+        exit;
+    }
+
+    $token = str_replace("Bearer ", "", $headers['Authorization']);
+    $userData = JwtHandler::verifyToken($token);
+
+    if (!$userData) {
+        echo json_encode(["error" => "Token inválido o expirado"]);
+        exit;
+    }
+
+    $idToDelete = $_GET['id'];
+
+    $path = __DIR__ . "{$userData['username']}_gridSaved.txt";
+
+    if (!file_exists($path)) {
+        echo json_encode(["error" => "No se encontró el archivo"]);
+        exit;
+    }
+
+    $grids = json_decode(file_get_contents($path), true);
+
+    if (!isset($grids[$idToDelete])) {
+        echo json_encode(["error" => "Grid no encontrado"]);
+        exit;
+    }
+
+    unset($grids[$idToDelete]);
+
+    file_put_contents($path, json_encode($grids));
+    echo json_encode(["success" => true]);
+    exit;
+}
