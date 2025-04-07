@@ -7,7 +7,15 @@ require __DIR__ . '/Backend/JWT.php';
 
 ini_set('html_errors', false);
 
-$method = $_SERVER["REQUEST_METHOD"];
+$method = $_SERVER['REQUEST_METHOD'];
+//$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+//
+//if (isset($routes[$method][$uri])) {
+//    $routes[$method][$uri]();
+//} else {
+//    http_response_code(404);
+//    echo json_encode(["error" => "Ruta no encontrada"]);
+//}
 
 
 $users = [
@@ -36,6 +44,148 @@ $users = [
 //$myInvokableClass = new Test();
 //
 //$myInvokableClass();
+
+
+//$routes = [
+//    "POST" => [
+//        "/login" => function () {
+//            header("Content-Type: application/json");
+//            $input = json_decode(file_get_contents("php://input"), true);
+//            if (!isset($input['username']) || !isset($input['password'])) {
+//                echo json_encode(["error" => "Faltan datos"]);
+//                return;
+//            }
+//
+//            global $users;
+//            $username = $input['username'];
+//            $password = $input['password'];
+//
+//            if (!isset($users[$username]) || $users[$username] !== $password) {
+//                echo json_encode(["error" => "Credenciales incorrectas"]);
+//                return;
+//            }
+//
+//            $token = JwtHandler::generateToken(["username" => $username]);
+//            echo json_encode(["token" => $token]);
+//        },
+//
+//        "/play" => function () {
+//            header("Content-Type: application/json");
+//            $input = json_decode(file_get_contents("php://input"), true);
+//            if (!$input) {
+//                echo json_encode(["error" => "No se pudo procesar el grid"]);
+//                return;
+//            }
+//
+//            $explorer = new \DungeonTreasureHunt\Backend\DungeonTreasureHuntExplorer();
+//            $path = $explorer->findPathToTreasure($input);
+//            echo json_encode($path);
+//        },
+//
+//        "/grids" => function () {
+//            header("Content-Type: application/json");
+//            $headers = getallheaders();
+//            if (!isset($headers['Authorization'])) {
+//                echo json_encode(["error" => "Token no proporcionado"]);
+//                return;
+//            }
+//
+//            $token = str_replace("Bearer ", "", $headers['Authorization']);
+//            $userData = JwtHandler::verifyToken($token);
+//            if (!$userData) {
+//                echo json_encode(["error" => "Token inválido o expirado"]);
+//                return;
+//            }
+//
+//            $input = json_decode(file_get_contents("php://input"), true);
+//            if (!isset($input['gridName']) || !isset($input['grid'])) {
+//                echo json_encode(["error" => "Grid o nombre no proporcionado"]);
+//                return;
+//            }
+//
+//            $gridName = $input['gridName'];
+//            $grid = $input['grid'];
+//
+//            $path = __DIR__ . "/{$userData['username']}_gridSaved.txt";
+//            $storedGrids = file_exists($path) ? json_decode(file_get_contents($path), true) : [];
+//            $newId = (count($storedGrids) > 0) ? max(array_keys($storedGrids)) + 1 : 1;
+//
+//            $storedGrids[$newId] = ['gridName' => $gridName, 'grid' => $grid];
+//
+//            if (file_put_contents($path, json_encode($storedGrids))) {
+//                echo json_encode(["success" => true]);
+//            } else {
+//                echo json_encode(["error" => "Error al guardar"]);
+//            }
+//        }
+//    ],
+//    "GET" => [
+//        "/grids" => function () {
+//            header("Content-Type: application/json");
+//            $headers = getallheaders();
+//            if (!isset($headers['Authorization'])) {
+//                echo json_encode(["error" => "Token no proporcionado"]);
+//                return;
+//            }
+//
+//            $token = str_replace("Bearer ", "",$headers['Authorization']);
+//            $userData = JwtHandler::verifyToken($token);
+//            if (!$userData) {
+//                echo json_encode(["error" => "Token invalido o expirado"]);
+//                return;
+//            }
+//
+//            $path = __DIR__."/{$userData['username']}_gridsSaved.txt";
+//            if (!file_exists($path) || empty(file_get_contents($path))) {
+//                echo json_encode(["success" => true, "grids" => []]);
+//                return;
+//            }
+//
+//            $grids = json_decode(file_get_contents($path),true);
+//            echo json_encode(["success" => true, "grids" => $grids]);
+//        }
+//    ],
+//    "DELETE" => [
+//        "/grids" => function () {
+//            header("Content-Type: application/json");
+//            $headers = getallheaders();
+//            if (!isset($headers['Authorization'])) {
+//                echo json_encode(["error" => "Token no proporcionado"]);
+//                return;
+//            }
+//
+//            $token = str_replace("Bearer ", "", $headers['Authorization']);
+//            $userData = JwtHandler::verifyToken($token);
+//            if (!$userData) {
+//                echo json_encode(["error" => "Token inválido o expirado"]);
+//                return;
+//            }
+//
+//            if (!isset($_GET['id'])) {
+//                echo json_encode(["error" => "ID no proporcionado"]);
+//                return;
+//            }
+//
+//            $idToDelete = $_GET['id'];
+//            $path = __DIR__ . "/{$userData['username']}_gridSaved.txt";
+//            if (!file_exists($path)) {
+//                echo json_encode(["error" => "Archivo no encontrado"]);
+//                return;
+//            }
+//
+//            $grids = json_decode(file_get_contents($path), true);
+//            if (!isset($grids[$idToDelete])) {
+//                echo json_encode(["error" => "Grid no encontrado"]);
+//                return;
+//            }
+//
+//            unset($grids[$idToDelete]);
+//            file_put_contents($path, json_encode($grids));
+//            echo json_encode(["success" => true]);
+//        }
+//    ]
+//];
+
 
 
 if ($method === "POST" && $_SERVER['REQUEST_URI'] === "/login") {

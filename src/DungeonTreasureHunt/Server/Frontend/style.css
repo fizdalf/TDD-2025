@@ -492,19 +492,19 @@ h3{
     order: 1;
 }
 
-.delete img{
+.abrir-delete img{
     width: 25px;
     height: 25px;
     filter: invert(1);
 }
 
-.delete{
+.abrir-delete{
     border-radius: 100%;
     padding: 8px;
     order: 1;
 }
 
-.delete:hover{
+.abrir-delete:hover{
     box-shadow: #000000 2.3px 2.3px 2.3px;
 }
 
@@ -533,4 +533,67 @@ h3{
 
 #contenedor-laberintos-guardados::-webkit-scrollbar-track {
     background-color: #27303b;
+}
+
+.contenedor-confirmar{
+    align-self: center;
+    position: fixed;
+    top: 35%;
+    right:40%;
+    width: 440px;
+    height: 200px;
+    overflow: hidden;
+    background-color: rgba(46, 45, 45, 0.714);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 5px 10px rgb(133, 133, 133);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transform: scale(0);
+    transition: transform 0.2s ease-in , height 0.2s ease;
+    z-index: 9999999999999;
+}
+
+.contenedor-confirmar.active-popup{
+    transform: scale(1);
+}
+
+.contenedor-confirmar .icono-cierre{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    background: rgb(224, 224, 224);
+    font-size: 1.5em;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-bottom-left-radius: 20px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.boton-comprobar-confirmar{
+    width: 100%;
+    height: 45px;
+    background: rgb(224, 224, 224);
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    color: black;
+    font-weight: 500;
+}
+
+.confirmar{
+    display: flex;
+    width: 75%;
+    gap: 32px;
 }

@@ -61,6 +61,7 @@ document.getElementById('cierre-input').addEventListener('click', function () {
     cerrar_input();
 });
 
+
 document.getElementById('comprobar').addEventListener('click', function () {
     responseGrid();
 
@@ -188,19 +189,24 @@ function getStoredGrids() {
                         gridDiv.innerHTML = `<p> ${gridName} </p>
                             <div class="edit"><img src="iconos/create-outline.svg" alt="edit"></div>
                             <span class="vacio"></span> 
-                            <div class="delete"><img src="iconos/trash-outline.svg" alt="delete"></div>
+                            <div class="abrir-delete" ><img src="iconos/trash-outline.svg" alt="delete"></div>
                             <span class="vacio"></span> `;
+
+                        contenedor.appendChild(gridDiv);
 
                         gridDiv.addEventListener("click", () => {
                             gridManager.setGrid(grid)
 
                         })
-                        const deleteButton = gridDiv.querySelector(".delete")
-                        deleteButton.addEventListener("click", (e) => {
-                            deleteGrid(id,gridName)
+                        const deleteConfirm = gridDiv.querySelector('.abrir-delete');
+                        deleteConfirm.addEventListener('click', async () => {
+                            const result = await abrir_confirmar("¿Está seguro que desea eliminiar el Grid: " + gridName + "?");
+                            if (result) {
+                                deleteGrid(id);
+                            }
                         });
 
-                        contenedor.appendChild(gridDiv);
+
                     });
                 } else {
                     console.error("contenedor no existe")
@@ -214,14 +220,14 @@ function getStoredGrids() {
         });
 }
 
-function deleteGrid(id, gridName) {
+function deleteGrid(id) {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) {
         console.error("No se encontró el token de autenticación.");
         return;
     }
 
-    fetch(`/grids?id=${id}`,{
+    fetch(`/grids?id=${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -237,7 +243,7 @@ function deleteGrid(id, gridName) {
             }
         })
         .catch(err => {
-            console.error("error en la solicitud ",err)
+            console.error("error en la solicitud ", err)
         })
 }
 
