@@ -23,7 +23,6 @@ class RouterTest extends TestCase
     #[Test]
     public function it_should_return_the_correct_controller_when_requesting_it()
     {
-
         $sut = new Router();
 
         $controller = function () {
@@ -31,9 +30,11 @@ class RouterTest extends TestCase
         };
         $sut->register('/login', 'POST', $controller);
 
-        $receivedController = $sut->getController('/login', 'POST');
+        $result = $sut->getController('/login', 'POST');
 
-        $this->assertNotNull($controller);
+        $receivedController = $result[0] ?? null;
+
+        $this->assertNotNull($receivedController);
         $this->assertEquals($controller, $receivedController);
     }
 
@@ -65,5 +66,22 @@ class RouterTest extends TestCase
         $controller = $sut->getController('/login', 'GET');
 
         $this->assertNull($controller);
+    }
+
+    #[Test]
+    public function it_should_match_route_with_parameter()
+    {
+        $sut = new Router();
+
+        $sut->register('/grids/{id}','DELETE',function ($params) {
+            return "Deleted ID: ". $params['id'];
+        });
+
+        [$controller, $params] = $sut->getController('/grids/69', 'DELETE');
+
+        $this->assertNotNull($controller);
+
+        $response = $controller($params);
+        $this->assertEquals('Deleted ID: 69', $response);
     }
 }
