@@ -200,7 +200,7 @@ function getStoredGrids() {
                         })
                         const deleteConfirm = gridDiv.querySelector('.abrir-delete');
                         deleteConfirm.addEventListener('click', async () => {
-                            const result = await abrir_confirmar("¿Está seguro que desea eliminiar el Grid: " + gridName + "?");
+                            const result = await abrir_confirmar();
                             if (result) {
                                 deleteGrid(id);
                             }

@@ -6,12 +6,11 @@ const cancelButton = contenedorConfirmar.querySelector('#cierre-confirmar2');
 let cancelFn = null;
 let acceptFn = null;
 
-function abrir_confirmar(mensaje) {
+function abrir_confirmar() {
 
     return new Promise((resolve, reject) => {
         try {
 
-            contenedorConfirmar.querySelector('.mensaje').textContent = mensaje;
             contenedorConfirmar.classList.add("active-popup");
 
 
