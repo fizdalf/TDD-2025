@@ -1,9 +1,8 @@
 import {GridManager} from "./GridManager.js";
-import {isUserLoggedIn, cerrarSesion, doLogin} from './Login.js';
 import {Tile} from './Tile.js';
 import {resolveGrid} from "./GameLogic.js";
 import {pathCellPainter} from "./PathCellPainter.js";
-import {SaveGrid} from "./SaveGrid.js";
+import sessionManager, { login, logout, isAuthenticated, fetchWithAuth } from './SessionManager.js';
 
 
 const columnNumber = 4;
@@ -68,7 +67,7 @@ document.getElementById('comprobar').addEventListener('click', function () {
 });
 
 document.getElementById('cerrar-sesion').addEventListener("click", () => {
-    cerrarSesion();
+    sessionManager.logout();
     sesionNoIniciada();
 });
 
@@ -85,15 +84,11 @@ const botonLogin = document.querySelector(".boton-login");
 if (botonLogin) {
     botonLogin.addEventListener("click", (event) => {
         event.preventDefault();
-        const usernameInput = document.querySelector(".caja-input input[type='text']");
-        const passwordInput = document.querySelector(".caja-input input[type='password']");
-        const rememberMeInput = document.querySelector("input[type='checkbox']");
+        const username = document.querySelector(".caja-input input[type='text']").value;
+        const password = document.querySelector(".caja-input input[type='password']").value;
+        const rememberMe = document.querySelector("input[type='checkbox']").checked;
 
-        const rememberMe = rememberMeInput.checked;
-        const username = usernameInput.value;
-        const password = passwordInput.value;
-
-        doLogin(username, password, rememberMe)
+        sessionManager.login(username, password, rememberMe)
             .then(() => {
                 sesionIniciada();
                 cerrar();
@@ -102,14 +97,14 @@ if (botonLogin) {
                 alert('Hubo un error al intentar iniciar sesión: ' + error);
             })
             .finally(() => {
-                usernameInput.value = "";
-                passwordInput.checked = false;
+                document.querySelector(".caja-input input[type='text']").value = "";
+                document.querySelector("input[type='checkbox']").checked = false;
             });
     });
 }
 
 function checkAlreadyLogged() {
-    if (isUserLoggedIn()) {
+    if (sessionManager.isLoggedIn()) {
         sesionIniciada();
     }
 }
@@ -135,69 +130,64 @@ function responseGrid() {
 }
 
 function SaveCurrentGrid(gridName) {
-    const grid = gridManager.getGrid()
+    const grid = gridManager.getGrid();
 
     if (!gridName) {
         alert("El grid no tiene nombre, no se guardará.");
         return;
     }
+
     cerrar_input();
-    SaveGrid(grid, gridName)
+
+    sessionManager.fetchWithAuth('/grids', {
+        method: 'POST',
+        body: JSON.stringify({ grid, gridName })
+    })
+        .then(response => response.json())
         .then(response => {
             if (response.error) {
-                console.error("Error al guardar el grid: ", response.error);
                 alert("Hubo un error al guardar el grid");
             } else {
                 getStoredGrids();
             }
         })
         .catch(error => {
-            console.error(error);
             alert("Hubo un error en la solicitud");
         });
 }
 
 function getStoredGrids() {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (!token) {
+    if (!sessionManager.isLoggedIn()) {
         console.error("No se encontró el token de autenticación.");
         return;
     }
 
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    };
-
-    fetch('/grids', {
-        method: 'GET',
-        headers: headers
-    })
+    sessionManager.fetchWithAuth('/grids')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const contenedor = document.getElementById("contenedor-laberintos-guardados");
                 contenedor.innerHTML = "";
+
                 if (contenedor) {
                     Object.keys(data.grids).forEach(id => {
                         const gridInfo = data.grids[id];
-                        const gridName = gridInfo.gridName;
-                        const grid = gridInfo.grid;
-
                         const gridDiv = document.createElement("div");
                         gridDiv.classList.add("laberinto-guardado");
-                        gridDiv.innerHTML = `<p> ${gridName} </p>
-                            <div class="edit"><img src="iconos/create-outline.svg" alt="edit"></div>
-                            <span class="vacio"></span> 
-                            <div class="abrir-delete" ><img src="iconos/trash-outline.svg" alt="delete"></div>
-                            <span class="vacio"></span> `;
+                        gridDiv.innerHTML = `<p> ${gridInfo.gridName} </p>
+                                            <div class="edit"><img src="iconos/create-outline.svg" alt="edit"></div>
+                                            <span class="vacio"></span> 
+                                            <div class="abrir-delete"><img src="iconos/trash-outline.svg" alt="delete"></div>
+                                            <span class="vacio"></span>`;
 
                         contenedor.appendChild(gridDiv);
 
                         gridDiv.addEventListener("click", () => {
-                            gridManager.setGrid(grid)
+                            gridManager.resetGrid();
+                            resetGridUI();
+                            gridManager.setGrid(gridInfo.grid);
+                        });
 
-                        })
                         const deleteConfirm = gridDiv.querySelector('.abrir-delete');
                         deleteConfirm.addEventListener('click', async () => {
                             const result = await abrir_confirmar();
@@ -205,11 +195,7 @@ function getStoredGrids() {
                                 deleteGrid(id);
                             }
                         });
-
-
                     });
-                } else {
-                    console.error("contenedor no existe")
                 }
             } else {
                 console.error("Error al obtener los grids:", data.error);
