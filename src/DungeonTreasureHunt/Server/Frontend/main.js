@@ -207,30 +207,18 @@ function getStoredGrids() {
 }
 
 function deleteGrid(id) {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (!token) {
-        console.error("No se encontró el token de autenticación.");
-        return;
-    }
-
-    fetch(`/grids?id=${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    })
+    sessionManager.fetchWithAuth(`/grids/${id}`, { method: 'DELETE' })
         .then(res => res.json())
         .then(res => {
             if (res.success) {
                 getStoredGrids();
             } else {
-                console.error("error al eliminar", res.error)
+                console.error("Error al eliminar:", res.error);
             }
         })
         .catch(err => {
-            console.error("error en la solicitud ", err)
-        })
+            console.error("Error en la solicitud:", err);
+        });
 }
 
 

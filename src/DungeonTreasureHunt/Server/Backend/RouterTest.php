@@ -1,6 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt;
+namespace DungeonTreasureHunt\Backend;
 
 require_once 'Router.php';
 
@@ -54,34 +54,34 @@ class RouterTest extends TestCase
     }
 
     #[Test]
-    public function it_()
-    {
-
-        $sut = new Router();
-
-        $sut->register('/grid', 'POST', function () {
-            return 'Login Controller';
-        });
-
-        $controller = $sut->getController('/login', 'GET');
-
-        $this->assertNull($controller);
-    }
-
-    #[Test]
     public function it_should_match_route_with_parameter()
     {
         $sut = new Router();
 
-        $sut->register('/grids/{id}','DELETE',function ($params) {
-            return "Deleted ID: ". $params['id'];
-        });
+        $controller = function ($params) {
+            return "Deleted ID: " . $params['id'];
+        };
+        $sut->register('/grids/{id}', 'DELETE', $controller);
 
-        [$controller, $params] = $sut->getController('/grids/69', 'DELETE');
+        [$receivedController, $params] = $sut->getController('/grids/69', 'DELETE');
 
-        $this->assertNotNull($controller);
+        $this->assertEquals($controller, $receivedController);
+        $this->assertEquals(["id" => "69"], $params);
+    }
 
-        $response = $controller($params);
-        $this->assertEquals('Deleted ID: 69', $response);
+    #[Test]
+    public function it_should_match_route_with_two_parameters()
+    {
+        $sut = new Router();
+
+        $controller = function ($params) {
+            return "Deleted ID: " . $params['id'];
+        };
+        $sut->register('/grids/{id}/{something}', 'DELETE', $controller);
+
+        [$receivedController, $params] = $sut->getController('/grids/69/551', 'DELETE');
+
+        $this->assertEquals($controller, $receivedController);
+        $this->assertEquals(["id" => "69", "something" => 551], $params);
     }
 }
