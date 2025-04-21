@@ -7,7 +7,7 @@ use DungeonTreasureHunt\Backend\Response;
 
 class GridsPostController
 {
-    public function __invoke(): void
+    public function __invoke(): Response
     {
         $response = new Response();
         $headers = getallheaders();
@@ -17,8 +17,7 @@ class GridsPostController
             $response->setStatusCode(401);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "Token no proporcionado"]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $token = str_replace("Bearer ", "", $headers['Authorization']);
@@ -28,8 +27,7 @@ class GridsPostController
             $response->setStatusCode(401);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "Token inv\u00e1lido o expirado"]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $data = json_decode($input, true);
@@ -37,8 +35,7 @@ class GridsPostController
             $response->setStatusCode(400);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "Faltan datos"]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $path = __DIR__ . "/{$userData['username']}_gridSaved.txt";
@@ -55,6 +52,6 @@ class GridsPostController
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "No se pudo guardar"]));
         }
-        $response->send();
+        return $response;
     }
 }

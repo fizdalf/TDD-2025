@@ -7,7 +7,7 @@ use DungeonTreasureHunt\Backend\Response;
 
 class GridsGetController
 {
-    public function __invoke(): void
+    public function __invoke(): Response
     {
         $response = new Response();
         $headers = getallheaders();
@@ -16,8 +16,7 @@ class GridsGetController
             $response->setStatusCode(401);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "Token no proporcionado"]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $token = str_replace("Bearer ", "", $headers['Authorization']);
@@ -27,8 +26,7 @@ class GridsGetController
             $response->setStatusCode(401);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "Token inv\u00e1lido o expirado"]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $path = __DIR__ . "/{$userData['username']}_gridSaved.txt";
@@ -36,8 +34,7 @@ class GridsGetController
         if (!file_exists($path)) {
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["success" => true, "grids" => []]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $fileContent = file_get_contents($path);
@@ -45,6 +42,6 @@ class GridsGetController
 
         $response->setHeader("Content-Type", "application/json");
         $response->setBody(json_encode(["success" => true, "grids" => $grids]));
-        $response->send();
+        return $response;
     }
 }

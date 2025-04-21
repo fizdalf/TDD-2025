@@ -10,7 +10,7 @@ use function json_encode as json_encode2;
 
 class LoginController
 {
-    public function __invoke(): void
+    public function __invoke(): Response
     {
         $response = new Response();
 
@@ -25,8 +25,7 @@ class LoginController
             $response->setStatusCode(400);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode2(["error" => "Faltan datos"]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $username = $input['username'];
@@ -36,13 +35,12 @@ class LoginController
             $response->setStatusCode(401);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode1(["error" => "Credenciales incorrectas"]));
-            $response->send();
-            return;
+            return $response;
         }
 
         $token = JwtHandler::generateToken(["username" => $username]);
         $response->setHeader("Content-Type", "application/json");
         $response->setBody(json_encode(["token" => $token]));
-        $response->send();
+        return $response;
     }
 }

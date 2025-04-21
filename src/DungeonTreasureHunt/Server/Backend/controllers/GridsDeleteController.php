@@ -27,8 +27,7 @@ class GridsDeleteController
             $response->setStatusCode(401);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "Token inv\u00e1lido o expirado"]));
-            $response->send();
-            return null;
+            return $response;
         }
 
         $idToDelete = $params['id'] ?? null;
@@ -36,8 +35,7 @@ class GridsDeleteController
             $response->setStatusCode(400);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "ID no proporcionado"]));
-            $response->send();
-            return null;
+            return $response;
         }
 
         $path = __DIR__ . "/../{$userData['username']}_gridSaved.txt";
@@ -46,8 +44,7 @@ class GridsDeleteController
             $response->setStatusCode(404);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "No se encontr\u00f3 el archivo"]));
-            $response->send();
-            return null;
+            return $response;
         }
 
         $grids = json_decode(file_get_contents($path), true);
@@ -55,8 +52,7 @@ class GridsDeleteController
             $response->setStatusCode(404);
             $response->setHeader("Content-Type", "application/json");
             $response->setBody(json_encode(["error" => "Grid no encontrado"]));
-            $response->send();
-            return null;
+            return $response;
         }
 
         unset($grids[$idToDelete]);
@@ -64,7 +60,6 @@ class GridsDeleteController
 
         $response->setHeader("Content-Type", "application/json");
         $response->setBody(json_encode(["success" => true]));
-        $response->send();
-        return null;
+        return $response;
     }
 }
