@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt\Backend\models\Tile;
+use DungeonTreasureHunt\Backend\services\DungeonTreasureHunt;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

@@ -1,12 +1,19 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\services;
 
 class Response
 {
     private array $headers = [];
-    private int $statusCode = 200;
+    private int $statusCode;
     private mixed $body;
+
+    public function __construct(int $statusCode = 200, mixed $body = null)
+    {
+        $this->statusCode = $statusCode;
+        $this->body = $body;
+        $this->setHeader("Content-Type", "application/json");
+    }
 
     public function setHeader(string $key, string $value): void
     {
@@ -21,6 +28,12 @@ class Response
     public function setBody(string $body): void
     {
         $this->body = $body;
+    }
+
+    public function setJsonBody(array $body): void
+    {
+        $this->body = json_encode($body);
+        $this->setHeader("Content-Type", "application/json");
     }
 
     public function send(): void

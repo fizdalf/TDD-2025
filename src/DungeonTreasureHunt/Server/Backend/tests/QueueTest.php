@@ -1,7 +1,8 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt\Backend\models\Queue;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

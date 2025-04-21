@@ -1,9 +1,9 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\controllers;
 
-use JwtHandler;
-use DungeonTreasureHunt\Backend\Response;
+use DungeonTreasureHunt\Backend\services\JwtHandler;
+use DungeonTreasureHunt\Backend\services\Response;
 
 
 class GridsDeleteController

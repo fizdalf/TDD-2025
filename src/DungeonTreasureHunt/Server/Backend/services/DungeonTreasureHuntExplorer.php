@@ -1,6 +1,15 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\services;
+
+use DungeonTreasureHunt\Backend\models\Direction;
+use DungeonTreasureHunt\Backend\models\Grid;
+use DungeonTreasureHunt\Backend\models\Path;
+use DungeonTreasureHunt\Backend\models\Position;
+use DungeonTreasureHunt\Backend\models\PossibleMovement;
+use DungeonTreasureHunt\Backend\models\Queue;
+use DungeonTreasureHunt\Backend\models\Tile;
+use DungeonTreasureHunt\Backend\models\VisitedTile;
 
 require_once 'Direction.php';
 require_once 'Tile.php';

@@ -1,6 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\services;
 
 class Router
 {

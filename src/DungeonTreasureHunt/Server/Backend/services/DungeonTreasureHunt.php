@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\services;
 
 require_once 'Direction.php';
 require_once 'Tile.php';

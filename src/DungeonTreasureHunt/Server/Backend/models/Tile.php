@@ -1,6 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\models;
 
 enum Tile : string
 {

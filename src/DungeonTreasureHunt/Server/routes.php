@@ -13,12 +13,12 @@ require_once __DIR__.'/Backend/GridsPostController.php';
 require_once __DIR__.'/Backend/GridsGetController.php';
 require_once __DIR__.'/Backend/GridsDeleteController.php';
 
-use DungeonTreasureHunt\Backend\Router;
-use DungeonTreasureHunt\Backend\GridsDeleteController;
-use DungeonTreasureHunt\Backend\GridsGetController;
-use DungeonTreasureHunt\Backend\GridsPostController;
-use DungeonTreasureHunt\Backend\LoginController;
-use DungeonTreasureHunt\Backend\PlayController;
+use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
+use DungeonTreasureHunt\Backend\controllers\GridsGetController;
+use DungeonTreasureHunt\Backend\controllers\GridsPostController;
+use DungeonTreasureHunt\Backend\controllers\LoginController;
+use DungeonTreasureHunt\Backend\controllers\PlayController;
+use DungeonTreasureHunt\Backend\services\Router;
 
 
 $router = new Router();

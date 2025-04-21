@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\models;
 
 class Position implements \JsonSerializable
 {

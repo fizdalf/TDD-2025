@@ -1,9 +1,9 @@
 <?php
 
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\models;
 
-use DungeonTreasureHunt\Backend;
+use DungeonTreasureHunt\Backend\models;
 
 class Grid
 {
@@ -19,7 +19,7 @@ class Grid
 
     }
 
-    public function getPlayer(): ?Backend\Position
+    public function getPlayer(): ?models\Position
     {
         foreach ($this->dungeon as $y => $row) {
             $x = array_search(Tile::Player, $row, true);

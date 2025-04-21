@@ -1,6 +1,10 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\services;
+
+use DungeonTreasureHunt\Backend\models\Position;
+use DungeonTreasureHunt\Backend\models\Tile;
+use DungeonTreasureHunt\Backend\models\VisitedTile;
 
 class MoveChecker
 {

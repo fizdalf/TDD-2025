@@ -1,13 +1,14 @@
 <?php
 
 
+namespace DungeonTreasureHunt\Backend\tests;
 require_once 'Position.php';
 require_once 'PossibleMovement.php';
 require_once 'Direction.php';
 
-use DungeonTreasureHunt\Backend\Direction;
-use DungeonTreasureHunt\Backend\Position;
-use DungeonTreasureHunt\Backend\PossibleMovement;
+use DungeonTreasureHunt\Backend\models\Direction;
+use DungeonTreasureHunt\Backend\models\Position;
+use DungeonTreasureHunt\Backend\models\PossibleMovement;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +16,7 @@ class SerializationTest extends TestCase
 {
     #[Test]
     public function it_should_serialize_the_way_we_expect_it()
-   {
+    {
         $data = [
             new PossibleMovement(
                 new Position(0, 1),
@@ -53,6 +54,6 @@ class SerializationTest extends TestCase
 
         $this->assertEquals($expectedData, $json);
 
-   }
+    }
 }
 

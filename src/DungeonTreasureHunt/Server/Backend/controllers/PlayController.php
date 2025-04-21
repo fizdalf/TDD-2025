@@ -1,9 +1,9 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\DungeonTreasureHuntExplorer;
-use DungeonTreasureHunt\Backend\Response;
+use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
+use DungeonTreasureHunt\Backend\services\Response;
 use function json_encode;
 use function json_encode as json_encode1;
 

@@ -1,6 +1,6 @@
 <?php
 
-use DungeonTreasureHunt\Backend\Response;
+use DungeonTreasureHunt\Backend\services\Response;
 
 require_once __DIR__ . '/routes.php';
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\tests;
 
 require_once 'Router.php';
 
+use DungeonTreasureHunt\Backend\services\Router;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

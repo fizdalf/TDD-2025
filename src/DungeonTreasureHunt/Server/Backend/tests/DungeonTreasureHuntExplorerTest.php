@@ -1,7 +1,12 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend;
+namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt\Backend\models\Direction;
+use DungeonTreasureHunt\Backend\models\Position;
+use DungeonTreasureHunt\Backend\models\PossibleMovement;
+use DungeonTreasureHunt\Backend\models\Tile;
+use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
