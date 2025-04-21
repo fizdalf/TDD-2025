@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego del laberinto</title>
-    <link rel="shortcut icon" href="imagenes/laberinto2.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../imagenes/laberinto2.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -65,17 +65,17 @@
     </button>
 </article>
 <div class="contenedor">
-    <span id="cierre" class="icono-cierre"><img class="iconCierre" src="iconos/close-outline.svg" alt="cierre"></span>
+    <span id="cierre" class="icono-cierre"><img class="iconCierre" src="../iconos/close-outline.svg" alt="cierre"></span>
     <div class="forma-caja login">
         <h2>Iniciar sesión</h2>
         <form action="#">
             <div class="caja-input">
-                <span class="icono"><img class="iconPerson" src="iconos/person.svg" alt="user"></span>
+                <span class="icono"><img class="iconPerson" src="../iconos/person.svg" alt="user"></span>
                 <input type="text" required autocomplete="current-username">
                 <label>Nombre de usuario</label>
             </div>
             <div class="caja-input">
-                <span class="icono"><img class="lockClosed" src="iconos/lock-closed.svg" alt="lock-closed"></ion-icon></span>
+                <span class="icono"><img class="lockClosed" src="../iconos/lock-closed.svg" alt="lock-closed"></ion-icon></span>
                 <input type="password" required autocomplete="current-password">
                 <label>Contraseña</label>
             </div>
@@ -97,12 +97,12 @@
         <h2>Registrarse</h2>
         <form action="#">
             <div class="caja-input">
-                <span class="icono"><img class="iconPerson" src="iconos/person.svg" alt="user"></span>
+                <span class="icono"><img class="iconPerson" src="../iconos/person.svg" alt="user"></span>
                 <input type="text" required autocomplete="current-username">
                 <label>Usuario</label>
             </div>
             <div class="caja-input">
-                <span class="icono"><img class="lockClosed" src="iconos/lock-closed.svg" alt="lock-closed"></ion-icon></span>
+                <span class="icono"><img class="lockClosed" src="../iconos/lock-closed.svg" alt="lock-closed"></ion-icon></span>
                 <input type="password" required autocomplete="current-password">
                 <label>Contraseña</label>
             </div>
@@ -119,11 +119,11 @@
 </div>
 
 <div class="contenedor-input">
-    <span id="cierre-input" class="icono-cierre"><img class="iconCierre" src="iconos/close-outline.svg" alt="cierre"></span>
+    <span id="cierre-input" class="icono-cierre"><img class="iconCierre" src="../iconos/close-outline.svg" alt="cierre"></span>
     <div class="forma-caja login">
         <form action="#">
             <div id="nombre-input" class="caja-input">
-                <span class="icono"><img class="iconPerson" src="iconos/person.svg" alt="name"></span>
+                <span class="icono"><img class="iconPerson" src="../iconos/person.svg" alt="name"></span>
                 <input type="text" required autocomplete="current-name">
                 <label>Nombre del laberinto</label>
             </div>
@@ -133,7 +133,7 @@
 </div>
 
 <div class="contenedor-confirmar">
-    <span id="cierre-confirmar" class="icono-cierre"><img class="iconCierre" src="iconos/close-outline.svg" alt="cierre"></span>
+    <span id="cierre-confirmar" class="icono-cierre"><img class="iconCierre" src="../iconos/close-outline.svg" alt="cierre"></span>
     <div class="mensaje">
 
     </div>
@@ -142,15 +142,15 @@
         <button type="submit" id="deleteGrid" class="boton-comprobar-confirmar">Eliminar</button>
     </div>
 </div>
-<script src="tester.js"></script>
-<script src="GridManagerTest.js" type="module"></script>
-<script src="ApiPathTest.js" type="module"></script>
-<script src="PathCellPainterTest.js" type="module"></script>
-<script src="GameLogicTest.js" type="module"></script>
-<script src="getColorIndicesTest.js" type="module"></script>
-<script src="main.js" type="module"></script>
-<script src="Container.js"></script>
-<script src="Container-input.js"></script>
-<script src="Container-confirmar.js"></script>
+<script src="../core/tester.js"></script>
+<script src="../tests/GridManagerTest.js" type="module"></script>
+<script src="../tests/ApiPathTest.js" type="module"></script>
+<script src="../tests/PathCellPainterTest.js" type="module"></script>
+<script src="../tests/GameLogicTest.js" type="module"></script>
+<script src="../tests/getColorIndicesTest.js" type="module"></script>
+<script src="../core/main.js" type="module"></script>
+<script src="../components/Container.js"></script>
+<script src="../components/Container-input.js"></script>
+<script src="../components/Container-confirmar.js"></script>
 </body>
 </html>

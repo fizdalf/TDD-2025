@@ -1,4 +1,4 @@
-import {getCurrentToken} from "./Login.js";
+import {getCurrentToken} from "../services/Login.js";
 
 export function SaveGrid(grid, gridName) {
     const token = getCurrentToken();

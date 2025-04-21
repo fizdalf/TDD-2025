@@ -1,4 +1,4 @@
-import {Tile} from './Tile.js';
+import {Tile} from '../components/Tile.js';
 
 export class GridManager {
     #grid;

@@ -1,8 +1,8 @@
-import {GridManager} from "./GridManager.js";
-import {Tile} from './Tile.js';
-import {resolveGrid} from "./GameLogic.js";
-import {pathCellPainter} from "./PathCellPainter.js";
-import sessionManager, { login, logout, isAuthenticated, fetchWithAuth } from './SessionManager.js';
+import {GridManager} from "../logic/GridManager.js";
+import {Tile} from '../components/Tile.js';
+import {resolveGrid} from "../logic/GameLogic.js";
+import {pathCellPainter} from "../components/PathCellPainter.js";
+import sessionManager, { login, logout, isAuthenticated, fetchWithAuth } from '../logic/SessionManager.js';
 
 
 const columnNumber = 4;
@@ -175,9 +175,9 @@ function getStoredGrids() {
                         const gridDiv = document.createElement("div");
                         gridDiv.classList.add("laberinto-guardado");
                         gridDiv.innerHTML = `<p> ${gridInfo.gridName} </p>
-                                            <div class="edit"><img src="iconos/create-outline.svg" alt="edit"></div>
+                                            <div class="edit"><img src="../iconos/create-outline.svg" alt="edit"></div>
                                             <span class="vacio"></span> 
-                                            <div class="abrir-delete"><img src="iconos/trash-outline.svg" alt="delete"></div>
+                                            <div class="abrir-delete"><img src="../iconos/trash-outline.svg" alt="delete"></div>
                                             <span class="vacio"></span>`;
 
                         contenedor.appendChild(gridDiv);

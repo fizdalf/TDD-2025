@@ -1,4 +1,4 @@
-import {resolveGrid} from "./GameLogic.js";
+import {resolveGrid} from "../logic/GameLogic.js";
 
 document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solved laberynth', async function () {
 

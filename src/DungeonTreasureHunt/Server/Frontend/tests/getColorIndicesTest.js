@@ -1,4 +1,4 @@
-import { getColorIndices } from "./getColorIndices.js";
+import { getColorIndices } from "../logic/getColorIndices.js";
 
 document.Tester.registerTest('[GetColorIndices] it should return correct indices from movements', function () {
 

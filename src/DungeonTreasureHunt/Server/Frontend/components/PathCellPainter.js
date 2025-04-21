@@ -1,4 +1,4 @@
-import {getLinearIndexFrom2DGrid} from "./getColorIndices.js";
+import {getLinearIndexFrom2DGrid} from "../logic/getColorIndices.js";
 
 
 export function pathCellPainter(movements, gridManager) {

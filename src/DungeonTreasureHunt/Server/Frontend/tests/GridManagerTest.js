@@ -1,4 +1,4 @@
-import {GridManager} from "./GridManager.js";
+import {GridManager} from "../logic/GridManager.js";
 
 document.Tester.registerTest('[GridManager][GameStateChange] it should raise a gameStateChange event when the grid is full and it contains a player and at least one treasure', async function () {
     const gridManager = new GridManager(4, 4);

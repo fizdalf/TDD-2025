@@ -1,6 +1,6 @@
-import {pathCellPainter} from "./PathCellPainter.js";
-import {getLinearIndexFrom2DGrid} from "./getColorIndices.js";
-import {GridManager} from "./GridManager.js";
+import {pathCellPainter} from "../components/PathCellPainter.js";
+import {getLinearIndexFrom2DGrid} from "../logic/getColorIndices.js";
+import {GridManager} from "../logic/GridManager.js";
 
 document.Tester.registerTest('[PathCellPainter] it should color the correct cells in order', async function () {
 
