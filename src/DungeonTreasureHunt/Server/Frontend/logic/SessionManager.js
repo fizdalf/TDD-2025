@@ -1,4 +1,4 @@
-class SessionManager {
+export class SessionManager {
     constructor() {
         this.loadSession();
     }
@@ -32,10 +32,7 @@ class SessionManager {
         sessionStorage.removeItem("username");
     }
 
-    getAuthHeaders() {
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`
-        };
+    getToken() {
+        return this.token;
     }
 }

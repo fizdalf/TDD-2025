@@ -6,7 +6,7 @@ use DungeonTreasureHunt\Backend\models\Queue;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once "Queue.php";
+require_once __DIR__ . '/../models/Queue.php';
 
 class QueueTest extends TestCase
 {

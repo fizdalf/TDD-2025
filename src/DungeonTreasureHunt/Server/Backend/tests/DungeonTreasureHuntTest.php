@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt;
 use DungeonTreasureHunt\Backend\models\Tile;
-use DungeonTreasureHunt\Backend\services\DungeonTreasureHunt;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once "DungeonTreasureHunt.php";
+require_once __DIR__ . '/../services/DungeonTreasureHunt.php';
+require_once __DIR__ . '/../services/DungeonTreasureHuntExplorer.php';
+
 
 class DungeonTreasureHuntTest extends TestCase
 {

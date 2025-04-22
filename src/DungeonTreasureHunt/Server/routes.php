@@ -2,32 +2,38 @@
 
 namespace DungeonTreasureHunt;
 
-require_once __DIR__ . '/Backend/DungeonTreasureHuntExplorer.php';
-require_once __DIR__ .'/Backend/Router.php';
-require __DIR__ . '/Backend/JWT.php';
-require_once __DIR__.'/Backend/Response.php';
+require_once __DIR__ . '/Backend/services/DungeonTreasureHuntExplorer.php';
+require_once __DIR__ .'/Backend/services/Router.php';
+require __DIR__ . '/Backend/services/JWT.php';
+require __DIR__ . '/Backend/services/JWTUserExtractor.php';
+require_once __DIR__.'/Backend/services/Response.php';
 
-require_once __DIR__.'/Backend/LoginController.php';
-require_once __DIR__.'/Backend/PlayController.php';
-require_once __DIR__.'/Backend/GridsPostController.php';
-require_once __DIR__.'/Backend/GridsGetController.php';
-require_once __DIR__.'/Backend/GridsDeleteController.php';
+require_once __DIR__.'/Backend/controllers/LoginController.php';
+require_once __DIR__.'/Backend/controllers/PlayController.php';
+require_once __DIR__.'/Backend/controllers/GridsPostController.php';
+require_once __DIR__.'/Backend/controllers/GridsGetController.php';
+require_once __DIR__.'/Backend/controllers/GridsDeleteController.php';
 
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\controllers\GridsGetController;
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\controllers\LoginController;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
+use DungeonTreasureHunt\Backend\services\JwtHandler;
+use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Router;
 
 
 $router = new Router();
 
+$jwtHandler = new JWTHandler();
+$jwtUserExtractor = new JWTUserExtractor($jwtHandler);
+
 $router->register('/login', 'POST', new LoginController());
 $router->register('/play', 'POST', new PlayController());
-$router->register('/grids', 'POST', new GridsPostController());
-$router->register('/grids', 'GET', new GridsGetController());
-$router->register('/grids/{id}', 'DELETE', new GridsDeleteController());
+$router->register('/grids', 'POST', new GridsPostController($jwtUserExtractor));
+$router->register('/grids', 'GET', new GridsGetController($jwtUserExtractor));
+$router->register('/grids/{id}', 'DELETE', new GridsDeleteController($jwtUserExtractor));
 
 
 //$router->register('/login', 'POST', function () {

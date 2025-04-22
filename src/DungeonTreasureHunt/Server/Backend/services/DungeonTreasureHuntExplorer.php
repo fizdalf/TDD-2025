@@ -11,15 +11,15 @@ use DungeonTreasureHunt\Backend\models\Queue;
 use DungeonTreasureHunt\Backend\models\Tile;
 use DungeonTreasureHunt\Backend\models\VisitedTile;
 
-require_once 'Direction.php';
-require_once 'Tile.php';
-require_once 'PossibleMovement.php';
-require_once 'VisitedTile.php';
-require_once 'Queue.php';
-require_once 'Position.php';
+require_once __DIR__ . '/../models/Grid.php';
+require_once __DIR__ . '/../models/Direction.php';
+require_once __DIR__ . '/../models/Path.php';
+require_once __DIR__ . '/../models/VisitedTile.php';
+require_once __DIR__ . '/../models/Queue.php';
+require_once __DIR__ . '/../models/Position.php';
+require_once __DIR__ . '/../models/PossibleMovement.php';
+require_once __DIR__ . '/../models/Tile.php';
 require_once 'MoveChecker.php';
-require_once 'Grid.php';
-require_once 'Path.php';
 
 class DungeonTreasureHuntExplorer
 {
@@ -29,16 +29,14 @@ class DungeonTreasureHuntExplorer
     {
         $this->moveChecker = new MoveChecker();
     }
+
     /** @return PossibleMovement[] */
     public function findPathToTreasure(array $grid): array
     {
-        error_log("Grid recibido: " . print_r($grid, true));
-
         $dungeon = new Grid($grid);
         $playerPosition = $dungeon->getPlayer();
 
         if ($playerPosition === null) {
-            error_log("No se encontró al jugador");
             return [];
         }
 
@@ -51,11 +49,9 @@ class DungeonTreasureHuntExplorer
         while (!$queue->isEmpty()) {
             $currentPosition = $queue->dequeue();
 
-            // Log de la posición actual
-            error_log("Visitando: (" . $currentPosition->getX() . ", " . $currentPosition->getY() . ")");
-
             if (Tile::isTreasure($grid, $currentPosition)) {
-                return $this->reconstructPath($cameFrom, $currentPosition);
+
+                return $this->reconstructPath($cameFrom, $playerPosition, $currentPosition);
             }
 
             $possibleDirections = [
@@ -68,30 +64,35 @@ class DungeonTreasureHuntExplorer
             foreach ($possibleDirections as $direction) {
                 $nextPosition = $currentPosition->move($direction);
                 if ($this->moveChecker->isValidMove($nextPosition, $grid, $visitedTracker)) {
+
                     $cameFrom->save($nextPosition, new PossibleMovement($currentPosition, $direction));
                     $queue->enqueue($nextPosition);
                 }
             }
 
+
             $visitedTracker->markAsVisited($currentPosition);
         }
 
-        return [];  // Si no se encuentra un camino
+        return [];
     }
 
-
-    private function reconstructPath(Path $cameFrom, Position $endPosition): array
+    private function reconstructPath(Path $cameFrom, Position $startPosition, Position $endPosition): array
     {
         $path = [];
         $current = $endPosition;
 
-        while (($possibleMovement = $cameFrom->get($current)) !== null) {
-            $path[] = new PossibleMovement($current, $possibleMovement->direction);
+        while ($current !== $startPosition) {
+            $possibleMovement = $cameFrom->get($current);
+            if ($possibleMovement === null) {
+                break;
+            }
+
+            $path[] = $possibleMovement;
             $current = $possibleMovement->playerPosition;
         }
 
         return array_reverse($path);
     }
-
 
 }

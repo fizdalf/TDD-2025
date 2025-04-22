@@ -2,46 +2,52 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\services\JwtHandler;
+
+use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
+
+require_once __DIR__ . '/../services/Response.php';
+require_once __DIR__ . '/../services/JWT.php';
+require_once __DIR__ . '/../services/JWTUserExtractor.php';
 
 class GridsGetController
 {
+
+    private JWTUserExtractor $jwtUserExtractor;
+
+    public function __construct(JWTUserExtractor $jwtUserExtractor)
+    {
+        $this->jwtUserExtractor = $jwtUserExtractor;
+    }
+
     public function __invoke(): Response
     {
         $response = new Response();
+        $response->setHeader("Content-Type", "application/json");
+
         $headers = getallheaders();
+        $authHeader = $headers['Authorization'] ?? '';
 
-        if (!isset($headers['Authorization'])) {
-            $response->setStatusCode(401);
-            $response->setHeader("Content-Type", "application/json");
-            $response->setBody(json_encode(["error" => "Token no proporcionado"]));
-            return $response;
+        if (!str_starts_with($authHeader, "Bearer ")) {
+            return $response->withStatus(401)->withJson(["error" => "Token no proporcionado"]);
         }
 
-        $token = str_replace("Bearer ", "", $headers['Authorization']);
-        $userData = JwtHandler::verifyToken($token);
+        $token = substr($authHeader, 7);
+        $username = $this->jwtUserExtractor->extractUsername($token);
 
-        if (!$userData) {
-            $response->setStatusCode(401);
-            $response->setHeader("Content-Type", "application/json");
-            $response->setBody(json_encode(["error" => "Token inv\u00e1lido o expirado"]));
-            return $response;
+        if (!$username) {
+            return $response->withStatus(401)->withJson(["error" => "Token inválido o expirado"]);
         }
 
-        $path = __DIR__ . "/{$userData['username']}_gridSaved.txt";
+        $path = __DIR__ . "/../data/{$username}_gridSaved.txt";
 
         if (!file_exists($path)) {
-            $response->setHeader("Content-Type", "application/json");
-            $response->setBody(json_encode(["success" => true, "grids" => []]));
-            return $response;
+            return $response->withJson(["success" => true, "grids" => []]);
         }
 
         $fileContent = file_get_contents($path);
-        $grids = json_decode($fileContent, true) ?: [];
+        $grids = json_decode($fileContent, true) ?? [];
 
-        $response->setHeader("Content-Type", "application/json");
-        $response->setBody(json_encode(["success" => true, "grids" => $grids]));
-        return $response;
+        return $response->withJson(["success" => true, "grids" => $grids]);
     }
 }

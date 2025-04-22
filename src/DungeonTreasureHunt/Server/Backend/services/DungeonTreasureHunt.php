@@ -1,16 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace DungeonTreasureHunt\Backend\services;
+use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 
-require_once 'Direction.php';
-require_once 'Tile.php';
-require_once 'PossibleMovement.php';
-require_once 'VisitedTile.php';
-require_once 'Queue.php';
-require_once 'Position.php';
-require_once 'DungeonTreasureHuntExplorer.php';
-require_once 'MoveChecker.php';
+require_once __DIR__ . '/DungeonTreasureHuntExplorer.php';
 
 class DungeonTreasureHunt
 {

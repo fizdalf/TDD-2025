@@ -4,27 +4,30 @@ namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\Response;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use function json_encode;
 use function json_encode as json_encode1;
+
+require_once __DIR__ . '/../services/Response.php';
+require_once __DIR__ . '/../services/DungeonTreasureHuntExplorer.php';
+require_once __DIR__ . '/../http/JsonResponseBuilder.php';
 
 class PlayController
 {
     public function __invoke(): Response
     {
-        $response = new Response();
         $input = json_decode(file_get_contents("php://input"), true);
 
         if (!$input) {
-            $response->setStatusCode(400);
-            $response->setHeader("Content-Type", "application/json");
-            $response->setBody(json_encode1(["error" => "No se pudo procesar el grid"]));
-            return $response;
+            return (new Response())
+                ->withStatus(400)
+                ->withJson(["error" => "No se pudo procesar el grid"]);
         }
 
         $explorer = new DungeonTreasureHuntExplorer();
         $path = $explorer->findPathToTreasure($input);
-        $response->setHeader("Content-Type", "application/json");
-        $response->setBody(json_encode($path));
-        return $response;
+
+        return (new Response())
+            ->withJson($path);
     }
 }

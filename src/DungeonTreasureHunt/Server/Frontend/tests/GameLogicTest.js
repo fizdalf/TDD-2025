@@ -14,6 +14,13 @@ document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solv
         {
             playerPosition: {
                 x: 0,
+                y: 0
+            },
+            direction: 'Down',
+        },
+        {
+            playerPosition: {
+                x: 0,
                 y: 1
             },
             direction: 'Down',
@@ -30,7 +37,7 @@ document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solv
                 x: 0,
                 y: 3
             },
-            direction: 'Down',
+            direction: 'Right',
         },
         {
             playerPosition: {
@@ -51,19 +58,12 @@ document.Tester.registerTest('[ResolveGrid] it should a list of steps for a solv
                 x: 3,
                 y: 3
             },
-            direction: 'Right',
-        },
-        {
-            playerPosition: {
-                x: 3,
-                y: 2
-            },
             direction: 'Up',
         },
         {
             playerPosition: {
                 x: 3,
-                y: 1
+                y: 2
             },
             direction: 'Up',
         },

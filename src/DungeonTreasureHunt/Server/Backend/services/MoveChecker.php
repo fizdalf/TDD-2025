@@ -14,7 +14,11 @@ class MoveChecker
         $y = $playerNextPosition->y;
 
 
-        if ($y >= count($grid) || $y < 0 || $x >= count($grid[$y]) || $x < 0) {
+        if ($y < 0 || $y >= count($grid)) {
+            return false;
+        }
+
+        if ($x < 0 || $x >= count($grid[$y])) {
             return false;
         }
 
@@ -30,5 +34,4 @@ class MoveChecker
 
         return true;
     }
-
 }

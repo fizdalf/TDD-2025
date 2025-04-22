@@ -20,6 +20,12 @@ class Response
         $this->headers[$key] = $value;
     }
 
+    public function withHeader(string $key, string $value): self
+    {
+        $this->setHeader($key, $value);
+        return $this;
+    }
+
     public function setStatusCode(int $code): void
     {
         $this->statusCode = $code;
@@ -35,6 +41,21 @@ class Response
         $this->body = json_encode($body);
         $this->setHeader("Content-Type", "application/json");
     }
+
+
+    public function withStatus(int $code): self
+    {
+        $this->setStatusCode($code);
+        return $this;
+    }
+
+    public function withJson(array $data): self
+    {
+        $this->setHeader("Content-Type", "application/json");
+        $this->setBody(json_encode($data));
+        return $this;
+    }
+
 
     public function send(): void
     {

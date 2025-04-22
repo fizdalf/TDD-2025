@@ -10,7 +10,9 @@ use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once 'DungeonTreasureHuntExplorer.php';
+require_once __DIR__ . '/../services/DungeonTreasureHuntExplorer.php';
+require_once __DIR__ . '/../models/PossibleMovement.php';
+require_once __DIR__ . '/../models/Position.php';
 
 class DungeonTreasureHuntExplorerTest extends TestCase
 {
@@ -25,38 +27,19 @@ class DungeonTreasureHuntExplorerTest extends TestCase
         ];
 
         $sut = new DungeonTreasureHuntExplorer();
-
-        var_dump($sut->findPathToTreasure($grid));
-
-
         $path = $sut->findPathToTreasure($grid);
 
         $this->assertEquals(
             [
-                new PossibleMovement(
-                    new Position(1, 0),
-                    Direction::Right
-                ),
-
-                new PossibleMovement(
-                    new Position(1, 1),
-                    Direction::Up
-                ),
-                new PossibleMovement(
-                    new Position(1, 0),
-                    Direction::Right
-                ),
-                new PossibleMovement(
-                    new Position(2, 0),
-                    Direction::Right
-                ),
-                new PossibleMovement(
-                    new Position(3, 0),
-                    Direction::Right
-                ),
+                new PossibleMovement(new Position(0, 1), Direction::Right),
+                new PossibleMovement(new Position(1, 1), Direction::Up),
+                new PossibleMovement(new Position(1, 0), Direction::Right),
+                new PossibleMovement(new Position(2, 0), Direction::Right),
+                new PossibleMovement(new Position(3, 0), Direction::Right),
             ],
             $path
         );
+
 
     }
 

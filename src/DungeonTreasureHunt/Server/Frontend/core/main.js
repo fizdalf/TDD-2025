@@ -2,8 +2,12 @@ import {GridManager} from "../logic/GridManager.js";
 import {Tile} from '../components/Tile.js';
 import {resolveGrid} from "../logic/GameLogic.js";
 import {pathCellPainter} from "../components/PathCellPainter.js";
-import sessionManager, { login, logout, isAuthenticated, fetchWithAuth } from '../logic/SessionManager.js';
 
+import {AuthService} from "../services/AuthService.js";
+import {SessionManager} from "../logic/SessionManager.js";
+
+const sessionManager = new SessionManager();
+const authService = new AuthService(sessionManager);
 
 const columnNumber = 4;
 const rowNumber = 4;
@@ -88,7 +92,7 @@ if (botonLogin) {
         const password = document.querySelector(".caja-input input[type='password']").value;
         const rememberMe = document.querySelector("input[type='checkbox']").checked;
 
-        sessionManager.login(username, password, rememberMe)
+        authService.login(username, password, rememberMe)
             .then(() => {
                 sesionIniciada();
                 cerrar();
@@ -139,9 +143,9 @@ function SaveCurrentGrid(gridName) {
 
     cerrar_input();
 
-    sessionManager.fetchWithAuth('/grids', {
+    authService.fetchWithAuth('/grids', {
         method: 'POST',
-        body: JSON.stringify({ grid, gridName })
+        body: JSON.stringify({grid, gridName})
     })
         .then(response => response.json())
         .then(response => {
@@ -162,7 +166,7 @@ function getStoredGrids() {
         return;
     }
 
-    sessionManager.fetchWithAuth('/grids')
+    authService.fetchWithAuth('/grids')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -207,7 +211,7 @@ function getStoredGrids() {
 }
 
 function deleteGrid(id) {
-    sessionManager.fetchWithAuth(`/grids/${id}`, { method: 'DELETE' })
+    authService.fetchWithAuth(`/grids/${id}`, {method: 'DELETE'})
         .then(res => res.json())
         .then(res => {
             if (res.success) {

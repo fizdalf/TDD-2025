@@ -2,9 +2,9 @@
 
 
 namespace DungeonTreasureHunt\Backend\tests;
-require_once 'Position.php';
-require_once 'PossibleMovement.php';
-require_once 'Direction.php';
+require_once __DIR__.'/../models/Position.php';
+require_once __DIR__.'/../models/PossibleMovement.php';
+require_once __DIR__.'/../models/Direction.php';
 
 use DungeonTreasureHunt\Backend\models\Direction;
 use DungeonTreasureHunt\Backend\models\Position;
