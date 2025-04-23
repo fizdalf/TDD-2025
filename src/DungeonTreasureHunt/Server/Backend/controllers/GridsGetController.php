@@ -2,7 +2,6 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 
@@ -12,7 +11,6 @@ require_once __DIR__ . '/../services/JWTUserExtractor.php';
 
 class GridsGetController
 {
-
     private JWTUserExtractor $jwtUserExtractor;
 
     public function __construct(JWTUserExtractor $jwtUserExtractor)
@@ -20,12 +18,11 @@ class GridsGetController
         $this->jwtUserExtractor = $jwtUserExtractor;
     }
 
-    public function __invoke(): Response
+    public function __invoke(array $headers = []): Response
     {
         $response = new Response();
         $response->setHeader("Content-Type", "application/json");
 
-        $headers = getallheaders();
         $authHeader = $headers['Authorization'] ?? '';
 
         if (!str_starts_with($authHeader, "Bearer ")) {
