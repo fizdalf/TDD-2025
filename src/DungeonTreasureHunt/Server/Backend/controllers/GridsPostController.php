@@ -2,15 +2,20 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\services\JwtHandler;
+
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
+use DungeonTreasureHunt\Backend\services\GridRepository;
+use DungeonTreasureHunt\Backend\http\Request;
+use Exception;
 
 require_once __DIR__ . '/../services/Response.php';
 require_once __DIR__ . '/../services/JWT.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
 require_once __DIR__ . '/../http/JsonResponseBuilder.php';
+require_once __DIR__ . '/../services/GridRepository.php';
+require_once __DIR__ . '/../http/Request.php';
 
 class GridsPostController
 {
@@ -22,18 +27,12 @@ class GridsPostController
         $this->jwtUserExtractor = $jwtUserExtractor;
     }
 
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
 
-        $headers = getallheaders();
-        $authHeader = $headers['Authorization'] ?? null;
+        $authHeader = $request->getHeaders('Authorization') ?? null;
 
-        if (!$authHeader) {
-            return JsonResponseBuilder::unauthorized("Token no proporcionado");
-        }
-
-
-        if (!str_starts_with($authHeader, "Bearer ")) {
+        if (!$authHeader || !str_starts_with($authHeader, "Bearer ")) {
             return JsonResponseBuilder::unauthorized("Token no proporcionado o mal formado");
         }
 
@@ -44,13 +43,13 @@ class GridsPostController
             return JsonResponseBuilder::unauthorized("Token inválido o expirado");
         }
 
-        $input = json_decode(file_get_contents("php://input"), true);
+        $input = $request->getBody();
         if (!isset($input['grid'], $input['gridName'])) {
             return JsonResponseBuilder::error("Faltan datos", 400);
         }
 
-        $path = __DIR__ . "/../data/{$username}_gridSaved.txt";
-        $storedGrids = file_exists($path) ? json_decode(file_get_contents($path), true) : [];
+        $repo = new GridRepository($username);
+        $storedGrids = $repo->loadGrids();
         $newId = empty($storedGrids) ? 1 : max(array_keys($storedGrids)) + 1;
 
         $storedGrids[$newId] = [
@@ -58,11 +57,12 @@ class GridsPostController
             "grid" => $input['grid']
         ];
 
-        if (file_put_contents($path, json_encode($storedGrids))) {
+        try {
+            $repo->saveGrids($storedGrids);
             return JsonResponseBuilder::success(["success" => true]);
+        } catch (Exception){
+            return JsonResponseBuilder::error("No se pudo guardar", 500);
         }
-
-        return JsonResponseBuilder::error("No se pudo guardar", 500);
     }
 
 
