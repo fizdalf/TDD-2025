@@ -1,5 +1,6 @@
 <?php
 
+use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\Response;
 
 require_once __DIR__ . '/routes.php';
@@ -23,8 +24,14 @@ if (!$controller) {
     exit;
 }
 
-[$controllerFunction, $params] = $controller;
-$result = $controllerFunction($params ?? []);
+[$controllerFunction, $routeParams] = $controller;
+
+$request = new Request(
+    headers: getallheaders(),
+    params: $routeParams ?? [],
+);
+
+$result = $controllerFunction($request);
 if($result instanceof Response){
     $result->send();
 }

@@ -2,15 +2,18 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\services\JwtHandler;
+use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
+use DungeonTreasureHunt\Backend\services\GridRepository;
 
 require_once __DIR__ . '/../services/Response.php';
 require_once __DIR__ . '/../services/JWT.php';
 require_once __DIR__ . '/../http/JsonResponseBuilder.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
+require_once __DIR__ . '/../http/Request.php';
+require_once __DIR__ . '/../services/GridRepository.php';
 
 
 class GridsDeleteController
@@ -23,40 +26,41 @@ class GridsDeleteController
         $this->jwtUserExtractor = $jwtUserExtractor;
     }
 
-    public function __invoke($params): ?Response
+    public function __invoke(Request $request): ?Response
     {
         $response = new Response();
-        $headers = getallheaders();
+        $authHeader = $request->getHeaders('Authorization');
 
-        if (!isset($headers['Authorization'])) {
+        if (!$authHeader) {
             return JsonResponseBuilder::error("Token no proporcionado", 401);
         }
 
-        $token = str_replace("Bearer ", "", $headers['Authorization']);
+        $token = str_replace("Bearer ", "", $authHeader);
         $username = $this->jwtUserExtractor->extractUsername($token);
 
         if (!$username) {
             return JsonResponseBuilder::error("Token no proporcionado o inválido", 401);
         }
 
-        $idToDelete = $params['id'] ?? null;
+        $idToDelete = $request->getParams('id');
         if ($idToDelete === null) {
             return JsonResponseBuilder::error("ID no proporcionado", 400);
         }
 
         $path = __DIR__ . "/../data/{$username}_gridSaved.txt";
 
-        if (!file_exists($path)) {
+        $repo = new GridRepository($username);
+        if (!$repo->exists()) {
             return JsonResponseBuilder::error("No se encontró el archivo", 404);
         }
 
-        $grids = json_decode(file_get_contents($path), true);
+        $grids = $repo->loadGrids();
         if (!isset($grids[$idToDelete])) {
             return JsonResponseBuilder::error("Grid no encontrado", 404);
         }
 
         unset($grids[$idToDelete]);
-        file_put_contents($path, json_encode($grids));
+        $repo->saveGrids($grids);
 
         $response->setHeader("Content-Type", "application/json");
         $response->setBody(json_encode(["success" => true]));
