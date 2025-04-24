@@ -4,19 +4,17 @@ namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-use function json_encode;
-use function json_encode as json_encode1;
+use DungeonTreasureHunt\Backend\http\Request;
 
 require_once __DIR__ . '/../services/Response.php';
 require_once __DIR__ . '/../services/DungeonTreasureHuntExplorer.php';
-require_once __DIR__ . '/../http/JsonResponseBuilder.php';
+require_once __DIR__ . '/../http/Request.php';
 
 class PlayController
 {
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
-        $input = json_decode(file_get_contents("php://input"), true);
+        $input = $request->getBody();
 
         if (!$input) {
             return (new Response())
