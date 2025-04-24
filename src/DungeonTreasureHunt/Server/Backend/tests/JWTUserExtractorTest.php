@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
-require_once __DIR__ . '/../services/JWT.php';
+require_once __DIR__ . '/../services/JwtHandler.php';
 
 class JWTUserExtractorTest extends TestCase
 {

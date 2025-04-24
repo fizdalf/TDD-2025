@@ -4,7 +4,7 @@ namespace DungeonTreasureHunt;
 
 require_once __DIR__ . '/Backend/services/DungeonTreasureHuntExplorer.php';
 require_once __DIR__ .'/Backend/services/Router.php';
-require __DIR__ . '/Backend/services/JWT.php';
+require __DIR__ . '/Backend/services/JwtHandler.php';
 require __DIR__ . '/Backend/services/JWTUserExtractor.php';
 require_once __DIR__.'/Backend/services/Response.php';
 
