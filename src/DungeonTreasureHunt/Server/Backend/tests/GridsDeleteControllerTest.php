@@ -85,7 +85,7 @@ class GridsDeleteControllerTest extends TestCase
         $token = JwtHandler::generateToken(["username" => $username]);
 
         $repo = new GridRepository($username);
-        $repo->saveGrids([]); // Aseguramos que no haya grids
+        $repo->saveGrids([]);
 
         $request = new Request(['Authorization' => "Bearer $token"], ['id' => 999]);
 
