@@ -4,9 +4,9 @@ namespace DungeonTreasureHunt\Backend\services;
 
 class Response
 {
-    public array $headers = [];
-    public int $statusCode;
-    public mixed $body;
+    private array $headers = [];
+    private int $statusCode;
+    private mixed $body;
 
     public function __construct(int $statusCode = 200, mixed $body = null)
     {

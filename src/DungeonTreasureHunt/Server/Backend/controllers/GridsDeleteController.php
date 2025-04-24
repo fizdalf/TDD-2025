@@ -12,8 +12,10 @@ require_once __DIR__ . '/../services/JWT.php';
 require_once __DIR__ . '/../http/JsonResponseBuilder.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
 
+
 class GridsDeleteController
 {
+
     private JWTUserExtractor $jwtUserExtractor;
 
     public function __construct(JWTUserExtractor $jwtUserExtractor)
@@ -21,12 +23,10 @@ class GridsDeleteController
         $this->jwtUserExtractor = $jwtUserExtractor;
     }
 
-    public function __invoke($params, $headers = null): ?Response
+    public function __invoke($params): ?Response
     {
         $response = new Response();
-        if ($headers === null) {
-            $headers = function_exists('getallheaders') ? getallheaders() : [];
-        }
+        $headers = getallheaders();
 
         if (!isset($headers['Authorization'])) {
             return JsonResponseBuilder::error("Token no proporcionado", 401);
