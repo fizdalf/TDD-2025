@@ -3,12 +3,16 @@
 namespace DungeonTreasureHunt\Backend\controllers;
 
 
+use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
+use DungeonTreasureHunt\Backend\services\GridRepository;
 
 require_once __DIR__ . '/../services/Response.php';
 require_once __DIR__ . '/../services/JWT.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
+require_once __DIR__ . '/../http/Request.php';
+require_once __DIR__ . '/../services/GridRepository.php';
 
 class GridsGetController
 {
@@ -20,13 +24,12 @@ class GridsGetController
         $this->jwtUserExtractor = $jwtUserExtractor;
     }
 
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
         $response = new Response();
         $response->setHeader("Content-Type", "application/json");
 
-        $headers = getallheaders();
-        $authHeader = $headers['Authorization'] ?? '';
+        $authHeader = $request->getHeaders('Authorization') ?? '';
 
         if (!str_starts_with($authHeader, "Bearer ")) {
             return $response->withStatus(401)->withJson(["error" => "Token no proporcionado"]);
@@ -39,14 +42,8 @@ class GridsGetController
             return $response->withStatus(401)->withJson(["error" => "Token inválido o expirado"]);
         }
 
-        $path = __DIR__ . "/../data/{$username}_gridSaved.txt";
-
-        if (!file_exists($path)) {
-            return $response->withJson(["success" => true, "grids" => []]);
-        }
-
-        $fileContent = file_get_contents($path);
-        $grids = json_decode($fileContent, true) ?? [];
+        $repo = new GridRepository($username);
+        $grids = $repo->loadGrids();
 
         return $response->withJson(["success" => true, "grids" => $grids]);
     }
