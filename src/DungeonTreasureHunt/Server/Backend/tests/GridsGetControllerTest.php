@@ -17,18 +17,17 @@ require_once __DIR__ . '/../controllers/GridsGetController.php';
 class GridsGetControllerTest extends TestCase
 {
 
-    private string $token;
+
     private string $username = "Test";
-    private string $path;
 
     protected function setUp(): void
     {
         $this->token = JwtHandler::generateToken(["username" => $this->username]);
-        $this->path = __DIR__ . "/../data/{$this->username}_gridSaved.txt";
+        $path = __DIR__ . "/../data/{$this->username}_gridSaved.txt";
 
 
         $grids = [["name" => "Grid 1"], ["name" => "Grid 2"]];
-        file_put_contents($this->path, json_encode($grids));
+        file_put_contents($path, json_encode($grids));
     }
 
     #[Test]
@@ -64,5 +63,19 @@ class GridsGetControllerTest extends TestCase
 
         $this->assertEquals(401, $response->getStatus());
         $this->assertEquals("Token no proporcionado", $body["error"]);
+    }
+
+    #[Test]
+    public function test_it_returns_unauthorized_if_token_is_invalid(): void
+    {
+        $request = new Request(["Authorization" => "Bearer tokenfalso"]);
+        $extractor = new JWTUserExtractor(new JwtHandler());
+        $controller = new GridsGetController($extractor);
+
+        $response = $controller($request);
+        $body = json_decode($response->getBody(), true);
+
+        $this->assertEquals(401, $response->getStatus());
+        $this->assertEquals("Token inválido o expirado", $body["error"]);
     }
 }
