@@ -65,4 +65,15 @@ class Response
         }
         echo $this->body;
     }
+
+    public function getStatus(): int
+    {
+        return $this->statusCode;
+    }
+
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
 }

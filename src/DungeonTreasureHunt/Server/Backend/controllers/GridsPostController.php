@@ -11,7 +11,7 @@ use DungeonTreasureHunt\Backend\http\Request;
 use Exception;
 
 require_once __DIR__ . '/../services/Response.php';
-require_once __DIR__ . '/../services/JWT.php';
+require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
 require_once __DIR__ . '/../http/JsonResponseBuilder.php';
 require_once __DIR__ . '/../services/GridRepository.php';

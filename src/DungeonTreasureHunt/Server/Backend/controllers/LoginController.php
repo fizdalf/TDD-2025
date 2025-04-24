@@ -8,7 +8,7 @@ use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 
 require_once __DIR__ . '/../services/Response.php';
-require_once __DIR__ . '/../services/JWT.php';
+require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../http/JsonResponseBuilder.php';
 require_once __DIR__ . '/../http/Request.php';
 

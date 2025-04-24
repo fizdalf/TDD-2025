@@ -30,4 +30,12 @@ class GridRepository
     {
         return file_exists($this->getPath());
     }
+
+    public function delete(): void
+    {
+        $path = $this->getPath();
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
 }
