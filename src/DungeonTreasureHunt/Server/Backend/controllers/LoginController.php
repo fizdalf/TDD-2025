@@ -14,28 +14,59 @@ require_once __DIR__ . '/../http/Request.php';
 
 class LoginController
 {
+    private array $users = [
+        "admin" => "1234",
+        "user" => "abcd"
+    ];
+
     public function __invoke(Request $request): Response
     {
-        $users = [
-            "admin" => "1234",
-            "user" => "abcd"
-        ];
+        $credentials = $this->extractCredentials($request);
 
-        $body = $request->getBody();
-
-        if (!isset($body['username'], $body['password'])) {
-            return JsonResponseBuilder::error("Faltan datos", 400);
+        if (!$this->areCredentialsComplete($credentials)) {
+            return $this->handleIncompleteCredentials();
         }
 
-        $username = $body['username'];
-        $password = $body['password'];
-
-        if (!isset($users[$username]) || $users[$username] !== $password) {
-            return JsonResponseBuilder::error("Credenciales incorrectas", 401);
+        if (!$this->areCredentialsValid($credentials['username'], $credentials['password'])) {
+            return $this->handleInvalidCredentials();
         }
 
-        $token = JwtHandler::generateToken(["username" => $username]);
+        return $this->generateSuccessResponse($credentials['username']);
+    }
 
+    private function extractCredentials(Request $request): array
+    {
+        return $request->parseBodyAsJson();
+    }
+
+    private function areCredentialsComplete(array $credentials): bool
+    {
+        return isset($credentials['username'], $credentials['password']);
+    }
+
+    private function areCredentialsValid(string $username, string $password): bool
+    {
+        return isset($this->users[$username]) && $this->users[$username] === $password;
+    }
+
+    private function handleIncompleteCredentials(): Response
+    {
+        return JsonResponseBuilder::error("Faltan datos", 400);
+    }
+
+    private function handleInvalidCredentials(): Response
+    {
+        return JsonResponseBuilder::error("Credenciales incorrectas", 401);
+    }
+
+    private function generateSuccessResponse(string $username): Response
+    {
+        $token = $this->generateToken($username);
         return JsonResponseBuilder::success(["token" => $token]);
+    }
+
+    private function generateToken(string $username): string
+    {
+        return JwtHandler::generateToken(["username" => $username]);
     }
 }
