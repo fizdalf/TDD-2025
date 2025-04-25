@@ -3,7 +3,6 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
-use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
@@ -22,7 +21,6 @@ require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
 require_once __DIR__ . '/../models/GridItem.php';
 require_once __DIR__ . '/../exceptions/InvalidTokenException.php';
-require_once __DIR__ . '/../exceptions/InvalidRequestException.php';
 
 class GridsPostControllerTest extends TestCase
 {

@@ -5,7 +5,6 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
-use DungeonTreasureHunt\Backend\services\GridRepository;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../../../../../vendor/autoload.php';
 require_once __DIR__ . '/../controllers/GridsDeleteController.php';
 require_once __DIR__ . '/../http/Request.php';
-require_once __DIR__ . '/../services/GridRepository.php';
 require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
 
