@@ -2,6 +2,11 @@
 
 namespace DungeonTreasureHunt\Backend\http;
 
+use DungeonTreasureHunt\Backend\models\GridItem;
+
+require_once __DIR__ . '/../models/GridItem.php';
+
+
 class Request
 {
     private array $headers;
@@ -41,6 +46,7 @@ class Request
 
     public function parseBodyAsJson(): array
     {
-        return json_decode($this->realBody, true) ?? [];
+        $input = file_get_contents("php://input");
+        return json_decode($input, true) ?? [];
     }
 }
