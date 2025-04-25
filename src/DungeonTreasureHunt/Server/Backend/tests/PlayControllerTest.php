@@ -20,7 +20,7 @@ class PlayControllerTest extends TestCase
     {
         $mockRequest = $this->createMock(Request::class);
 
-        $mockRequest->method('getBody')->willReturn([
+        $mockRequest->method('parseBodyAsJson')->willReturn([
             ['P', '.', '.'],
             ['#', '#', '.'],
             ['.', '.', 'T']
@@ -40,8 +40,7 @@ class PlayControllerTest extends TestCase
     public function it_should_return_400_if_no_body_provided()
     {
         $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('getBody')->willReturn([]);
-
+        $mockRequest->method('parseBodyAsJson')->willReturn([]);
 
         $controller = new PlayController();
         $response = $controller($mockRequest);
