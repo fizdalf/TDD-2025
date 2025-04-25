@@ -127,6 +127,7 @@ class GridsPostControllerTest extends TestCase
         $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
         $response = $controller($request);
 
-        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals(500, $response->getStatus());
+        $this->assertEquals(json_encode(["error" => "No se pudo guardar"]), $response->getBody());
     }
 }
