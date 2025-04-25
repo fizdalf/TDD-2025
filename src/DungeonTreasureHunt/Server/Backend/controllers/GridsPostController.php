@@ -2,7 +2,6 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
@@ -20,7 +19,6 @@ require_once __DIR__ . '/../http/Request.php';
 
 class GridsPostController
 {
-
     private JWTUserExtractor $jwtUserExtractor;
 
     public function __construct(JWTUserExtractor $jwtUserExtractor, private readonly GridRepository $gridRepository)
@@ -31,24 +29,58 @@ class GridsPostController
     public function __invoke(Request $request): Response
     {
         try {
-            $user = $this->getAuthenticatedUser($request);
-            $username = $user['username'];
-            $input = $request->parseBodyAsJson();
-            $this->validateRequest($input);
-            $this->gridRepository->saveGrid(new GridItem($input['gridName'], $input['grid'], $username));
-            return JsonResponseBuilder::success(["success" => true]);
+            $username = $this->processAuthentication($request);
+            $gridData = $this->processRequestData($request);
+            $this->saveGrid($username, $gridData);
+
+            return $this->createSuccessResponse();
         } catch (InvalidTokenException) {
-            return JsonResponseBuilder::unauthorized("Token no proporcionado o mal formado");
+            return $this->handleAuthenticationError();
         } catch (InvalidRequest) {
-            return JsonResponseBuilder::error("Faltan datos", 400);
+            return $this->handleInvalidRequestError();
         } catch (Exception) {
-            return JsonResponseBuilder::error("No se pudo guardar", 500);
+            return $this->handleSaveError();
         }
     }
 
-    /**
-     * @throws InvalidTokenException
-     */
+    private function processAuthentication(Request $request): string
+    {
+        $user = $this->getAuthenticatedUser($request);
+        return $user['username'];
+    }
+
+    private function processRequestData(Request $request): array
+    {
+        $input = $request->parseBodyAsJson();
+        $this->validateRequest($input);
+        return $input;
+    }
+
+    private function saveGrid(string $username, array $gridData): void
+    {
+        $this->gridRepository->saveGrid(new GridItem($gridData['gridName'], $gridData['grid'], $username));
+    }
+
+    private function createSuccessResponse(): Response
+    {
+        return JsonResponseBuilder::success(["success" => true]);
+    }
+
+    private function handleAuthenticationError(): Response
+    {
+        return JsonResponseBuilder::unauthorized("Token no proporcionado o mal formado");
+    }
+
+    private function handleInvalidRequestError(): Response
+    {
+        return JsonResponseBuilder::error("Faltan datos", 400);
+    }
+
+    private function handleSaveError(): Response
+    {
+        return JsonResponseBuilder::error("No se pudo guardar", 500);
+    }
+
     public function getAuthenticatedUser(Request $request): ?array
     {
         $authHeader = $request->getHeaders('Authorization') ?? null;
@@ -65,25 +97,16 @@ class GridsPostController
         return $user;
     }
 
-    /**
-     * @param array $input
-     * @return array
-     * @throws InvalidRequest
-     */
     public function validateRequest(array $input): void
     {
         if (!isset($input['grid'], $input['gridName'])) {
             throw new InvalidRequest();
         }
     }
-
-
 }
-
 
 class InvalidTokenException extends Exception
 {
-
 }
 
 class InvalidRequest extends Exception
