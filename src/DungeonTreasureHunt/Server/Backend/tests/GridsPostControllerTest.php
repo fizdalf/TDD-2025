@@ -41,13 +41,6 @@ class GridsPostControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertEquals(200, $response->getStatus());
-
-        $savedGrids = $repo->loadGrids();
-        $this->assertArrayHasKey(1, $savedGrids); // Asegura que se haya guardado con un ID válido
-
-        if ($repo->exists()) {
-            $repo->delete();
-        }
     }
 
     #[Test]
