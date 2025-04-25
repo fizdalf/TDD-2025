@@ -17,8 +17,7 @@ class PlayController
         $input = $request->getBody();
 
         if (!$input) {
-            return (new Response())
-                ->withStatus(400)
+            return (new Response(400))
                 ->withJson(["error" => "No se pudo procesar el grid"]);
         }
 

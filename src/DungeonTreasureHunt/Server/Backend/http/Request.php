@@ -7,11 +7,13 @@ class Request
     private array $headers;
     private array $params;
     private array $body;
+    private ?string $realBody;
 
-    public function __construct(array $headers = [], array $params = [])
+    public function __construct(array $headers = [], array $params = [], string $body = "")
     {
         $this->headers = $headers;
         $this->params = $params;
+        $this->realBody = $body;
 
         $input = file_get_contents("php://input");
         $this->body = json_decode($input, true) ?? [];
@@ -26,9 +28,19 @@ class Request
     {
         return $this->params[$name] ?? null;
     }
-
+    /** @deprecated Use parseBodyAsJson instead! */
     public function getBody(): array
     {
         return $this->body;
+    }
+
+    public function getRealBody(): string
+    {
+        return $this->realBody;
+    }
+
+    public function parseBodyAsJson(): array
+    {
+        return json_decode($this->realBody, true) ?? [];
     }
 }

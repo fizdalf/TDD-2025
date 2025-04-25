@@ -2,9 +2,15 @@
 
 namespace DungeonTreasureHunt\Backend\services;
 
-class GridRepository
+
+use DungeonTreasureHunt\Backend\models\GridItem;
+
+class GridFileSystemRepository implements GridRepository
 {
-    public function __construct(private string $username){}
+    public function __construct(private string $username)
+    {
+    }
+
 
     private function getPath(): string
     {
@@ -14,11 +20,26 @@ class GridRepository
     public function loadGrids(): array
     {
         $path = $this->getPath();
-        if (!file_exists($path)){
+        if (!file_exists($path)) {
             return [];
         }
 
         return json_decode(file_get_contents($path), true);
+    }
+
+    public function saveGrid(GridItem $gridItem): void
+    {
+
+        $this->username = $gridItem->username;
+        $storedGrids = $this->loadGrids();
+        $newId = empty($storedGrids) ? 1 : max(array_keys($storedGrids)) + 1;
+
+        $storedGrids[$newId] = [
+            "gridName" => $gridItem->name,
+            "grid" => $gridItem->grid
+        ];
+
+        $this->saveGrids($storedGrids);
     }
 
     public function saveGrids(array $grids): void
@@ -38,4 +59,9 @@ class GridRepository
             unlink($path);
         }
     }
+}
+
+interface GridRepository
+{
+    public function saveGrid(GridItem $gridItem);
 }

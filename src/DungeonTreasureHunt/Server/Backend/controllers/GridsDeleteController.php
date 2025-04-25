@@ -3,6 +3,7 @@
 namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
@@ -28,7 +29,7 @@ class GridsDeleteController
 
     public function __invoke(Request $request): ?Response
     {
-        $response = new Response();
+
         $authHeader = $request->getHeaders('Authorization');
 
         if (!$authHeader) {
@@ -47,9 +48,7 @@ class GridsDeleteController
             return JsonResponseBuilder::error("ID no proporcionado", 400);
         }
 
-        $path = __DIR__ . "/../data/{$username}_gridSaved.txt";
-
-        $repo = new GridRepository($username);
+        $repo = new GridFileSystemRepository($username);
         if (!$repo->exists()) {
             return JsonResponseBuilder::error("No se encontró el archivo", 404);
         }
@@ -62,6 +61,7 @@ class GridsDeleteController
         unset($grids[$idToDelete]);
         $repo->saveGrids($grids);
 
+        $response = new Response();
         $response->setHeader("Content-Type", "application/json");
         $response->setBody(json_encode(["success" => true]));
         return $response;

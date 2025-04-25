@@ -4,9 +4,9 @@ namespace DungeonTreasureHunt\Backend\controllers;
 
 
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\GridRepository;
 
 require_once __DIR__ . '/../services/Response.php';
 require_once __DIR__ . '/../services/JwtHandler.php';
@@ -42,7 +42,7 @@ class GridsGetController
             return $response->withStatus(401)->withJson(["error" => "Token inválido o expirado"]);
         }
 
-        $repo = new GridRepository($username);
+        $repo = new GridFileSystemRepository($username);
         $grids = $repo->loadGrids();
 
         return $response->withJson(["success" => true, "grids" => $grids]);

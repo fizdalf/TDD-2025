@@ -4,6 +4,7 @@ namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\GridRepository;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
@@ -17,6 +18,7 @@ require_once __DIR__ . '/../http/Request.php';
 require_once __DIR__ . '/../services/GridRepository.php';
 require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
+require_once __DIR__ . '/../models/GridItem.php';
 
 class GridsPostControllerTest extends TestCase
 {
@@ -25,19 +27,28 @@ class GridsPostControllerTest extends TestCase
     {
         $username = "testuser";
         $token = JwtHandler::generateToken(["username" => $username]);
-        $repo = new GridRepository($username);
+        $repo = $this->createMock(GridRepository::class);
 
-        $gridData = [
+        $repo->expects($this->once())->method('saveGrid')->with(
+            new GridItem(
+                "New Test Grid",
+                [[0, 1], [1, 0]],
+                $username
+            )
+        );
+
+        $gridData = json_encode([
             "gridName" => "New Test Grid",
             "grid" => [[0, 1], [1, 0]]
-        ];
+        ]);
 
         $request = new Request(
             ['Authorization' => "Bearer $token"],
+            [],
             $gridData
         );
 
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()));
+        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
         $response = $controller($request);
 
         $this->assertEquals(200, $response->getStatus());
@@ -53,7 +64,8 @@ class GridsPostControllerTest extends TestCase
 
         $request = new Request([], $gridData);
 
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()));
+        $repo = $this->createMock(GridRepository::class);
+        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
         $response = $controller($request);
 
         $this->assertEquals(401, $response->getStatus());
@@ -62,12 +74,19 @@ class GridsPostControllerTest extends TestCase
     #[Test]
     public function it_should_return_401_if_token_invalid()
     {
-        $request = new Request(['Authorization' => 'Bearer invalidtoken'], [
-            "gridName" => "New Test Grid",
-            "grid" => [[0, 1], [1, 0]]
-        ]);
+        $request = new Request(
+            ['Authorization' => 'Bearer invalidtoken'],
+            [],
+            json_encode(
+                [
+                    "gridName" => "New Test Grid",
+                    "grid" => [[0, 1], [1, 0]]
+                ]
+            )
+        );
 
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()));
+        $repo = $this->createMock(GridRepository::class);
+        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
         $response = $controller($request);
 
         $this->assertEquals(401, $response->getStatus());
@@ -80,8 +99,8 @@ class GridsPostControllerTest extends TestCase
         $token = JwtHandler::generateToken(["username" => $username]);
 
         $request = new Request(['Authorization' => "Bearer $token"], []);
-
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()));
+        $repo = $this->createMock(GridRepository::class);
+        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
         $response = $controller($request);
 
         $this->assertEquals(400, $response->getStatus());
@@ -95,7 +114,7 @@ class GridsPostControllerTest extends TestCase
 
         $repo = $this->createMock(GridRepository::class);
         $repo->expects($this->once())
-            ->method('saveGrids')
+            ->method('saveGrid')
             ->willThrowException(new Exception("Database error"));
 
         $gridData = [
@@ -103,9 +122,9 @@ class GridsPostControllerTest extends TestCase
             "grid" => [[0, 1], [1, 0]]
         ];
 
-        $request = new Request(['Authorization' => "Bearer $token"], $gridData);
+        $request = new Request(['Authorization' => "Bearer $token"], [], json_encode($gridData));
 
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()));
+        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
         $response = $controller($request);
 
         $this->assertEquals(200, $response->getStatus());

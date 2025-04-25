@@ -4,6 +4,7 @@ namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\GridRepository;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
@@ -24,7 +25,7 @@ class GridsDeleteControllerTest extends TestCase
     {
         $username = "testuser";
         $token = JwtHandler::generateToken(["username" => $username]);
-        $repo = new GridRepository($username);
+        $repo = new GridFileSystemRepository($username);
         $repo->saveGrids([1 => ["gridName" => "Test Grid", "grid" => [[0, 1], [1, 0]]]]);
 
         $request = new Request(
@@ -84,7 +85,7 @@ class GridsDeleteControllerTest extends TestCase
         $username = "testuser";
         $token = JwtHandler::generateToken(["username" => $username]);
 
-        $repo = new GridRepository($username);
+        $repo = new GridFileSystemRepository($username);
         $repo->saveGrids([]);
 
         $request = new Request(['Authorization' => "Bearer $token"], ['id' => 999]);
