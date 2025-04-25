@@ -6,12 +6,15 @@ use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
+use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
+use Exception;
 
 require_once __DIR__ . '/../services/Response.php';
 require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
 require_once __DIR__ . '/../http/Request.php';
 require_once __DIR__ . '/../services/GridRepository.php';
+require_once __DIR__ . '/../exceptions/InvalidTokenException.php';
 
 class GridsGetController
 {
@@ -24,40 +27,31 @@ class GridsGetController
 
     public function __invoke(Request $request): Response
     {
-        $response = $this->createBaseResponse();
+        try {
+            $username = $this->authenticateUser($request);
+            $grids = $this->loadUserGrids($username);
 
-        $username = $this->authenticateUser($request, $response);
-        if (!$username) {
-            return $response;
+            return $this->createSuccessResponse($grids);
+        } catch (InvalidTokenException $e) {
+            return $this->handleAuthError($e->getMessage());
+        } catch (Exception $e) {
+            return $this->handleGenericError($e->getMessage());
         }
-
-        $grids = $this->loadUserGrids($username);
-
-        return $this->createSuccessResponse($grids);
     }
 
-    private function createBaseResponse(): Response
-    {
-        $response = new Response();
-        $response->setHeader("Content-Type", "application/json");
-        return $response;
-    }
-
-    private function authenticateUser(Request $request, Response &$response): string|false
+    private function authenticateUser(Request $request): string
     {
         $authHeader = $request->getHeaders('Authorization') ?? '';
 
         if (!str_starts_with($authHeader, "Bearer ")) {
-            $response->withStatus(401)->withJson(["error" => "Token no proporcionado"]);
-            return false;
+            throw new InvalidTokenException("Token no proporcionado");
         }
 
         $token = substr($authHeader, 7);
         $username = $this->jwtUserExtractor->extractUsername($token);
 
         if (!$username) {
-            $response->withStatus(401)->withJson(["error" => "Token inválido o expirado"]);
-            return false;
+            throw new InvalidTokenException("Token inválido o expirado");
         }
 
         return $username;
@@ -76,7 +70,22 @@ class GridsGetController
 
     private function createSuccessResponse(array $grids): Response
     {
-        $response = $this->createBaseResponse();
+        $response = new Response();
+        $response->setHeader("Content-Type", "application/json");
         return $response->withJson(["success" => true, "grids" => $grids]);
+    }
+
+    private function handleAuthError(string $message): Response
+    {
+        $response = new Response(401);
+        $response->setHeader("Content-Type", "application/json");
+        return $response->withJson(["error" => $message]);
+    }
+
+    private function handleGenericError(string $message): Response
+    {
+        $response = new Response(500);
+        $response->setHeader("Content-Type", "application/json");
+        return $response->withJson(["error" => $message]);
     }
 }
