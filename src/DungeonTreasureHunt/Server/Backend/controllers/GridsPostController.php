@@ -8,6 +8,8 @@ use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\services\GridRepository;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
+use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use Exception;
 
 require_once __DIR__ . '/../services/Response.php';
@@ -16,6 +18,8 @@ require_once __DIR__ . '/../services/JWTUserExtractor.php';
 require_once __DIR__ . '/../http/JsonResponseBuilder.php';
 require_once __DIR__ . '/../services/GridRepository.php';
 require_once __DIR__ . '/../http/Request.php';
+require_once __DIR__ . '/../exceptions/InvalidTokenException.php';
+require_once __DIR__ . '/../exceptions/InvalidRequestException.php';
 
 class GridsPostController
 {
@@ -36,7 +40,7 @@ class GridsPostController
             return $this->createSuccessResponse();
         } catch (InvalidTokenException) {
             return $this->handleAuthenticationError();
-        } catch (InvalidRequest) {
+        } catch (InvalidRequestException) {
             return $this->handleInvalidRequestError();
         } catch (Exception) {
             return $this->handleSaveError();
@@ -100,15 +104,7 @@ class GridsPostController
     public function validateRequest(array $input): void
     {
         if (!isset($input['grid'], $input['gridName'])) {
-            throw new InvalidRequest();
+            throw new InvalidRequestException();
         }
     }
-}
-
-class InvalidTokenException extends Exception
-{
-}
-
-class InvalidRequest extends Exception
-{
 }
