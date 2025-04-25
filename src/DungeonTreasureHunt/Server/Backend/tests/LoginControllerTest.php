@@ -19,7 +19,7 @@ class LoginControllerTest extends TestCase
     public function it_should_login_successfully_with_valid_credentials()
     {
         $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('getBody')->willReturn([
+        $mockRequest->method('parseBodyAsJson')->willReturn([
             'username' => 'admin',
             'password' => '1234'
         ]);
@@ -35,14 +35,13 @@ class LoginControllerTest extends TestCase
 
         $userData = JwtHandler::verifyToken($body['token']);
         $this->assertEquals('admin', $userData['username']);
-
     }
 
     #[Test]
     public function it_should_return_400_if_username_or_password_missing()
     {
         $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('getBody')->willReturn([
+        $mockRequest->method('parseBodyAsJson')->willReturn([
             'username' => 'admin'
         ]);
 
@@ -56,7 +55,7 @@ class LoginControllerTest extends TestCase
     public function it_should_return_401_if_user_does_not_exist()
     {
         $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('getBody')->willReturn([
+        $mockRequest->method('parseBodyAsJson')->willReturn([
             'username' => 'not_a_user',
             'password' => 'whatever'
         ]);
@@ -71,7 +70,7 @@ class LoginControllerTest extends TestCase
     public function it_should_return_401_if_password_is_wrong()
     {
         $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('getBody')->willReturn([
+        $mockRequest->method('parseBodyAsJson')->willReturn([
             'username' => 'admin',
             'password' => 'wrong_password'
         ]);
