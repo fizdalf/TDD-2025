@@ -73,7 +73,7 @@ class GridsPostController
 
     private function createSuccessResponse(): Response
     {
-        return JsonResponseBuilder::success(["success" => true]);
+        return JsonResponseBuilder::success();
     }
 
     private function handleAuthenticationError(): Response

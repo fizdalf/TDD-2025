@@ -44,8 +44,6 @@ class GridsDeleteController
             return $this->handleRequestError($e->getMessage());
         } catch (GridNotFoundException $e) {
             return $this->handleNotFoundError($e->getMessage());
-        } catch (Exception $e) {
-            return $this->handleGenericError($e->getMessage());
         }
     }
 
@@ -101,7 +99,7 @@ class GridsDeleteController
 
     private function createSuccessResponse(): Response
     {
-        return JsonResponseBuilder::success(["success" => true]);
+        return JsonResponseBuilder::success();
     }
 
     private function handleAuthError(string $message): Response
@@ -119,8 +117,4 @@ class GridsDeleteController
         return JsonResponseBuilder::error($message, 404);
     }
 
-    private function handleGenericError(string $message): Response
-    {
-        return JsonResponseBuilder::error($message, 500);
-    }
 }

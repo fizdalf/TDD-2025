@@ -2,6 +2,7 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
@@ -31,7 +32,7 @@ class GridsGetController
             $username = $this->authenticateUser($request);
             $grids = $this->loadUserGrids($username);
 
-            return $this->createSuccessResponse($grids);
+            return JsonResponseBuilder::success(["grids" => $grids]);
         } catch (InvalidTokenException $e) {
             return $this->handleAuthError($e->getMessage());
         } catch (Exception $e) {
@@ -66,13 +67,6 @@ class GridsGetController
     private function createRepository(string $username): GridFileSystemRepository
     {
         return new GridFileSystemRepository($username);
-    }
-
-    private function createSuccessResponse(array $grids): Response
-    {
-        $response = new Response();
-        $response->setHeader("Content-Type", "application/json");
-        return $response->withJson(["success" => true, "grids" => $grids]);
     }
 
     private function handleAuthError(string $message): Response

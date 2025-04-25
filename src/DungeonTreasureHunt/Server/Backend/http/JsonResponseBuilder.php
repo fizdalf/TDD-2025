@@ -13,7 +13,10 @@ class JsonResponseBuilder
         return (new Response())
             ->withStatus($statusCode)
             ->withHeader("Content-Type", "application/json")
-            ->withJson($data);
+            ->withJson([
+                "status" => "success",
+                ...$data
+            ]);
     }
 
     public static function error(string $message, int $statusCode = 400): Response
@@ -21,7 +24,10 @@ class JsonResponseBuilder
         return (new Response())
             ->withStatus($statusCode)
             ->withHeader("Content-Type", "application/json")
-            ->withJson(["error" => $message]);
+            ->withJson([
+                "status" => "error",
+                "error" => $message
+            ]);
     }
 
     public static function unauthorized(string $message = "No autorizado"): Response
@@ -37,5 +43,10 @@ class JsonResponseBuilder
     public static function badRequest(string $message = "Petición incorrecta"): Response
     {
         return self::error($message, 400);
+    }
+
+    public static function internalServerError(): Response
+    {
+        return self::error('Internal Server Error', 500);
     }
 }

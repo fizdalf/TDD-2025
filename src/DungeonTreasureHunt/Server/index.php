@@ -1,10 +1,11 @@
 <?php
 
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\Response;
 
 require_once __DIR__ . '/routes.php';
-
+require_once __DIR__ . '/Backend/http/JsonResponseBuilder.php';
 
 
 ini_set('html_errors', false);
@@ -32,7 +33,13 @@ $request = new Request(
     body: file_get_contents("php://input")
 );
 
-$result = $controllerFunction($request);
-if($result instanceof Response){
+try {
+
+    $result = $controllerFunction($request);
+} catch (Exception $exception) {
+    $result = JsonResponseBuilder::internalServerError();
+}
+if ($result instanceof Response) {
     $result->send();
 }
+
