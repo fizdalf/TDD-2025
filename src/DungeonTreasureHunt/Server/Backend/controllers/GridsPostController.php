@@ -47,18 +47,12 @@ class GridsPostController
         }
     }
 
-    /**
-     * @throws InvalidTokenException
-     */
     private function processAuthentication(Request $request): string
     {
         $user = $this->getAuthenticatedUser($request);
         return $user['username'];
     }
 
-    /**
-     * @throws InvalidRequestException
-     */
     private function processRequestData(Request $request): array
     {
         $input = $request->parseBodyAsJson();
@@ -91,9 +85,6 @@ class GridsPostController
         return JsonResponseBuilder::error("No se pudo guardar", 500);
     }
 
-    /**
-     * @throws InvalidTokenException
-     */
     public function getAuthenticatedUser(Request $request): ?array
     {
         $authHeader = $request->getHeaders('Authorization') ?? null;
@@ -110,9 +101,6 @@ class GridsPostController
         return $user;
     }
 
-    /**
-     * @throws InvalidRequestException
-     */
     public function validateRequest(array $input): void
     {
         if (!isset($input['grid'], $input['gridName'])) {
