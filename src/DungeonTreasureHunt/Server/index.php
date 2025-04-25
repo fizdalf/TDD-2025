@@ -29,6 +29,7 @@ if (!$controller) {
 $request = new Request(
     headers: getallheaders(),
     params: $routeParams ?? [],
+    body: file_get_contents("php://input")
 );
 
 $result = $controllerFunction($request);

@@ -15,6 +15,7 @@ require_once __DIR__ . '/../controllers/GridsDeleteController.php';
 require_once __DIR__ . '/../http/Request.php';
 require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
+require_once __DIR__ . '/../services/GridRepository.php';
 
 class GridsDeleteControllerTest extends TestCase
 {

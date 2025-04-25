@@ -3,16 +3,16 @@
 namespace DungeonTreasureHunt;
 
 require_once __DIR__ . '/Backend/services/DungeonTreasureHuntExplorer.php';
-require_once __DIR__ .'/Backend/services/Router.php';
-require __DIR__ . '/Backend/services/JwtHandler.php';
-require __DIR__ . '/Backend/services/JWTUserExtractor.php';
-require_once __DIR__.'/Backend/services/Response.php';
+require_once __DIR__ . '/Backend/services/Router.php';
+require_once __DIR__ . '/Backend/services/JwtHandler.php';
+require_once __DIR__ . '/Backend/services/JWTUserExtractor.php';
+require_once __DIR__ . '/Backend/services/Response.php';
 
-require_once __DIR__.'/Backend/controllers/LoginController.php';
-require_once __DIR__.'/Backend/controllers/PlayController.php';
-require_once __DIR__.'/Backend/controllers/GridsPostController.php';
-require_once __DIR__.'/Backend/controllers/GridsGetController.php';
-require_once __DIR__.'/Backend/controllers/GridsDeleteController.php';
+require_once __DIR__ . '/Backend/controllers/LoginController.php';
+require_once __DIR__ . '/Backend/controllers/PlayController.php';
+require_once __DIR__ . '/Backend/controllers/GridsPostController.php';
+require_once __DIR__ . '/Backend/controllers/GridsGetController.php';
+require_once __DIR__ . '/Backend/controllers/GridsDeleteController.php';
 
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\controllers\GridsGetController;

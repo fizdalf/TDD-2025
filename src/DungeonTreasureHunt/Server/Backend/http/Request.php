@@ -15,13 +15,12 @@ class Request
     private ?string $realBody;
 
     public function __construct(array $headers = [], array $params = [], string $body = "")
+
+
     {
         $this->headers = $headers;
         $this->params = $params;
         $this->realBody = $body;
-
-        $input = file_get_contents("php://input");
-        $this->body = json_decode($input, true) ?? [];
     }
 
     public function getHeaders(string $name): ?string
@@ -46,7 +45,6 @@ class Request
 
     public function parseBodyAsJson(): array
     {
-        $input = file_get_contents("php://input");
-        return json_decode($input, true) ?? [];
+        return json_decode($this->realBody, true) ?? [];
     }
 }
