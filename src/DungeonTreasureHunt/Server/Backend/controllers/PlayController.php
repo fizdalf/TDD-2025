@@ -14,16 +14,46 @@ class PlayController
 {
     public function __invoke(Request $request): Response
     {
-        $input = $request->getBody();
+        $input = $this->extractGridData($request);
 
-        if (!$input) {
-            return (new Response(400))
-                ->withJson(["error" => "No se pudo procesar el grid"]);
+        if (!$this->isGridDataValid($input)) {
+            return $this->createErrorResponse();
         }
 
-        $explorer = new DungeonTreasureHuntExplorer();
-        $path = $explorer->findPathToTreasure($input);
+        $path = $this->findPathToTreasure($input);
 
+        return $this->createSuccessResponse($path);
+    }
+
+    private function extractGridData(Request $request): mixed
+    {
+        return $request->parseBodyAsJson();
+    }
+
+    private function isGridDataValid(mixed $input): bool
+    {
+        return !empty($input);
+    }
+
+    private function createErrorResponse(): Response
+    {
+        return (new Response(400))
+            ->withJson(["error" => "No se pudo procesar el grid"]);
+    }
+
+    private function findPathToTreasure(mixed $input): array
+    {
+        $explorer = $this->createExplorer();
+        return $explorer->findPathToTreasure($input);
+    }
+
+    private function createExplorer(): DungeonTreasureHuntExplorer
+    {
+        return new DungeonTreasureHuntExplorer();
+    }
+
+    private function createSuccessResponse(array $path): Response
+    {
         return (new Response())
             ->withJson($path);
     }
