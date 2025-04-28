@@ -1,22 +1,18 @@
 <?php
 
-
 namespace DungeonTreasureHunt\Backend\models;
 
 use DungeonTreasureHunt\Backend\models;
 
 class Grid
 {
-
     public function __construct(private readonly array $dungeon)
     {
     }
 
-
     public static function fromArray(array $textGrid)
     {
         return new self($textGrid);
-
     }
 
     public function getPlayer(): ?models\Position

@@ -2,7 +2,6 @@
 
 namespace DungeonTreasureHunt\Backend\services;
 
-
 use DungeonTreasureHunt\Backend\models\GridItem;
 
 interface GridRepository

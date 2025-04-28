@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 
-require_once __DIR__ . '/DungeonTreasureHuntExplorer.php';
-
 class DungeonTreasureHunt
 {
-
     private DungeonTreasureHuntExplorer $dungeonTreasureHuntExplorer;
 
     public function __construct()

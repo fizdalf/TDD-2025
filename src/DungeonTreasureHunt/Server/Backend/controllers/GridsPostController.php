@@ -12,15 +12,6 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use Exception;
 
-require_once __DIR__ . '/../services/Response.php';
-require_once __DIR__ . '/../services/JwtHandler.php';
-require_once __DIR__ . '/../services/JWTUserExtractor.php';
-require_once __DIR__ . '/../http/JsonResponseBuilder.php';
-require_once __DIR__ . '/../services/GridRepository.php';
-require_once __DIR__ . '/../http/Request.php';
-require_once __DIR__ . '/../exceptions/InvalidTokenException.php';
-require_once __DIR__ . '/../exceptions/InvalidRequestException.php';
-
 class GridsPostController
 {
     private JWTUserExtractor $jwtUserExtractor;

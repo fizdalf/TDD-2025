@@ -5,7 +5,6 @@ namespace DungeonTreasureHunt\Backend\models;
 
 class Position implements \JsonSerializable
 {
-
     public $x;
     public $y;
 
@@ -41,7 +40,6 @@ class Position implements \JsonSerializable
 
     public function jsonSerialize(): mixed
     {
-
         return [
             "x" => $this->x,
             "y" => $this->y

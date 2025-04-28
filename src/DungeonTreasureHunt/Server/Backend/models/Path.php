@@ -4,7 +4,6 @@ namespace DungeonTreasureHunt\Backend\models;
 
 class Path
 {
-
     private array $cameFrom = [];
 
     public function save(Position $position, PossibleMovement $data): void
@@ -24,5 +23,4 @@ class Path
     {
         return "{$position->getX()},{$position->getY()}";
     }
-
 }

@@ -8,11 +8,6 @@ use DungeonTreasureHunt\Backend\services\JwtHandler;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../../vendor/autoload.php';
-require_once __DIR__ . '/../controllers/LoginController.php';
-require_once __DIR__ . '/../http/Request.php';
-require_once __DIR__ . '/../services/JwtHandler.php';
-
 class LoginControllerTest extends TestCase
 {
     #[Test]

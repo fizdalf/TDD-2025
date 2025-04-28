@@ -13,15 +13,6 @@ use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../../vendor/autoload.php';
-require_once __DIR__ . '/../controllers/GridsPostController.php';
-require_once __DIR__ . '/../http/Request.php';
-require_once __DIR__ . '/../services/GridRepository.php';
-require_once __DIR__ . '/../services/JwtHandler.php';
-require_once __DIR__ . '/../services/JWTUserExtractor.php';
-require_once __DIR__ . '/../models/GridItem.php';
-require_once __DIR__ . '/../exceptions/InvalidTokenException.php';
-
 class GridsPostControllerTest extends TestCase
 {
     #[Test]

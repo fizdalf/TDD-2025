@@ -10,10 +10,6 @@ use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../services/DungeonTreasureHuntExplorer.php';
-require_once __DIR__ . '/../models/PossibleMovement.php';
-require_once __DIR__ . '/../models/Position.php';
-
 class DungeonTreasureHuntExplorerTest extends TestCase
 {
     #[Test]

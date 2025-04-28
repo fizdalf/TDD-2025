@@ -4,8 +4,6 @@ namespace DungeonTreasureHunt\Backend\http;
 
 use DungeonTreasureHunt\Backend\services\Response;
 
-require_once __DIR__ . '/../services/Response.php';
-
 class JsonResponseBuilder
 {
     public static function success(array $data = [], int $statusCode = 200): Response

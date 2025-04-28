@@ -2,7 +2,6 @@
 
 namespace DungeonTreasureHunt\Backend\models;
 
-
 class PossibleMovement implements \JsonSerializable
 {
     public Position $playerPosition;

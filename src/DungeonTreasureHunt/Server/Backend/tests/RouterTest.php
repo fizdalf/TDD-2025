@@ -2,8 +2,6 @@
 
 namespace DungeonTreasureHunt\Backend\tests;
 
-require_once __DIR__ . '/../services/Router.php';
-
 use DungeonTreasureHunt\Backend\services\Router;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

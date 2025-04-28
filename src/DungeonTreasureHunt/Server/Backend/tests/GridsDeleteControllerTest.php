@@ -10,14 +10,6 @@ use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../../vendor/autoload.php';
-require_once __DIR__ . '/../controllers/GridsDeleteController.php';
-require_once __DIR__ . '/../http/Request.php';
-require_once __DIR__ . '/../services/JwtHandler.php';
-require_once __DIR__ . '/../services/JWTUserExtractor.php';
-require_once __DIR__ . '/../services/GridRepository.php';
-require_once __DIR__ . '/../services/GridFileSystemRepository.php';
-
 class GridsDeleteControllerTest extends TestCase
 {
     #[Test]

@@ -6,10 +6,6 @@ use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\Request;
 
-require_once __DIR__ . '/../services/Response.php';
-require_once __DIR__ . '/../services/DungeonTreasureHuntExplorer.php';
-require_once __DIR__ . '/../http/Request.php';
-
 class PlayController
 {
     public function __invoke(Request $request): Response

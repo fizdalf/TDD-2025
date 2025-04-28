@@ -1,7 +1,6 @@
 <?php
 
 namespace DungeonTreasureHunt\Backend\services;
-require __DIR__ . '/../../../../../vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -10,7 +9,6 @@ class JwtHandler
 {
     private static $SECRET_KEY = "secretKey";
     private static $ALGORITHM = "HS256";
-
 
     public static function generateToken(mixed $user, $expTime = 3600): string
     {
@@ -22,7 +20,6 @@ class JwtHandler
         return JWT::encode($payload, self::$SECRET_KEY, self::$ALGORITHM);
     }
 
-
     public static function verifyToken($token): false|array
     {
         try {
@@ -32,7 +29,5 @@ class JwtHandler
             return false;
         }
     }
-
-
 }
 

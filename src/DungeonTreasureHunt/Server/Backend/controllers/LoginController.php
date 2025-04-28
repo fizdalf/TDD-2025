@@ -7,11 +7,6 @@ use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 
-require_once __DIR__ . '/../services/Response.php';
-require_once __DIR__ . '/../services/JwtHandler.php';
-require_once __DIR__ . '/../http/JsonResponseBuilder.php';
-require_once __DIR__ . '/../http/Request.php';
-
 class LoginController
 {
     private array $users = [

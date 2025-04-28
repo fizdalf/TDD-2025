@@ -7,12 +7,6 @@ use DungeonTreasureHunt\Backend\http\Request;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../../vendor/autoload.php';
-require_once __DIR__ . '/../controllers/PlayController.php';
-require_once __DIR__ . '/../http/Request.php';
-require_once __DIR__ . '/../services/DungeonTreasureHuntExplorer.php';
-require_once __DIR__ . '/../services/Response.php';
-
 class PlayControllerTest extends TestCase
 {
     #[Test]

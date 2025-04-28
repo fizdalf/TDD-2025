@@ -13,7 +13,6 @@ class MoveChecker
         $x = $playerNextPosition->x;
         $y = $playerNextPosition->y;
 
-
         if ($y < 0 || $y >= count($grid)) {
             return false;
         }

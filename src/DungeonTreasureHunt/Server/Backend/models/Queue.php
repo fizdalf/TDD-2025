@@ -4,7 +4,6 @@ namespace DungeonTreasureHunt\Backend\models;
 
 class Queue
 {
-
     private array $elements = [];
 
     public function isEmpty(): bool
@@ -19,11 +18,9 @@ class Queue
 
     public function dequeue(): mixed
     {
-
         if ($this->isEmpty()){
             return false;
         }
-
         return array_shift($this->elements);
     }
 }

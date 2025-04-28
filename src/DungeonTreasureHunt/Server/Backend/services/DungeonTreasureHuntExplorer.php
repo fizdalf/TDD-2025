@@ -11,16 +11,6 @@ use DungeonTreasureHunt\Backend\models\Queue;
 use DungeonTreasureHunt\Backend\models\Tile;
 use DungeonTreasureHunt\Backend\models\VisitedTile;
 
-require_once __DIR__ . '/../models/Grid.php';
-require_once __DIR__ . '/../models/Direction.php';
-require_once __DIR__ . '/../models/Path.php';
-require_once __DIR__ . '/../models/VisitedTile.php';
-require_once __DIR__ . '/../models/Queue.php';
-require_once __DIR__ . '/../models/Position.php';
-require_once __DIR__ . '/../models/PossibleMovement.php';
-require_once __DIR__ . '/../models/Tile.php';
-require_once 'MoveChecker.php';
-
 class DungeonTreasureHuntExplorer
 {
     private readonly MoveChecker $moveChecker;
@@ -91,7 +81,6 @@ class DungeonTreasureHuntExplorer
             $path[] = $possibleMovement;
             $current = $possibleMovement->playerPosition;
         }
-
         return array_reverse($path);
     }
 

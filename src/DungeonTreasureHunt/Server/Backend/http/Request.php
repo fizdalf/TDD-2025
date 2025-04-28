@@ -4,9 +4,6 @@ namespace DungeonTreasureHunt\Backend\http;
 
 use DungeonTreasureHunt\Backend\models\GridItem;
 
-require_once __DIR__ . '/../models/GridItem.php';
-
-
 class Request
 {
     private array $headers;
