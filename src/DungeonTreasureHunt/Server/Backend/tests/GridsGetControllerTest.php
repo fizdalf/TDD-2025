@@ -13,6 +13,7 @@ require_once __DIR__ . '/../services/JwtHandler.php';
 require_once __DIR__ . '/../services/JWTUserExtractor.php';
 require_once __DIR__ . '/../http/Request.php';
 require_once __DIR__ . '/../controllers/GridsGetController.php';
+require_once __DIR__ . '/../services/GridFileSystemRepository.php';
 
 class GridsGetControllerTest extends TestCase
 {
