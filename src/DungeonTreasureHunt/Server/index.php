@@ -4,8 +4,7 @@ use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\Response;
 
-require_once __DIR__ . '/routes.php';
-require_once __DIR__ . '/Backend/http/JsonResponseBuilder.php';
+
 
 
 ini_set('html_errors', false);

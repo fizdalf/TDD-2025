@@ -2,24 +2,12 @@
 
 namespace DungeonTreasureHunt;
 
-require_once __DIR__ . '/Backend/services/DungeonTreasureHuntExplorer.php';
-require_once __DIR__ . '/Backend/services/Router.php';
-require_once __DIR__ . '/Backend/services/JwtHandler.php';
-require_once __DIR__ . '/Backend/services/JWTUserExtractor.php';
-require_once __DIR__ . '/Backend/services/Response.php';
-
-require_once __DIR__ . '/Backend/controllers/LoginController.php';
-require_once __DIR__ . '/Backend/controllers/PlayController.php';
-require_once __DIR__ . '/Backend/controllers/GridsPostController.php';
-require_once __DIR__ . '/Backend/controllers/GridsGetController.php';
-require_once __DIR__ . '/Backend/controllers/GridsDeleteController.php';
-
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\controllers\GridsGetController;
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\controllers\LoginController;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
-use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
+use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Router;
