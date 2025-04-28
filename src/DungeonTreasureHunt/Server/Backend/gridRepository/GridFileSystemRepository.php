@@ -1,6 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\services;
+namespace DungeonTreasureHunt\Backend\gridRepository;
 
 use DungeonTreasureHunt\Backend\models\GridItem;
 
