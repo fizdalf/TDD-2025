@@ -46,8 +46,9 @@ class GridsGetControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatus());
 
         $body = json_decode($response->getBody(), true);
+        var_dump($body);
         $this->assertIsArray($body);
-        $this->assertTrue($body['success']);
+        $this->assertTrue($body['status'] === "success");
         $this->assertArrayHasKey('grids', $body);
     }
 

@@ -131,7 +131,8 @@ class GridsPostControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertEquals(500, $response->getStatus());
-        $this->assertEquals(json_encode(["error" => "No se pudo guardar"]), $response->getBody());
+        $this->assertEquals(json_encode(["status" => "error", "error" => "No se pudo guardar"]), $response->getBody());
+
     }
 
     private function createRequestWithMockedJsonParsing(array $headers, array $params, array $bodyData): Request
