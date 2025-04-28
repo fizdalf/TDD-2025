@@ -17,12 +17,12 @@ class PlayController
         $input = $this->extractGridData($request);
 
         if (!$this->isGridDataValid($input)) {
-            return $this->createErrorResponse();
+            return Response::error("No se pudo procesar el grid");
         }
 
         $path = $this->findPathToTreasure($input);
 
-        return $this->createSuccessResponse($path);
+        return Response::success($path);
     }
 
     private function extractGridData(Request $request): mixed
