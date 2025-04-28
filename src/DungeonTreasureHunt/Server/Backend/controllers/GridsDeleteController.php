@@ -2,14 +2,14 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
+use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
+use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
+use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\services\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
-use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
-use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
 
 class GridsDeleteController
 {
