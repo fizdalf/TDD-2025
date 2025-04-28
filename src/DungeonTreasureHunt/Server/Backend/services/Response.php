@@ -76,4 +76,13 @@ class Response
         return $this->body;
     }
 
+    public static function success(array $data): self
+    {
+        return (new self(200))->withJson($data);
+    }
+
+    public static function error(string $message, int $statusCode = 400): self
+    {
+        return (new self($statusCode))->withJson(["error" => $message]);
+    }
 }
