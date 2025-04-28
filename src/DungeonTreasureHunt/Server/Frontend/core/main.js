@@ -169,7 +169,7 @@ function getStoredGrids() {
     authService.fetchWithAuth('/grids')
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.status === 'success') {
                 const contenedor = document.getElementById("contenedor-laberintos-guardados");
                 contenedor.innerHTML = "";
 
@@ -214,7 +214,7 @@ function deleteGrid(id) {
     authService.fetchWithAuth(`/grids/${id}`, {method: 'DELETE'})
         .then(res => res.json())
         .then(res => {
-            if (res.success) {
+            if (res.status === 'success') {
                 getStoredGrids();
             } else {
                 console.error("Error al eliminar:", res.error);

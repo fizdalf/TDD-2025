@@ -10,6 +10,8 @@ use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use Exception;
 
+require_once __DIR__ . '/../../../../../vendor/autoload.php';
+
 class GridsGetController
 {
     private JWTUserExtractor $jwtUserExtractor;
@@ -28,8 +30,8 @@ class GridsGetController
             return JsonResponseBuilder::success(["grids" => $grids]);
         } catch (InvalidTokenException $e) {
             return $this->handleAuthError($e->getMessage());
-        } catch (Exception $e) {
-            return $this->handleGenericError($e->getMessage());
+        } catch (Exception) {
+            return $this->handleGenericError();
         }
     }
 
@@ -64,15 +66,12 @@ class GridsGetController
 
     private function handleAuthError(string $message): Response
     {
-        $response = new Response(401);
-        $response->setHeader("Content-Type", "application/json");
-        return $response->withJson(["error" => $message]);
+        return JsonResponseBuilder::unauthorized($message);
     }
 
-    private function handleGenericError(string $message): Response
+    private function handleGenericError(): Response
     {
-        $response = new Response(500);
-        $response->setHeader("Content-Type", "application/json");
-        return $response->withJson(["error" => $message]);
+
+        return JsonResponseBuilder::internalServerError();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\Request;
@@ -31,10 +32,9 @@ class PlayController
         return !empty($input);
     }
 
-    private function createErrorResponse(): Response
+    private function createErrorResponse(string $message, int $statusCode = 400): Response
     {
-        return (new Response(400))
-            ->withJson(["error" => "No se pudo procesar el grid"]);
+        return JsonResponseBuilder::error($message, $statusCode);
     }
 
     private function findPathToTreasure(mixed $input): array
@@ -50,7 +50,6 @@ class PlayController
 
     private function createSuccessResponse(array $path): Response
     {
-        return (new Response())
-            ->withJson($path);
+        return JsonResponseBuilder::success($path);
     }
 }

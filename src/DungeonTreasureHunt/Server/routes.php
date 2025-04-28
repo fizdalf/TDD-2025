@@ -12,7 +12,6 @@ use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Router;
 
-
 $router = new Router();
 
 $jwtHandler = new JWTHandler();
