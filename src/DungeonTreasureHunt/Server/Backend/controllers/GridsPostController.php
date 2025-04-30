@@ -5,6 +5,7 @@ namespace DungeonTreasureHunt\Backend\controllers;
 use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
@@ -35,7 +36,7 @@ class GridsPostController
             $gridData = $this->processRequestData($request);
             $this->saveGrid($username, $gridData);
 
-            return $this->responseBuilder->success();
+            return JsonResponseBuilder::success([]);
         } catch (InvalidTokenException) {
             return $this->handleAuthenticationError();
         } catch (InvalidRequestException) {
@@ -76,12 +77,12 @@ class GridsPostController
 
     private function handleInvalidRequestError(): Response
     {
-        return $this->responseBuilder->error("Faltan datos", 400);
+        return JsonResponseBuilder::error("Faltan datos", 400);
     }
 
     private function handleSaveError(): Response
     {
-        return $this->responseBuilder->error("No se pudo guardar", 500);
+        return JsonResponseBuilder::error("No se pudo guardar", 500);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace DungeonTreasureHunt\Backend\gridRepository;
 
+use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
 use DungeonTreasureHunt\Backend\models\GridItem;
 
 class GridFileSystemRepository implements GridRepository
@@ -57,5 +58,43 @@ class GridFileSystemRepository implements GridRepository
         if (file_exists($path)) {
             unlink($path);
         }
+    }
+
+    public function deleteGrid(GridItem $gridItem): void
+    {
+        $this->username = $gridItem->username;
+        $grids = $this->loadGrids();
+
+        if (!isset($gridItem->id)) {
+            throw new GridNotFoundException("Grid no encontrado");
+        }
+
+        if (!isset($grids[$gridItem->id])) {
+            throw new GridNotFoundException("Grid no encontrado");
+        }
+
+        unset($grids[$gridItem->id]);
+        $this->saveGrids($grids);
+    }
+
+    public function getGrid(string $username, string $id): ?GridItem
+    {
+        $this->username = $username;
+        $grids = $this->loadGrids();
+
+        if (count($grids) === 0) {
+            return null;
+        }
+        if (!isset($grids[$id])) {
+            return null;
+        }
+        $gridData = $grids[$id];
+
+        return new GridItem(
+            $gridData['name'],
+            $gridData['grid'],
+            $username,
+            $id
+        );
     }
 }

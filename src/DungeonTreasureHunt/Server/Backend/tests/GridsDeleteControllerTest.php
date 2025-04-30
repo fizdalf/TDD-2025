@@ -4,40 +4,26 @@ namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
-use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactory;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
-use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GridsDeleteControllerTest extends TestCase
 {
-    private ResponseBuilder $responseBuilder;
-    private GridRepositoryFactory $gridRepositoryFactory;
     private JWTUserExtractor $jwtUserExtractor;
     private GridFileSystemRepository $gridRepository;
+    private GridsDeleteController $sut;
 
     protected function setUp(): void
     {
-        $this->responseBuilder = $this->createMock(ResponseBuilder::class);
-
-        $this->responseBuilder->method('success')->willReturn(
-            (new Response(200))->withJson(['status' => 'success'])
-        );
-        $this->responseBuilder->method('error')->willReturnCallback(
-            function($message, $statusCode) {
-                return (new Response($statusCode))->withJson(['status' => 'error', 'error' => $message]);
-            }
-        );
-
         $this->jwtUserExtractor = $this->createMock(JWTUserExtractor::class);
-
         $this->gridRepository = $this->createMock(GridFileSystemRepository::class);
-
-        $this->gridRepositoryFactory = $this->createMock(GridRepositoryFactory::class);
-        $this->gridRepositoryFactory->method('createForUser')->willReturn($this->gridRepository);
+        $this->sut = new GridsDeleteController(
+            $this->jwtUserExtractor,
+            $this->gridRepository,
+        );
     }
 
     #[Test]
@@ -48,47 +34,31 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->jwtUserExtractor->method('extractUsername')->willReturn($username);
 
-        $this->gridRepository->method('exists')->willReturn(true);
-        $this->gridRepository->method('loadGrids')->willReturn([
-            $gridId => ["gridName" => "Test Grid", "grid" => [[0, 1], [1, 0]]]
-        ]);
-
+        $this->gridRepository->method('getGrid')->willReturn(new GridItem(
+            'Test Grid',
+            [[0, 1], [1, 0]],
+            $username
+        ));
         $request = new Request(
             ['Authorization' => "Bearer valid_token"],
             ['id' => $gridId]
         );
 
-        $controller = new GridsDeleteController(
-            $this->jwtUserExtractor,
-            $this->gridRepositoryFactory,
-            $this->responseBuilder
-        );
-
-        $response = $controller($request);
+        $response = $this->sut->__invoke($request);
 
         $this->assertEquals(200, $response->getStatus());
+        //TODO: assert the body too!
     }
 
     #[Test]
     public function it_should_return_401_if_token_missing()
     {
-        $this->responseBuilder->method('error')->willReturnCallback(
-            function($message, $statusCode) {
-                return (new Response($statusCode))->withJson(['status' => 'error', 'error' => $message]);
-            }
-        );
-
         $request = new Request([], ['id' => 1]);
 
-        $controller = new GridsDeleteController(
-            $this->jwtUserExtractor,
-            $this->gridRepositoryFactory,
-            $this->responseBuilder
-        );
-
-        $response = $controller($request);
+        $response = $this->sut->__invoke($request);
 
         $this->assertEquals(401, $response->getStatus());
+        //TODO: assert the body too!
     }
 
     #[Test]
@@ -98,15 +68,10 @@ class GridsDeleteControllerTest extends TestCase
 
         $request = new Request(['Authorization' => 'Bearer invalidtoken'], ['id' => 1]);
 
-        $controller = new GridsDeleteController(
-            $this->jwtUserExtractor,
-            $this->gridRepositoryFactory,
-            $this->responseBuilder
-        );
-
-        $response = $controller($request);
+        $response = $this->sut->__invoke($request);
 
         $this->assertEquals(401, $response->getStatus());
+        //TODO: assert the body too!
     }
 
     #[Test]
@@ -118,15 +83,10 @@ class GridsDeleteControllerTest extends TestCase
 
         $request = new Request(['Authorization' => "Bearer valid_token"], []);
 
-        $controller = new GridsDeleteController(
-            $this->jwtUserExtractor,
-            $this->gridRepositoryFactory,
-            $this->responseBuilder
-        );
-
-        $response = $controller($request);
+        $response = $this->sut->__invoke($request);
 
         $this->assertEquals(400, $response->getStatus());
+        //TODO: assert the body too!
     }
 
     #[Test]
@@ -137,19 +97,11 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->jwtUserExtractor->method('extractUsername')->willReturn($username);
 
-        $this->gridRepository->method('exists')->willReturn(true);
-        $this->gridRepository->method('loadGrids')->willReturn([]);
-
         $request = new Request(['Authorization' => "Bearer valid_token"], ['id' => $gridId]);
 
-        $controller = new GridsDeleteController(
-            $this->jwtUserExtractor,
-            $this->gridRepositoryFactory,
-            $this->responseBuilder
-        );
-
-        $response = $controller($request);
+        $response = $this->sut->__invoke($request);
 
         $this->assertEquals(404, $response->getStatus());
+        //TODO: assert the body too!
     }
 }

@@ -2,6 +2,7 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\services\ResponseBuilder;
@@ -52,17 +53,17 @@ class LoginController
 
     private function handleIncompleteCredentials(): Response
     {
-        return $this->responseBuilder->error("Faltan datos", 400);
+        return JsonResponseBuilder::error("Faltan datos", 400);
     }
 
     private function handleInvalidCredentials(): Response
     {
-        return $this->responseBuilder->error("Credenciales incorrectas", 401);
+        return JsonResponseBuilder::error("Credenciales incorrectas", 401);
     }
 
     private function generateSuccessResponse(string $username): Response
     {
         $token = $this->tokenGenerator->generateToken(["username" => $username]);
-        return $this->responseBuilder->success(["token" => $token]);
+        return JsonResponseBuilder::success(["token" => $token]);
     }
 }

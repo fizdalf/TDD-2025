@@ -7,7 +7,8 @@ class GridItem
     public function __construct(
         public readonly string $name,
         public readonly array  $grid,
-        public readonly string $username
+        public readonly string $username,
+        public readonly ?int   $id = null
     )
     {
     }

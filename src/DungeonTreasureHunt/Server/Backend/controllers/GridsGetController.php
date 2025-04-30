@@ -6,6 +6,7 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactory;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
@@ -18,13 +19,14 @@ class GridsGetController
 {
     private JWTUserExtractor $jwtUserExtractor;
     private GridRepositoryFactory $gridRepositoryFactory;
-    private ResponseBuilder $responseBuilder;
+    private JsonResponseBuilderAdapter $responseBuilder;
 
     public function __construct(
-        JWTUserExtractor $jwtUserExtractor,
-        GridRepositoryFactory $gridRepositoryFactory,
-        ResponseBuilder $responseBuilder
-    ) {
+        JWTUserExtractor           $jwtUserExtractor,
+        GridRepositoryFactory      $gridRepositoryFactory,
+        JsonResponseBuilderAdapter $responseBuilder
+    )
+    {
         $this->jwtUserExtractor = $jwtUserExtractor;
         $this->gridRepositoryFactory = $gridRepositoryFactory;
         $this->responseBuilder = $responseBuilder;
@@ -36,7 +38,7 @@ class GridsGetController
             $username = $this->authenticateUser($request);
             $grids = $this->loadUserGrids($username);
 
-            return $this->responseBuilder->success(["grids" => $grids]);
+            return JsonResponseBuilder::success(["grids" => $grids]);
         } catch (InvalidTokenException $e) {
             return $this->handleAuthError($e->getMessage());
         } catch (Exception) {

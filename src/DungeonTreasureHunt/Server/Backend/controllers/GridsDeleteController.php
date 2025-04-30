@@ -6,8 +6,10 @@ use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
+use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactory;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
@@ -16,17 +18,16 @@ use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 class GridsDeleteController
 {
     private JWTUserExtractor $jwtUserExtractor;
-    private GridRepositoryFactory $gridRepositoryFactory;
-    private ResponseBuilder $responseBuilder;
+    private GridRepository $gridRepository;
+
 
     public function __construct(
         JWTUserExtractor $jwtUserExtractor,
-        GridRepositoryFactory $gridRepositoryFactory,
-        ResponseBuilder $responseBuilder
-    ) {
+        GridRepository   $gridRepository,
+    )
+    {
         $this->jwtUserExtractor = $jwtUserExtractor;
-        $this->gridRepositoryFactory = $gridRepositoryFactory;
-        $this->responseBuilder = $responseBuilder;
+        $this->gridRepository = $gridRepository;
     }
 
     public function __invoke(Request $request): Response
@@ -36,13 +37,13 @@ class GridsDeleteController
             $idToDelete = $this->validateAndGetId($request);
             $this->deleteGrid($username, $idToDelete);
 
-            return $this->responseBuilder->success();
+            return JsonResponseBuilder::success();
         } catch (InvalidTokenException $e) {
-            return $this->responseBuilder->error($e->getMessage(), 401);
+            return JsonResponseBuilder::error($e->getMessage(), 401);
         } catch (InvalidRequestException $e) {
-            return $this->responseBuilder->error($e->getMessage(), 400);
+            return JsonResponseBuilder::error($e->getMessage(), 400);
         } catch (GridNotFoundException $e) {
-            return $this->responseBuilder->error($e->getMessage(), 404);
+            return JsonResponseBuilder::error($e->getMessage(), 404);
         }
     }
 
@@ -76,18 +77,12 @@ class GridsDeleteController
 
     private function deleteGrid(string $username, string $idToDelete): void
     {
-        $repo = $this->gridRepositoryFactory->createForUser($username);
+        $foundGrid = $this->gridRepository->getGrid($username, $idToDelete);
 
-        if (!$repo->exists()) {
-            throw new GridNotFoundException("No se encontró el archivo");
+        if (!$foundGrid) {
+            throw new GridNotFoundException("");
         }
 
-        $grids = $repo->loadGrids();
-        if (!isset($grids[$idToDelete])) {
-            throw new GridNotFoundException("Grid no encontrado");
-        }
-
-        unset($grids[$idToDelete]);
-        $repo->saveGrids($grids);
+        $this->gridRepository->deleteGrid($foundGrid);
     }
 }
