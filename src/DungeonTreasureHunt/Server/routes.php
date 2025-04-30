@@ -22,9 +22,15 @@ $jwtUserExtractor = new JWTUserExtractor($jwtHandler);
 $gridRepositoryFactory = new GridRepositoryFactoryImpl();
 $responseBuilder = new JsonResponseBuilderAdapter();
 
+$userGridRepository = new GridFileSystemRepository("");
+
 $router->register('/login', 'POST', new LoginController());
 $router->register('/play', 'POST', new PlayController());
-$router->register('/grids', 'POST', new GridsPostController($jwtUserExtractor, new GridFileSystemRepository("")));
+$router->register('/grids', 'POST', new GridsPostController(
+    $jwtUserExtractor,
+    $userGridRepository,
+    $responseBuilder
+));
 $router->register('/grids', 'GET', new GridsGetController(
     $jwtUserExtractor,
     $gridRepositoryFactory,

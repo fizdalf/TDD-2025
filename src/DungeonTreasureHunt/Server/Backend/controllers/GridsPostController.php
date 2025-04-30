@@ -5,20 +5,27 @@ namespace DungeonTreasureHunt\Backend\controllers;
 use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
+use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use Exception;
 
 class GridsPostController
 {
     private JWTUserExtractor $jwtUserExtractor;
+    private GridRepository $gridRepository;
+    private ResponseBuilder $responseBuilder;
 
-    public function __construct(JWTUserExtractor $jwtUserExtractor, private readonly GridRepository $gridRepository)
-    {
+    public function __construct(
+        JWTUserExtractor $jwtUserExtractor,
+        GridRepository $gridRepository,
+        ResponseBuilder $responseBuilder
+    ) {
         $this->jwtUserExtractor = $jwtUserExtractor;
+        $this->gridRepository = $gridRepository;
+        $this->responseBuilder = $responseBuilder;
     }
 
     public function __invoke(Request $request): Response
@@ -28,7 +35,7 @@ class GridsPostController
             $gridData = $this->processRequestData($request);
             $this->saveGrid($username, $gridData);
 
-            return $this->createSuccessResponse();
+            return $this->responseBuilder->success();
         } catch (InvalidTokenException) {
             return $this->handleAuthenticationError();
         } catch (InvalidRequestException) {
@@ -62,24 +69,19 @@ class GridsPostController
         $this->gridRepository->saveGrid(new GridItem($gridData['gridName'], $gridData['grid'], $username));
     }
 
-    private function createSuccessResponse(): Response
-    {
-        return JsonResponseBuilder::success();
-    }
-
     private function handleAuthenticationError(): Response
     {
-        return JsonResponseBuilder::unauthorized("Token no proporcionado o mal formado");
+        return $this->responseBuilder->unauthorized("Token no proporcionado o mal formado");
     }
 
     private function handleInvalidRequestError(): Response
     {
-        return JsonResponseBuilder::error("Faltan datos", 400);
+        return $this->responseBuilder->error("Faltan datos", 400);
     }
 
     private function handleSaveError(): Response
     {
-        return JsonResponseBuilder::error("No se pudo guardar", 500);
+        return $this->responseBuilder->error("No se pudo guardar", 500);
     }
 
     /**
