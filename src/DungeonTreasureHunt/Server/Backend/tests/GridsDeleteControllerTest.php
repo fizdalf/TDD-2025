@@ -3,11 +3,9 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
-use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactory;
 use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\services\ResponseBuilder;
@@ -25,7 +23,6 @@ class GridsDeleteControllerTest extends TestCase
     {
         $this->responseBuilder = $this->createMock(ResponseBuilder::class);
 
-        // Configuración del ResponseBuilder mock
         $this->responseBuilder->method('success')->willReturn(
             (new Response(200))->withJson(['status' => 'success'])
         );
@@ -37,10 +34,8 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->jwtUserExtractor = $this->createMock(JWTUserExtractor::class);
 
-        // Mock del repositorio
         $this->gridRepository = $this->createMock(GridFileSystemRepository::class);
 
-        // Mock de la factory de repositorios
         $this->gridRepositoryFactory = $this->createMock(GridRepositoryFactory::class);
         $this->gridRepositoryFactory->method('createForUser')->willReturn($this->gridRepository);
     }
@@ -51,10 +46,8 @@ class GridsDeleteControllerTest extends TestCase
         $username = "testuser";
         $gridId = "1";
 
-        // Configurar el mock del extractor JWT
         $this->jwtUserExtractor->method('extractUsername')->willReturn($username);
 
-        // Configurar el mock del repositorio
         $this->gridRepository->method('exists')->willReturn(true);
         $this->gridRepository->method('loadGrids')->willReturn([
             $gridId => ["gridName" => "Test Grid", "grid" => [[0, 1], [1, 0]]]
@@ -79,7 +72,6 @@ class GridsDeleteControllerTest extends TestCase
     #[Test]
     public function it_should_return_401_if_token_missing()
     {
-        // Configurar el mock del ResponseBuilder
         $this->responseBuilder->method('error')->willReturnCallback(
             function($message, $statusCode) {
                 return (new Response($statusCode))->withJson(['status' => 'error', 'error' => $message]);
@@ -102,7 +94,6 @@ class GridsDeleteControllerTest extends TestCase
     #[Test]
     public function it_should_return_401_if_token_invalid()
     {
-        // Configurar el mock del extractor JWT para devolver null (token inválido)
         $this->jwtUserExtractor->method('extractUsername')->willReturn(null);
 
         $request = new Request(['Authorization' => 'Bearer invalidtoken'], ['id' => 1]);
@@ -123,7 +114,6 @@ class GridsDeleteControllerTest extends TestCase
     {
         $username = "testuser";
 
-        // Configurar el mock del extractor JWT
         $this->jwtUserExtractor->method('extractUsername')->willReturn($username);
 
         $request = new Request(['Authorization' => "Bearer valid_token"], []);
@@ -145,10 +135,8 @@ class GridsDeleteControllerTest extends TestCase
         $username = "testuser";
         $gridId = "999";
 
-        // Configurar el mock del extractor JWT
         $this->jwtUserExtractor->method('extractUsername')->willReturn($username);
 
-        // Configurar el mock del repositorio
         $this->gridRepository->method('exists')->willReturn(true);
         $this->gridRepository->method('loadGrids')->willReturn([]);
 
