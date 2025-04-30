@@ -4,10 +4,12 @@ namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
+use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactory;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
+use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use Exception;
 
 require_once __DIR__ . '/../../../../../vendor/autoload.php';
@@ -15,10 +17,17 @@ require_once __DIR__ . '/../../../../../vendor/autoload.php';
 class GridsGetController
 {
     private JWTUserExtractor $jwtUserExtractor;
+    private GridRepositoryFactory $gridRepositoryFactory;
+    private ResponseBuilder $responseBuilder;
 
-    public function __construct(JWTUserExtractor $jwtUserExtractor)
-    {
+    public function __construct(
+        JWTUserExtractor $jwtUserExtractor,
+        GridRepositoryFactory $gridRepositoryFactory,
+        ResponseBuilder $responseBuilder
+    ) {
         $this->jwtUserExtractor = $jwtUserExtractor;
+        $this->gridRepositoryFactory = $gridRepositoryFactory;
+        $this->responseBuilder = $responseBuilder;
     }
 
     public function __invoke(Request $request): Response
@@ -27,7 +36,7 @@ class GridsGetController
             $username = $this->authenticateUser($request);
             $grids = $this->loadUserGrids($username);
 
-            return JsonResponseBuilder::success(["grids" => $grids]);
+            return $this->responseBuilder->success(["grids" => $grids]);
         } catch (InvalidTokenException $e) {
             return $this->handleAuthError($e->getMessage());
         } catch (Exception) {
@@ -55,23 +64,17 @@ class GridsGetController
 
     private function loadUserGrids(string $username): array
     {
-        $repo = $this->createRepository($username);
+        $repo = $this->gridRepositoryFactory->createForUser($username);
         return $repo->loadGrids();
-    }
-
-    private function createRepository(string $username): GridFileSystemRepository
-    {
-        return new GridFileSystemRepository($username);
     }
 
     private function handleAuthError(string $message): Response
     {
-        return JsonResponseBuilder::unauthorized($message);
+        return $this->responseBuilder->unauthorized($message);
     }
 
     private function handleGenericError(): Response
     {
-
-        return JsonResponseBuilder::internalServerError();
+        return $this->responseBuilder->internalServerError();
     }
 }

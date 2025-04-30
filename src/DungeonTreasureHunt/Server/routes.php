@@ -25,7 +25,11 @@ $responseBuilder = new JsonResponseBuilderAdapter();
 $router->register('/login', 'POST', new LoginController());
 $router->register('/play', 'POST', new PlayController());
 $router->register('/grids', 'POST', new GridsPostController($jwtUserExtractor, new GridFileSystemRepository("")));
-$router->register('/grids', 'GET', new GridsGetController($jwtUserExtractor));
+$router->register('/grids', 'GET', new GridsGetController(
+    $jwtUserExtractor,
+    $gridRepositoryFactory,
+    $responseBuilder
+));
 $router->register('/grids/{id}', 'DELETE', new GridsDeleteController(
     $jwtUserExtractor,
     $gridRepositoryFactory,
