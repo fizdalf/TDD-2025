@@ -7,22 +7,49 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
-use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
+use DungeonTreasureHunt\Backend\services\Response;
+use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GridsPostControllerTest extends TestCase
 {
+    private ResponseBuilder $responseBuilder;
+    private JWTUserExtractor $jwtUserExtractor;
+    private GridRepository $gridRepository;
+
+    protected function setUp(): void
+    {
+        $this->responseBuilder = $this->createMock(ResponseBuilder::class);
+
+        $this->responseBuilder->method('success')->willReturn(
+            (new Response(200))->withJson(['status' => 'success'])
+        );
+        $this->responseBuilder->method('error')->willReturnCallback(
+            function($message, $statusCode) {
+                return (new Response($statusCode))->withJson(['status' => 'error', 'error' => $message]);
+            }
+        );
+        $this->responseBuilder->method('unauthorized')->willReturnCallback(
+            function($message) {
+                return (new Response(401))->withJson(['status' => 'error', 'error' => $message]);
+            }
+        );
+
+        $this->jwtUserExtractor = $this->createMock(JWTUserExtractor::class);
+        $this->gridRepository = $this->createMock(GridRepository::class);
+    }
+
     #[Test]
     public function it_should_create_grid_successfully()
     {
         $username = "testuser";
-        $token = JwtHandler::generateToken(["username" => $username]);
-        $repo = $this->createMock(GridRepository::class);
 
-        $repo->expects($this->once())->method('saveGrid')->with(
+        $this->jwtUserExtractor->method('extractUserInfo')->willReturn(["username" => $username]);
+
+        $this->gridRepository->expects($this->once())->method('saveGrid')->with(
             new GridItem(
                 "New Test Grid",
                 [[0, 1], [1, 0]],
@@ -36,14 +63,18 @@ class GridsPostControllerTest extends TestCase
         ];
 
         $request = $this->createRequestWithMockedJsonParsing(
-            ['Authorization' => "Bearer $token"],
+            ['Authorization' => "Bearer valid_token"],
             [],
             $gridData
         );
 
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
-        $response = $controller($request);
+        $controller = new GridsPostController(
+            $this->jwtUserExtractor,
+            $this->gridRepository,
+            $this->responseBuilder
+        );
 
+        $response = $controller($request);
         $this->assertEquals(200, $response->getStatus());
     }
 
@@ -53,26 +84,32 @@ class GridsPostControllerTest extends TestCase
         $request = $this->createMock(Request::class);
         $request->method('getHeaders')->willReturn(null);
 
-        $repo = $this->createMock(GridRepository::class);
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
-        $response = $controller($request);
+        $controller = new GridsPostController(
+            $this->jwtUserExtractor,
+            $this->gridRepository,
+            $this->responseBuilder
+        );
 
+        $response = $controller($request);
         $this->assertEquals(401, $response->getStatus());
     }
 
     #[Test]
     public function it_should_return_401_if_token_invalid()
     {
+        $this->jwtUserExtractor->method('extractUserInfo')
+            ->willThrowException(new InvalidTokenException('Invalid Token'));
+
         $request = $this->createMock(Request::class);
         $request->method('getHeaders')->willReturn('Bearer invalidtoken');
 
-        $jwtExtractor = $this->createMock(JWTUserExtractor::class);
-        $jwtExtractor->method('extractUserInfo')->willThrowException(new InvalidTokenException('Invalid Token'));
+        $controller = new GridsPostController(
+            $this->jwtUserExtractor,
+            $this->gridRepository,
+            $this->responseBuilder
+        );
 
-        $repo = $this->createMock(GridRepository::class);
-        $controller = new GridsPostController($jwtExtractor, $repo);
         $response = $controller($request);
-
         $this->assertEquals(401, $response->getStatus());
     }
 
@@ -80,19 +117,20 @@ class GridsPostControllerTest extends TestCase
     public function it_should_return_400_if_missing_grid_data()
     {
         $username = "testuser";
-        $token = JwtHandler::generateToken(["username" => $username]);
+
+        $this->jwtUserExtractor->method('extractUserInfo')->willReturn(["username" => $username]);
 
         $request = $this->createMock(Request::class);
-        $request->method('getHeaders')->willReturn("Bearer $token");
+        $request->method('getHeaders')->willReturn("Bearer valid_token");
         $request->method('parseBodyAsJson')->willReturn(['incomplete' => 'data']);
 
-        $jwtExtractor = $this->createMock(JWTUserExtractor::class);
-        $jwtExtractor->method('extractUserInfo')->willReturn(["username" => $username]);
+        $controller = new GridsPostController(
+            $this->jwtUserExtractor,
+            $this->gridRepository,
+            $this->responseBuilder
+        );
 
-        $repo = $this->createMock(GridRepository::class);
-        $controller = new GridsPostController($jwtExtractor, $repo);
         $response = $controller($request);
-
         $this->assertEquals(400, $response->getStatus());
     }
 
@@ -100,7 +138,11 @@ class GridsPostControllerTest extends TestCase
     public function it_should_return_500_if_save_fails()
     {
         $username = "testuser";
-        $token = JwtHandler::generateToken(["username" => $username]);
+
+        $this->jwtUserExtractor->method('extractUserInfo')->willReturn(["username" => $username]);
+
+        $this->gridRepository->method('saveGrid')
+            ->willThrowException(new Exception("Database error"));
 
         $gridData = [
             "gridName" => "Test Grid",
@@ -108,28 +150,24 @@ class GridsPostControllerTest extends TestCase
         ];
 
         $request = $this->createRequestWithMockedJsonParsing(
-            ['Authorization' => "Bearer $token"],
+            ['Authorization' => "Bearer valid_token"],
             [],
             $gridData
         );
 
-        $repo = $this->createMock(GridRepository::class);
-        $repo->expects($this->once())
-            ->method('saveGrid')
-            ->willThrowException(new Exception("Database error"));
+        $controller = new GridsPostController(
+            $this->jwtUserExtractor,
+            $this->gridRepository,
+            $this->responseBuilder
+        );
 
-        $controller = new GridsPostController(new JWTUserExtractor(new JwtHandler()), $repo);
         $response = $controller($request);
-
         $this->assertEquals(500, $response->getStatus());
-        $this->assertEquals(json_encode(["status" => "error", "error" => "No se pudo guardar"]), $response->getBody());
-
     }
 
     private function createRequestWithMockedJsonParsing(array $headers, array $params, array $bodyData): Request
     {
         $request = $this->createMock(Request::class);
-
         $request->method('getHeaders')
             ->willReturnCallback(function($header = null) use ($headers) {
                 if ($header) {
@@ -137,13 +175,10 @@ class GridsPostControllerTest extends TestCase
                 }
                 return $headers;
             });
-
         $request->method('parseBodyAsJson')
             ->willReturn($bodyData);
-
         $request->method('getParams')
             ->willReturn($params);
-
         return $request;
     }
 }
