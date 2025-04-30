@@ -11,31 +11,43 @@ use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactoryImpl;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
+use DungeonTreasureHunt\Backend\services\JwtTokenGenerator;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Router;
+use DungeonTreasureHunt\Backend\services\SimpleUserAuthenticator;
 
 $router = new Router();
 
 $jwtHandler = new JwtHandler();
 $jwtUserExtractor = new JWTUserExtractor($jwtHandler);
+$responseBuilder = new JsonResponseBuilderAdapter();
 
 $gridRepositoryFactory = new GridRepositoryFactoryImpl();
-$responseBuilder = new JsonResponseBuilderAdapter();
+$tokenGenerator = new JwtTokenGenerator($jwtHandler);
+$userAuthenticator = new SimpleUserAuthenticator();
 
 $userGridRepository = new GridFileSystemRepository("");
 
-$router->register('/login', 'POST', new LoginController());
+$router->register('/login', 'POST', new LoginController(
+    $responseBuilder,
+    $tokenGenerator,
+    $userAuthenticator
+));
+
 $router->register('/play', 'POST', new PlayController());
+
 $router->register('/grids', 'POST', new GridsPostController(
     $jwtUserExtractor,
     $userGridRepository,
     $responseBuilder
 ));
+
 $router->register('/grids', 'GET', new GridsGetController(
     $jwtUserExtractor,
     $gridRepositoryFactory,
     $responseBuilder
 ));
+
 $router->register('/grids/{id}', 'DELETE', new GridsDeleteController(
     $jwtUserExtractor,
     $gridRepositoryFactory,

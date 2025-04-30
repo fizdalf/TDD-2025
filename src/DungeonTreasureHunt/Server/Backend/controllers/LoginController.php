@@ -4,15 +4,26 @@ namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
+use DungeonTreasureHunt\Backend\services\ResponseBuilder;
+use DungeonTreasureHunt\Backend\services\TokenGenerator;
+use DungeonTreasureHunt\Backend\services\UserAuthenticator;
 use DungeonTreasureHunt\Backend\http\Request;
 
 class LoginController
 {
-    private array $users = [
-        "admin" => "1234",
-        "user" => "abcd"
-    ];
+    private ResponseBuilder $responseBuilder;
+    private TokenGenerator $tokenGenerator;
+    private UserAuthenticator $userAuthenticator;
+
+    public function __construct(
+        ResponseBuilder $responseBuilder,
+        TokenGenerator $tokenGenerator,
+        UserAuthenticator $userAuthenticator
+    ) {
+        $this->responseBuilder = $responseBuilder;
+        $this->tokenGenerator = $tokenGenerator;
+        $this->userAuthenticator = $userAuthenticator;
+    }
 
     public function __invoke(Request $request): Response
     {
@@ -22,7 +33,7 @@ class LoginController
             return $this->handleIncompleteCredentials();
         }
 
-        if (!$this->areCredentialsValid($credentials['username'], $credentials['password'])) {
+        if (!$this->userAuthenticator->authenticate($credentials['username'], $credentials['password'])) {
             return $this->handleInvalidCredentials();
         }
 
@@ -39,29 +50,19 @@ class LoginController
         return isset($credentials['username'], $credentials['password']);
     }
 
-    private function areCredentialsValid(string $username, string $password): bool
-    {
-        return isset($this->users[$username]) && $this->users[$username] === $password;
-    }
-
     private function handleIncompleteCredentials(): Response
     {
-        return JsonResponseBuilder::error("Faltan datos", 400);
+        return $this->responseBuilder->error("Faltan datos", 400);
     }
 
     private function handleInvalidCredentials(): Response
     {
-        return JsonResponseBuilder::error("Credenciales incorrectas", 401);
+        return $this->responseBuilder->error("Credenciales incorrectas", 401);
     }
 
     private function generateSuccessResponse(string $username): Response
     {
-        $token = $this->generateToken($username);
-        return JsonResponseBuilder::success(["token" => $token]);
-    }
-
-    private function generateToken(string $username): string
-    {
-        return JwtHandler::generateToken(["username" => $username]);
+        $token = $this->tokenGenerator->generateToken(["username" => $username]);
+        return $this->responseBuilder->success(["token" => $token]);
     }
 }
