@@ -8,57 +8,40 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 
 class GridsDeleteController
 {
-    private JWTUserExtractor $jwtUserExtractor;
+    private AuthenticatedUserExtractor $authenticatedUserExtractor;
     private GridRepository $gridRepository;
 
-
     public function __construct(
-        JWTUserExtractor $jwtUserExtractor,
-        GridRepository   $gridRepository,
-    )
-    {
-        $this->jwtUserExtractor = $jwtUserExtractor;
+        AuthenticatedUserExtractor $authenticatedUserExtractor,
+        GridRepository $gridRepository
+    ) {
+        $this->authenticatedUserExtractor = $authenticatedUserExtractor;
         $this->gridRepository = $gridRepository;
     }
 
     public function __invoke(Request $request): Response
     {
         try {
-            $username = $this->authenticateUser($request);
+            $user = $this->authenticatedUserExtractor->extractUser($request);
+            $username = $user['username'];
+
             $idToDelete = $this->validateAndGetId($request);
             $this->deleteGrid($username, $idToDelete);
 
             return JsonResponseBuilder::success();
         } catch (InvalidTokenException $e) {
-            return JsonResponseBuilder::error($e->getMessage(), 401);
+            return JsonResponseBuilder::unauthorized($e->getMessage());
         } catch (InvalidRequestException $e) {
-            return JsonResponseBuilder::error($e->getMessage(), 400);
+            return JsonResponseBuilder::badRequest($e->getMessage());
         } catch (GridNotFoundException $e) {
-            return JsonResponseBuilder::error($e->getMessage(), 404);
+            return JsonResponseBuilder::notFound($e->getMessage());
         }
-    }
-
-    private function authenticateUser(Request $request): string
-    {
-        $authHeader = $request->getHeaders('Authorization');
-
-        if (!$authHeader) {
-            throw new InvalidTokenException("Token no proporcionado");
-        }
-
-        $token = str_replace("Bearer ", "", $authHeader);
-        $username = $this->jwtUserExtractor->extractUsername($token);
-
-        if (!$username) {
-            throw new InvalidTokenException("Token no proporcionado o inválido");
-        }
-
-        return $username;
     }
 
     private function validateAndGetId(Request $request): string
@@ -76,7 +59,7 @@ class GridsDeleteController
         $foundGrid = $this->gridRepository->getGrid($username, $idToDelete);
 
         if (!$foundGrid) {
-            throw new GridNotFoundException("");
+            throw new GridNotFoundException("Grid no encontrado");
         }
 
         $this->gridRepository->deleteGrid($foundGrid);
