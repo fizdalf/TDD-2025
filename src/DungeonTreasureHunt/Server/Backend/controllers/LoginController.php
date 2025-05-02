@@ -11,16 +11,16 @@ use DungeonTreasureHunt\Backend\http\Request;
 
 class LoginController
 {
-    private JsonResponseBuilderAdapter $responseBuilder;
+
     private TokenGenerator $tokenGenerator;
     private UserAuthenticator $userAuthenticator;
 
     public function __construct(
-        JsonResponseBuilderAdapter $responseBuilder,
+
         TokenGenerator $tokenGenerator,
         UserAuthenticator $userAuthenticator
     ) {
-        $this->responseBuilder = $responseBuilder;
+
         $this->tokenGenerator = $tokenGenerator;
         $this->userAuthenticator = $userAuthenticator;
     }

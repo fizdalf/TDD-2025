@@ -22,7 +22,6 @@ $router = new Router();
 $jwtHandler = new JwtHandler();
 $jwtUserExtractor = new JWTUserExtractor($jwtHandler);
 $AuthenticatedUserExtractor = new AuthenticatedUserExtractor($jwtUserExtractor);
-$responseBuilder = new JsonResponseBuilderAdapter();
 $explorer = new DungeonTreasureHuntExplorer();
 
 
@@ -31,7 +30,6 @@ $tokenGenerator = new JwtTokenGenerator($jwtHandler);
 $userAuthenticator = new SimpleUserAuthenticator();
 
 $router->register('/login', 'POST', new LoginController(
-    $responseBuilder,
     $tokenGenerator,
     $userAuthenticator
 ));

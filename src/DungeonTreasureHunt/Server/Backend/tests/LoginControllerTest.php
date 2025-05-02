@@ -14,24 +14,15 @@ use PHPUnit\Framework\TestCase;
 
 class LoginControllerTest extends TestCase
 {
-    private JsonResponseBuilderAdapter $responseBuilder;
+
     private TokenGenerator $tokenGenerator;
     private UserAuthenticator $userAuthenticator;
 
     protected function setUp(): void
     {
-        $this->responseBuilder = $this->createMock(JsonResponseBuilderAdapter::class);
 
-        $this->responseBuilder->method('success')->willReturnCallback(
-            function($data = []) {
-                return (new Response(200))->withJson(['status' => 'success', ...$data]);
-            }
-        );
-        $this->responseBuilder->method('error')->willReturnCallback(
-            function($message, $statusCode) {
-                return (new Response($statusCode))->withJson(['status' => 'error', 'error' => $message]);
-            }
-        );
+
+
 
         $this->tokenGenerator = $this->createMock(TokenGenerator::class);
         $this->tokenGenerator->method('generateToken')->willReturnCallback(
@@ -59,7 +50,6 @@ class LoginControllerTest extends TestCase
         ]);
 
         $controller = new LoginController(
-            $this->responseBuilder,
             $this->tokenGenerator,
             $this->userAuthenticator
         );
@@ -85,7 +75,6 @@ class LoginControllerTest extends TestCase
         ]);
 
         $controller = new LoginController(
-            $this->responseBuilder,
             $this->tokenGenerator,
             $this->userAuthenticator
         );
@@ -108,7 +97,6 @@ class LoginControllerTest extends TestCase
         ]);
 
         $controller = new LoginController(
-            $this->responseBuilder,
             $this->tokenGenerator,
             $this->userAuthenticator
         );
@@ -132,7 +120,6 @@ class LoginControllerTest extends TestCase
         ]);
 
         $controller = new LoginController(
-            $this->responseBuilder,
             $this->tokenGenerator,
             $this->userAuthenticator
         );

@@ -4,7 +4,7 @@ namespace DungeonTreasureHunt\Backend\http;
 
 use DungeonTreasureHunt\Backend\services\Response;
 
-class JsonResponseBuilderAdapter
+class JsonResponseBuilderAdapter implements \DungeonTreasureHunt\Backend\services\TokenGenerator
 {
     public function success(array $data = []): Response
     {
