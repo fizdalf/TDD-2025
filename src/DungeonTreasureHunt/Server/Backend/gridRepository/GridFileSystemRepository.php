@@ -91,7 +91,7 @@ class GridFileSystemRepository implements GridRepository
         $gridData = $grids[$id];
 
         return new GridItem(
-            $gridData['name'],
+            $gridData['gridName'],
             $gridData['grid'],
             $username,
             $id
