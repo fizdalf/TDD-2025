@@ -15,29 +15,12 @@ use PHPUnit\Framework\TestCase;
 
 class GridsGetControllerTest extends TestCase
 {
-    private JsonResponseBuilderAdapter $responseBuilder;
     private GridRepository $gridRepository;
     private JWTUserExtractor $jwtUserExtractor;
     private string $username = "Test";
 
     protected function setUp(): void
     {
-        $this->responseBuilder = $this->createMock(JsonResponseBuilderAdapter::class);
-
-        $this->responseBuilder->method('success')->willReturnCallback(
-            function ($data = []) {
-                return (new Response(200))->withJson(['status' => 'success', ...$data]);
-            }
-        );
-        $this->responseBuilder->method('unauthorized')->willReturnCallback(
-            function ($message) {
-                return (new Response(401))->withJson(['status' => 'error', 'error' => $message]);
-            }
-        );
-        $this->responseBuilder->method('internalServerError')->willReturn(
-            (new Response(500))->withJson(['status' => 'error', 'error' => 'Internal Server Error'])
-        );
-
         $this->jwtUserExtractor = $this->createMock(JWTUserExtractor::class);
 
         $this->gridRepository = $this->createMock(GridRepository::class);
@@ -51,7 +34,7 @@ class GridsGetControllerTest extends TestCase
         $this->jwtUserExtractor->method('extractUsername')->willReturn($this->username);
 
         $this->gridRepository->method('getAllGrids')->with($this->username)->willReturn(
-            new UserGrids([
+            new UserGrids(...[
                 new GridItem("Grid 1", [], $this->username, 1),
                 new GridItem("Grid 2", [], $this->username, 2)
             ])
@@ -62,11 +45,11 @@ class GridsGetControllerTest extends TestCase
 
         $controller = new GridsGetController(
             $this->jwtUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);
+
 
         $this->assertEquals(200, $response->getStatus());
 
@@ -84,8 +67,7 @@ class GridsGetControllerTest extends TestCase
 
         $controller = new GridsGetController(
             $this->jwtUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);
@@ -104,8 +86,7 @@ class GridsGetControllerTest extends TestCase
 
         $controller = new GridsGetController(
             $this->jwtUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);

@@ -5,39 +5,20 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
-use DungeonTreasureHunt\Backend\services\Response;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GridsPostControllerTest extends TestCase
 {
-    private JsonResponseBuilderAdapter $responseBuilder;
     private AuthenticatedUserExtractor $authenticatedUserExtractor;
     private GridRepository $gridRepository;
 
     protected function setUp(): void
     {
-        $this->responseBuilder = $this->createMock(JsonResponseBuilderAdapter::class);
-
-        $this->responseBuilder->method('success')->willReturn(
-            (new Response(200))->withJson(['status' => 'success'])
-        );
-        $this->responseBuilder->method('error')->willReturnCallback(
-            function ($message, $statusCode) {
-                return (new Response($statusCode))->withJson(['status' => 'error', 'error' => $message]);
-            }
-        );
-        $this->responseBuilder->method('unauthorized')->willReturnCallback(
-            function ($message) {
-                return (new Response(401))->withJson(['status' => 'error', 'error' => $message]);
-            }
-        );
-
         $this->authenticatedUserExtractor = $this->createMock(AuthenticatedUserExtractor::class);
         $this->gridRepository = $this->createMock(GridRepository::class);
     }
@@ -70,8 +51,7 @@ class GridsPostControllerTest extends TestCase
 
         $controller = new GridsPostController(
             $this->authenticatedUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);
@@ -91,8 +71,7 @@ class GridsPostControllerTest extends TestCase
 
         $controller = new GridsPostController(
             $this->authenticatedUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);
@@ -112,8 +91,7 @@ class GridsPostControllerTest extends TestCase
 
         $controller = new GridsPostController(
             $this->authenticatedUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);
@@ -135,8 +113,7 @@ class GridsPostControllerTest extends TestCase
 
         $controller = new GridsPostController(
             $this->authenticatedUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);
@@ -168,8 +145,7 @@ class GridsPostControllerTest extends TestCase
 
         $controller = new GridsPostController(
             $this->authenticatedUserExtractor,
-            $this->gridRepository,
-            $this->responseBuilder
+            $this->gridRepository
         );
 
         $response = $controller($request);

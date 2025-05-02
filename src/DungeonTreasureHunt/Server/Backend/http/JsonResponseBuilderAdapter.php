@@ -16,13 +16,4 @@ class JsonResponseBuilderAdapter
         return JsonResponseBuilder::error($message, $statusCode);
     }
 
-    public function unauthorized(string $message): Response
-    {
-        return JsonResponseBuilder::unauthorized($message);
-    }
-
-    public function internalServerError(): Response
-    {
-        return JsonResponseBuilder::internalServerError();
-    }
 }

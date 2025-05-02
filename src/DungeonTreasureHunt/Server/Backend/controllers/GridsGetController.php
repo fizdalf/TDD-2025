@@ -18,17 +18,15 @@ class GridsGetController
 {
     private JWTUserExtractor $jwtUserExtractor;
     private GridRepository $gridRepository;
-    private JsonResponseBuilderAdapter $responseBuilder;
+
 
     public function __construct(
         JWTUserExtractor           $jwtUserExtractor,
-        GridRepository      $gridRepository,
-        JsonResponseBuilderAdapter $responseBuilder
+        GridRepository      $gridRepository
     )
     {
         $this->jwtUserExtractor = $jwtUserExtractor;
         $this->gridRepository = $gridRepository;
-        $this->responseBuilder = $responseBuilder;
     }
 
     public function __invoke(Request $request): Response
@@ -72,11 +70,11 @@ class GridsGetController
 
     private function handleAuthError(string $message): Response
     {
-        return $this->responseBuilder->unauthorized($message);
+        return JsonResponseBuilder::unauthorized($message);
     }
 
     private function handleGenericError(): Response
     {
-        return $this->responseBuilder->internalServerError();
+        return JsonResponseBuilder::internalServerError();
     }
 }

@@ -102,6 +102,6 @@ class GridFileSystemRepository implements GridRepository
             );
         }
 
-        return new UserGrids($gridItems);
+        return new UserGrids(...$gridItems);
     }
 }

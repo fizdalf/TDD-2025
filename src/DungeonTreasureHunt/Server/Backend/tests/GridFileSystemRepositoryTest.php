@@ -10,13 +10,12 @@ use PHPUnit\Framework\TestCase;
 class GridFileSystemRepositoryTest extends TestCase
 {
     public string $username = 'TestUser';
-    private string $filePath;
 
     protected function tearDown(): void
     {
-        $this->filePath = __DIR__ . '/../data/' . $this->username . '_gridSaved.txt';
-        if (file_exists($this->filePath)) {
-            unlink($this->filePath);
+        $filePath = __DIR__ . '/../data/' . $this->username . '_gridSaved.txt';
+        if (file_exists($filePath)) {
+            unlink($filePath);
         }
     }
 

@@ -93,6 +93,7 @@ class LoginControllerTest extends TestCase
         $response = $controller($mockRequest);
 
         $this->assertEquals(400, $response->getStatus());
+        // body?
     }
 
     #[Test]

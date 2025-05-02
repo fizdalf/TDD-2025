@@ -9,11 +9,12 @@ class UserGrids
      */
     private array $grids;
 
-    public function __construct(array $grids)
+    public function __construct(GridItem ...$grids)
     {
         $this->grids = $grids;
     }
 
+    /** @return GridItem[] */
     public function all(): array
     {
         return $this->grids;
