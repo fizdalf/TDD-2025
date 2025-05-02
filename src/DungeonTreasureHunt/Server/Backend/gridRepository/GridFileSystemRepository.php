@@ -4,6 +4,7 @@ namespace DungeonTreasureHunt\Backend\gridRepository;
 
 use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
 use DungeonTreasureHunt\Backend\models\GridItem;
+use DungeonTreasureHunt\Backend\models\UserGrids;
 
 class GridFileSystemRepository implements GridRepository
 {

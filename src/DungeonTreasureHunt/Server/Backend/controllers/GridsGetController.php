@@ -8,6 +8,7 @@ use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactory;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\UserGrids;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\services\ResponseBuilder;

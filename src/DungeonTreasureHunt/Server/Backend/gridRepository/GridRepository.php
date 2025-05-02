@@ -3,6 +3,7 @@
 namespace DungeonTreasureHunt\Backend\gridRepository;
 
 use DungeonTreasureHunt\Backend\models\GridItem;
+use DungeonTreasureHunt\Backend\models\UserGrids;
 
 interface GridRepository
 {
