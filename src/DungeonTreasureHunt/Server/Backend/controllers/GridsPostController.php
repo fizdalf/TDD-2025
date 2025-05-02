@@ -8,23 +8,23 @@ use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
-use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
+use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use Exception;
 
 class GridsPostController
 {
-    private JWTUserExtractor $jwtUserExtractor;
+    private AuthenticatedUserExtractor $authenticatedUserExtractor;
     private GridRepository $gridRepository;
     private ResponseBuilder $responseBuilder;
 
     public function __construct(
-        JWTUserExtractor $jwtUserExtractor,
+        AuthenticatedUserExtractor $authenticatedUserExtractor,
         GridRepository $gridRepository,
         ResponseBuilder $responseBuilder
     ) {
-        $this->jwtUserExtractor = $jwtUserExtractor;
+        $this->authenticatedUserExtractor = $authenticatedUserExtractor;
         $this->gridRepository = $gridRepository;
         $this->responseBuilder = $responseBuilder;
     }
@@ -51,7 +51,7 @@ class GridsPostController
      */
     private function processAuthentication(Request $request): string
     {
-        $user = $this->getAuthenticatedUser($request);
+        $user = $this->authenticatedUserExtractor->extractUser($request);
         return $user['username'];
     }
 
@@ -85,24 +85,8 @@ class GridsPostController
         return JsonResponseBuilder::error("No se pudo guardar", 500);
     }
 
-    /**
-     * @throws InvalidTokenException
-     */
-    public function getAuthenticatedUser(Request $request): ?array
-    {
-        $authHeader = $request->getHeaders('Authorization') ?? null;
 
-        if (!$authHeader || !str_starts_with($authHeader, "Bearer ")) {
-            throw new InvalidTokenException('Invalid Token');
-        }
 
-        $token = substr($authHeader, 7);
-        $user = $this->jwtUserExtractor->extractUserInfo($token);
-        if (!isset($user) || !isset($user['username'])) {
-            throw new InvalidTokenException('Invalid Token');
-        }
-        return $user;
-    }
 
     /**
      * @throws InvalidRequestException
