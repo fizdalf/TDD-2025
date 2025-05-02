@@ -115,6 +115,8 @@ class LoginControllerTest extends TestCase
         $response = $controller($mockRequest);
 
         $this->assertEquals(401, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -137,5 +139,7 @@ class LoginControllerTest extends TestCase
         $response = $controller($mockRequest);
 
         $this->assertEquals(401, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 }

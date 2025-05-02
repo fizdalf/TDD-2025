@@ -76,6 +76,8 @@ class GridsPostControllerTest extends TestCase
 
         $response = $controller($request);
         $this->assertEquals(200, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -92,6 +94,8 @@ class GridsPostControllerTest extends TestCase
 
         $response = $controller($request);
         $this->assertEquals(401, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -111,6 +115,8 @@ class GridsPostControllerTest extends TestCase
 
         $response = $controller($request);
         $this->assertEquals(401, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -132,6 +138,8 @@ class GridsPostControllerTest extends TestCase
 
         $response = $controller($request);
         $this->assertEquals(400, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -163,6 +171,8 @@ class GridsPostControllerTest extends TestCase
 
         $response = $controller($request);
         $this->assertEquals(500, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     private function createRequestWithMockedJsonParsing(array $headers, array $params, array $bodyData): Request

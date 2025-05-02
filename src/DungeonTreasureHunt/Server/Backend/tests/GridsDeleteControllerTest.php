@@ -48,6 +48,8 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatus());
         //TODO: assert the body too!
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -59,6 +61,8 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(401, $response->getStatus());
         //TODO: assert the body too!
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -72,6 +76,8 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(401, $response->getStatus());
         //TODO: assert the body too!
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -87,6 +93,8 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatus());
         //TODO: assert the body too!
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 
     #[Test]
@@ -103,5 +111,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatus());
         //TODO: assert the body too!
+        $body = json_decode($response->getBody(), true);
+        $this->assertIsArray($body);
     }
 }
