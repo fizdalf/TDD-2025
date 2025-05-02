@@ -18,7 +18,7 @@ class GridFileSystemRepository implements GridRepository
         return __DIR__ . "/../data/{$this->username}_gridSaved.txt";
     }
 
-    public function loadGrids(): array
+    private function loadGrids(): array
     {
         $path = $this->getPath();
         if (!file_exists($path)) {
@@ -43,7 +43,7 @@ class GridFileSystemRepository implements GridRepository
         $this->saveGrids($storedGrids);
     }
 
-    public function saveGrids(array $grids): void
+    private function saveGrids(array $grids): void
     {
         file_put_contents($this->getPath(), json_encode($grids));
     }
