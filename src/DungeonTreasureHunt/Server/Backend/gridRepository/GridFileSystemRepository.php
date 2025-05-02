@@ -8,19 +8,14 @@ use DungeonTreasureHunt\Backend\models\UserGrids;
 
 class GridFileSystemRepository implements GridRepository
 {
-    public function __construct(private string $username)
+    private function getPath(string $username): string
     {
+        return __DIR__ . "/../data/{$username}_gridSaved.txt";
     }
 
-
-    private function getPath(): string
+    public function loadGrids(string $username): array
     {
-        return __DIR__ . "/../data/{$this->username}_gridSaved.txt";
-    }
-
-    private function loadGrids(): array
-    {
-        $path = $this->getPath();
+        $path = $this->getPath($username);
         if (!file_exists($path)) {
             return [];
         }
@@ -28,11 +23,14 @@ class GridFileSystemRepository implements GridRepository
         return json_decode(file_get_contents($path), true);
     }
 
+    private function saveGrids(string $username, array $grids): void
+    {
+        file_put_contents($this->getPath($username), json_encode($grids));
+    }
+
     public function saveGrid(GridItem $gridItem): void
     {
-
-        $this->username = $gridItem->username;
-        $storedGrids = $this->loadGrids();
+        $storedGrids = $this->loadGrids($gridItem->username);
         $newId = empty($storedGrids) ? 1 : max(array_keys($storedGrids)) + 1;
 
         $storedGrids[$newId] = [
@@ -40,22 +38,17 @@ class GridFileSystemRepository implements GridRepository
             "grid" => $gridItem->grid
         ];
 
-        $this->saveGrids($storedGrids);
+        $this->saveGrids($gridItem->username, $storedGrids);
     }
 
-    private function saveGrids(array $grids): void
+    public function exists(string $username): bool
     {
-        file_put_contents($this->getPath(), json_encode($grids));
+        return file_exists($this->getPath($username));
     }
 
-    public function exists(): bool
+    public function delete(string $username): void
     {
-        return file_exists($this->getPath());
-    }
-
-    public function delete(): void
-    {
-        $path = $this->getPath();
+        $path = $this->getPath($username);
         if (file_exists($path)) {
             unlink($path);
         }
@@ -63,8 +56,7 @@ class GridFileSystemRepository implements GridRepository
 
     public function deleteGrid(GridItem $gridItem): void
     {
-        $this->username = $gridItem->username;
-        $grids = $this->loadGrids();
+        $grids = $this->loadGrids($gridItem->username);
 
         if (!isset($gridItem->id)) {
             throw new GridNotFoundException("Grid no encontrado");
@@ -75,20 +67,17 @@ class GridFileSystemRepository implements GridRepository
         }
 
         unset($grids[$gridItem->id]);
-        $this->saveGrids($grids);
+        $this->saveGrids($gridItem->username, $grids);
     }
 
     public function getGrid(string $username, int $id): ?GridItem
     {
-        $this->username = $username;
-        $grids = $this->loadGrids();
+        $grids = $this->loadGrids($username);
 
-        if (count($grids) === 0) {
-            return null;
-        }
         if (!isset($grids[$id])) {
             return null;
         }
+
         $gridData = $grids[$id];
 
         return new GridItem(
@@ -101,8 +90,7 @@ class GridFileSystemRepository implements GridRepository
 
     public function getAllGrids(string $username): UserGrids
     {
-        $this->username = $username;
-        $grids = $this->loadGrids();
+        $grids = $this->loadGrids($username);
         $gridItems = [];
 
         foreach ($grids as $id => $data) {

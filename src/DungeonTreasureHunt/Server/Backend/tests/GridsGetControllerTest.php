@@ -3,7 +3,6 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\GridsGetController;
-use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
@@ -19,7 +18,6 @@ class GridsGetControllerTest extends TestCase
     private JsonResponseBuilderAdapter $responseBuilder;
     private GridRepository $gridRepository;
     private JWTUserExtractor $jwtUserExtractor;
-    private GridFileSystemRepository $gridFileSystemRepository;
     private string $username = "Test";
 
     protected function setUp(): void

@@ -8,6 +8,13 @@ use DungeonTreasureHunt\Backend\http\Request;
 
 class PlayController
 {
+    private DungeonTreasureHuntExplorer $explorer;
+
+    public function __construct(DungeonTreasureHuntExplorer $explorer)
+    {
+        $this->explorer = $explorer;
+    }
+
     public function __invoke(Request $request): Response
     {
         $input = $this->extractGridData($request);
@@ -16,7 +23,7 @@ class PlayController
             return Response::error("No se pudo procesar el grid");
         }
 
-        $path = $this->findPathToTreasure($input);
+        $path = $this->explorer->findPathToTreasure($input);
 
         return Response::success($path);
     }
@@ -29,16 +36,5 @@ class PlayController
     private function isGridDataValid(mixed $input): bool
     {
         return !empty($input);
-    }
-
-    private function findPathToTreasure(mixed $input): array
-    {
-        $explorer = $this->createExplorer();
-        return $explorer->findPathToTreasure($input);
-    }
-
-    private function createExplorer(): DungeonTreasureHuntExplorer
-    {
-        return new DungeonTreasureHuntExplorer();
     }
 }

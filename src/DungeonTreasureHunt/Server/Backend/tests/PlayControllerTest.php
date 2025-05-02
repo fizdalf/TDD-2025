@@ -4,6 +4,7 @@ namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\PlayController;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +21,7 @@ class PlayControllerTest extends TestCase
             ['.', '.', 'T']
         ]);
 
-        $controller = new PlayController();
+        $controller = new PlayController(new DungeonTreasureHuntExplorer());
         $response = $controller($mockRequest);
 
         $this->assertEquals(200, $response->getStatus());
@@ -36,7 +37,7 @@ class PlayControllerTest extends TestCase
         $mockRequest = $this->createMock(Request::class);
         $mockRequest->method('parseBodyAsJson')->willReturn([]);
 
-        $controller = new PlayController();
+        $controller = new PlayController(new DungeonTreasureHuntExplorer());
         $response = $controller($mockRequest);
 
         $this->assertEquals(400, $response->getStatus());

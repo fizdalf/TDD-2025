@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class GridFileSystemRepositoryTest extends TestCase
 {
-    private string $username = 'TestUser';
+    public string $username = 'TestUser';
     private string $filePath;
 
     protected function tearDown(): void
@@ -24,7 +24,7 @@ class GridFileSystemRepositoryTest extends TestCase
     public function it_should_return_empty_array_when_no_file_exists()
     {
         $repo = new GridFileSystemRepository($this->username);
-        $grids = $repo->loadGrids();
+        $grids = $repo->loadGrids($this->username);
 
         $this->assertIsArray($grids);
         $this->assertEmpty($grids);
@@ -37,7 +37,7 @@ class GridFileSystemRepositoryTest extends TestCase
         $gridItem = new GridItem('MyGrid', [[1, 0], [0, 1]], $this->username);
         $repo->saveGrid($gridItem);
 
-        $grids = $repo->loadGrids();
+        $grids = $repo->loadGrids($this->username);
         $this->assertCount(1, $grids);
 
         $firstGrid = array_values($grids)[0];
@@ -56,7 +56,7 @@ class GridFileSystemRepositoryTest extends TestCase
         $gridItem2 = new GridItem('Grid2', [[0]], $this->username);
         $repo->saveGrid($gridItem2);
 
-        $grids = $repo->loadGrids();
+        $grids = $repo->loadGrids($this->username);
         $this->assertCount(2, $grids);
 
         $ids = array_keys($grids);
@@ -65,7 +65,7 @@ class GridFileSystemRepositoryTest extends TestCase
         $gridItemToDelete = new GridItem('Grid1', [[1]], $this->username, $gridIdToDelete);
         $repo->deleteGrid($gridItemToDelete);
 
-        $gridsAfterDelete = $repo->loadGrids();
+        $gridsAfterDelete = $repo->loadGrids($this->username);
         $this->assertCount(1, $gridsAfterDelete);
     }
 
@@ -76,7 +76,7 @@ class GridFileSystemRepositoryTest extends TestCase
         $gridItem = new GridItem('GridX', [[1,1]], $this->username);
         $repo->saveGrid($gridItem);
 
-        $grids = $repo->loadGrids();
+        $grids = $repo->loadGrids($this->username);
         $id = array_key_first($grids);
 
         $result = $repo->getGrid($this->username, $id);
