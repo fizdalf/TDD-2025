@@ -3,15 +3,13 @@
 namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
-use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
-use DungeonTreasureHunt\Backend\gridRepository\GridRepositoryFactory;
+use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\UserGrids;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use Exception;
 
 require_once __DIR__ . '/../../../../../vendor/autoload.php';
@@ -19,17 +17,17 @@ require_once __DIR__ . '/../../../../../vendor/autoload.php';
 class GridsGetController
 {
     private JWTUserExtractor $jwtUserExtractor;
-    private GridRepositoryFactory $gridRepositoryFactory;
+    private GridRepository $gridRepository;
     private JsonResponseBuilderAdapter $responseBuilder;
 
     public function __construct(
         JWTUserExtractor           $jwtUserExtractor,
-        GridRepositoryFactory      $gridRepositoryFactory,
+        GridRepository      $gridRepository,
         JsonResponseBuilderAdapter $responseBuilder
     )
     {
         $this->jwtUserExtractor = $jwtUserExtractor;
-        $this->gridRepositoryFactory = $gridRepositoryFactory;
+        $this->gridRepository = $gridRepository;
         $this->responseBuilder = $responseBuilder;
     }
 
@@ -39,7 +37,9 @@ class GridsGetController
             $username = $this->authenticateUser($request);
             $grids = $this->loadUserGrids($username);
 
-            return JsonResponseBuilder::success(["grids" => $grids]);
+            return JsonResponseBuilder::success([
+                "grids" => $grids->toArray()
+            ]);
         } catch (InvalidTokenException $e) {
             return $this->handleAuthError($e->getMessage());
         } catch (Exception) {
@@ -65,10 +65,9 @@ class GridsGetController
         return $username;
     }
 
-    private function loadUserGrids(string $username): array
+    private function loadUserGrids(string $username): UserGrids
     {
-        $repo = $this->gridRepositoryFactory->createForUser($username);
-        return $repo->loadGrids();
+        return $this->gridRepository->getAllGrids($username);
     }
 
     private function handleAuthError(string $message): Response

@@ -5,24 +5,24 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GridsPostControllerTest extends TestCase
 {
-    private ResponseBuilder $responseBuilder;
+    private JsonResponseBuilderAdapter $responseBuilder;
     private JWTUserExtractor $jwtUserExtractor;
     private GridRepository $gridRepository;
 
     protected function setUp(): void
     {
-        $this->responseBuilder = $this->createMock(ResponseBuilder::class);
+        $this->responseBuilder = $this->createMock(JsonResponseBuilderAdapter::class);
 
         $this->responseBuilder->method('success')->willReturn(
             (new Response(200))->withJson(['status' => 'success'])

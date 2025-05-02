@@ -3,10 +3,10 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\LoginController;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use DungeonTreasureHunt\Backend\services\TokenGenerator;
 use DungeonTreasureHunt\Backend\services\UserAuthenticator;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,13 +14,13 @@ use PHPUnit\Framework\TestCase;
 
 class LoginControllerTest extends TestCase
 {
-    private ResponseBuilder $responseBuilder;
+    private JsonResponseBuilderAdapter $responseBuilder;
     private TokenGenerator $tokenGenerator;
     private UserAuthenticator $userAuthenticator;
 
     protected function setUp(): void
     {
-        $this->responseBuilder = $this->createMock(ResponseBuilder::class);
+        $this->responseBuilder = $this->createMock(JsonResponseBuilderAdapter::class);
 
         $this->responseBuilder->method('success')->willReturnCallback(
             function($data = []) {

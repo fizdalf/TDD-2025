@@ -3,21 +3,20 @@
 namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-use DungeonTreasureHunt\Backend\services\JwtHandler;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use DungeonTreasureHunt\Backend\services\TokenGenerator;
 use DungeonTreasureHunt\Backend\services\UserAuthenticator;
 use DungeonTreasureHunt\Backend\http\Request;
 
 class LoginController
 {
-    private ResponseBuilder $responseBuilder;
+    private JsonResponseBuilderAdapter $responseBuilder;
     private TokenGenerator $tokenGenerator;
     private UserAuthenticator $userAuthenticator;
 
     public function __construct(
-        ResponseBuilder $responseBuilder,
+        JsonResponseBuilderAdapter $responseBuilder,
         TokenGenerator $tokenGenerator,
         UserAuthenticator $userAuthenticator
     ) {

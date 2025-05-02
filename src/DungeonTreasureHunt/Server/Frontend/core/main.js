@@ -173,12 +173,11 @@ function getStoredGrids() {
                 const contenedor = document.getElementById("contenedor-laberintos-guardados");
                 contenedor.innerHTML = "";
 
-                if (contenedor) {
-                    Object.keys(data.grids).forEach(id => {
-                        const gridInfo = data.grids[id];
+                if (contenedor && data.grids && Array.isArray(data.grids)) {
+                    data.grids.forEach(gridInfo => {
                         const gridDiv = document.createElement("div");
                         gridDiv.classList.add("laberinto-guardado");
-                        gridDiv.innerHTML = `<p> ${gridInfo.gridName} </p>
+                        gridDiv.innerHTML = `<p> ${gridInfo.name} </p>
                                             <div class="edit"><img src="../iconos/create-outline.svg" alt="edit"></div>
                                             <span class="vacio"></span> 
                                             <div class="abrir-delete"><img src="../iconos/trash-outline.svg" alt="delete"></div>
@@ -193,10 +192,11 @@ function getStoredGrids() {
                         });
 
                         const deleteConfirm = gridDiv.querySelector('.abrir-delete');
-                        deleteConfirm.addEventListener('click', async () => {
+                        deleteConfirm.addEventListener('click', async (event) => {
+                            event.stopPropagation();
                             const result = await abrir_confirmar();
                             if (result) {
-                                deleteGrid(id);
+                                deleteGrid(gridInfo.id);
                             }
                         });
                     });

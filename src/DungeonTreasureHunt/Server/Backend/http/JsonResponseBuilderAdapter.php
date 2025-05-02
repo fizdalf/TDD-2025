@@ -3,9 +3,8 @@
 namespace DungeonTreasureHunt\Backend\http;
 
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 
-class JsonResponseBuilderAdapter implements ResponseBuilder
+class JsonResponseBuilderAdapter
 {
     public function success(array $data = []): Response
     {

@@ -78,7 +78,7 @@ class GridFileSystemRepository implements GridRepository
         $this->saveGrids($grids);
     }
 
-    public function getGrid(string $username, string $id): ?GridItem
+    public function getGrid(string $username, int $id): ?GridItem
     {
         $this->username = $username;
         $grids = $this->loadGrids();
@@ -97,5 +97,23 @@ class GridFileSystemRepository implements GridRepository
             $username,
             $id
         );
+    }
+
+    public function getAllGrids(string $username): UserGrids
+    {
+        $this->username = $username;
+        $grids = $this->loadGrids();
+        $gridItems = [];
+
+        foreach ($grids as $id => $data) {
+            $gridItems[] = new GridItem(
+                $data['gridName'],
+                $data['grid'],
+                $username,
+                $id
+            );
+        }
+
+        return new UserGrids($gridItems);
     }
 }

@@ -24,7 +24,8 @@ $jwtUserExtractor = new JWTUserExtractor($jwtHandler);
 $AuthenticatedUserExtractor = new AuthenticatedUserExtractor($jwtUserExtractor);
 $responseBuilder = new JsonResponseBuilderAdapter();
 
-$gridRepositoryFactory = new GridRepositoryFactoryImpl();
+$defaultUsername = "";
+$gridRepository = (new GridRepositoryFactoryImpl())->createForUser($defaultUsername);
 $tokenGenerator = new JwtTokenGenerator($jwtHandler);
 $userAuthenticator = new SimpleUserAuthenticator();
 
@@ -46,12 +47,11 @@ $router->register('/grids', 'POST', new GridsPostController(
 
 $router->register('/grids', 'GET', new GridsGetController(
     $jwtUserExtractor,
-    $gridRepositoryFactory,
+    $gridRepository,
     $responseBuilder
 ));
 
 $router->register('/grids/{id}', 'DELETE', new GridsDeleteController(
     $jwtUserExtractor,
-    $gridRepositoryFactory,
-    $responseBuilder
+    $gridRepository,
 ));

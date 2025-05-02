@@ -6,23 +6,23 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
-use DungeonTreasureHunt\Backend\services\ResponseBuilder;
 use Exception;
 
 class GridsPostController
 {
     private AuthenticatedUserExtractor $authenticatedUserExtractor;
     private GridRepository $gridRepository;
-    private ResponseBuilder $responseBuilder;
+    private JsonResponseBuilderAdapter $responseBuilder;
 
     public function __construct(
         AuthenticatedUserExtractor $authenticatedUserExtractor,
         GridRepository $gridRepository,
-        ResponseBuilder $responseBuilder
+        JsonResponseBuilderAdapter $responseBuilder
     ) {
         $this->authenticatedUserExtractor = $authenticatedUserExtractor;
         $this->gridRepository = $gridRepository;

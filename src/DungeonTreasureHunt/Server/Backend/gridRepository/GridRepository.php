@@ -11,5 +11,7 @@ interface GridRepository
 
     public function deleteGrid(GridItem $gridItem);
 
-    public function getGrid(string $username, string $id): ?GridItem;
+    public function getGrid(string $username,int $id): ?GridItem;
+
+    public function getAllGrids(string $username): UserGrids;
 }

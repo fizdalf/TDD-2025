@@ -2,7 +2,6 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\Request;
@@ -32,11 +31,6 @@ class PlayController
         return !empty($input);
     }
 
-    private function createErrorResponse(string $message, int $statusCode = 400): Response
-    {
-        return JsonResponseBuilder::error($message, $statusCode);
-    }
-
     private function findPathToTreasure(mixed $input): array
     {
         $explorer = $this->createExplorer();
@@ -46,10 +40,5 @@ class PlayController
     private function createExplorer(): DungeonTreasureHuntExplorer
     {
         return new DungeonTreasureHuntExplorer();
-    }
-
-    private function createSuccessResponse(array $path): Response
-    {
-        return JsonResponseBuilder::success($path);
     }
 }
