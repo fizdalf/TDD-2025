@@ -2,30 +2,27 @@
 
 namespace DungeonTreasureHunt\Backend\http;
 
+use DungeonTreasureHunt\Backend\services\JsonResponse;
 use DungeonTreasureHunt\Backend\services\Response;
 
 class JsonResponseBuilder
 {
     public static function success(array $data = [], int $statusCode = 200): Response
     {
-        return (new Response())
-            ->withStatus($statusCode)
-            ->withHeader("Content-Type", "application/json")
-            ->withJson([
-                "status" => "success",
-                ...$data
-            ]);
+        return new JsonResponse(200, [
+            "status" => "success",
+            ...$data
+        ]);
+
     }
 
-    public static function error(string $message, int $statusCode = 400): Response
+    public static function error(string $message, int $statusCode = 400): JsonResponse
     {
-        return (new Response())
-            ->withStatus($statusCode)
-            ->withHeader("Content-Type", "application/json")
-            ->withJson([
-                "status" => "error",
-                "error" => $message
-            ]);
+        return new JsonResponse($statusCode, [
+            "status" => "error",
+            "error" => $message
+        ]);
+
     }
 
     public static function unauthorized(string $message = "No autorizado"): Response

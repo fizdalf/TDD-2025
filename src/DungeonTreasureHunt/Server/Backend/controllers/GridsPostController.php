@@ -36,11 +36,11 @@ class GridsPostController
 
             return JsonResponseBuilder::success([]);
         } catch (InvalidTokenException) {
-            return $this->handleAuthenticationError();
+            return JsonResponseBuilder::unauthorized("Token no proporcionado o mal formado");
         } catch (InvalidRequestException) {
-            return $this->handleInvalidRequestError();
+            return JsonResponseBuilder::error("Faltan datos", 400);
         } catch (Exception) {
-            return $this->handleSaveError();
+            return JsonResponseBuilder::error("No se pudo guardar", 500);
         }
     }
 
@@ -67,23 +67,6 @@ class GridsPostController
     {
         $this->gridRepository->saveGrid(new GridItem($gridData['gridName'], $gridData['grid'], $username));
     }
-
-    private function handleAuthenticationError(): Response
-    {
-        return JsonResponseBuilder::unauthorized("Token no proporcionado o mal formado");
-    }
-
-    private function handleInvalidRequestError(): Response
-    {
-        return JsonResponseBuilder::error("Faltan datos", 400);
-    }
-
-    private function handleSaveError(): Response
-    {
-        return JsonResponseBuilder::error("No se pudo guardar", 500);
-    }
-
-
 
 
     /**

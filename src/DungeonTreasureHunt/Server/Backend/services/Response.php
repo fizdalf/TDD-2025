@@ -12,7 +12,6 @@ class Response
     {
         $this->statusCode = $statusCode;
         $this->body = $body;
-        $this->setHeader("Content-Type", "application/json");
     }
 
     public function setHeader(string $key, string $value): void

@@ -3,7 +3,6 @@
 namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\services\TokenGenerator;
 use DungeonTreasureHunt\Backend\services\UserAuthenticator;

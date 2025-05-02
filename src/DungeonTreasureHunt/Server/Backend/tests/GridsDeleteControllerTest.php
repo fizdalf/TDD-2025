@@ -7,6 +7,7 @@ use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Backend\services\JsonResponse;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
@@ -49,9 +50,12 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $this->assertEquals(200, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['status' => 'success'], $body);
+        $expectedResponse = new JsonResponse(200,
+            [
+                "status" => "success",
+            ]
+        );
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
@@ -88,7 +92,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(401, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Invalid Token','status' => 'error'], $body);
+        $this->assertEquals(['error' => 'Invalid Token', 'status' => 'error'], $body);
 
     }
 
@@ -104,7 +108,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'ID no proporcionado','status' => 'error'], $body);
+        $this->assertEquals(['error' => 'ID no proporcionado', 'status' => 'error'], $body);
 
     }
 

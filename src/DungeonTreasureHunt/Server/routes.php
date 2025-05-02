@@ -8,7 +8,6 @@ use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\controllers\LoginController;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\JwtTokenGenerator;
