@@ -47,12 +47,22 @@ class GridsGetControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertEquals(200, $response->getStatus());
-
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
-        $this->assertEquals("success", $body['status']);
-        $this->assertArrayHasKey('grids', $body);
-        $this->assertCount(2, $body['grids']);
+        $this->assertEquals([
+            'status' => 'success',
+            'grids' => [
+                [
+                    'grid' => [],
+                    'id' => 1,
+                    'name' => 'Grid 1'
+                ],
+                [
+                    'grid' => [],
+                    'id' => 2,
+                    'name' => 'Grid 2'
+                ]
+            ]
+        ], $body);
     }
 
     #[Test]
@@ -74,7 +84,9 @@ class GridsGetControllerTest extends TestCase
         $body = json_decode($response->getBody(), true);
 
         $this->assertEquals(401, $response->getStatus());
-        $this->assertEquals("Invalid Token", $body["error"]);
+        $body = json_decode($response->getBody(), true);
+        $this->assertEquals(['error' => 'Invalid Token','status' => 'error'], $body);
+
     }
 
     #[Test]
@@ -96,6 +108,8 @@ class GridsGetControllerTest extends TestCase
         $body = json_decode($response->getBody(), true);
 
         $this->assertEquals(401, $response->getStatus());
-        $this->assertEquals("Invalid Token", $body["error"]);
+        $body = json_decode($response->getBody(), true);
+        $this->assertEquals(['error' => 'Invalid Token','status' => 'error'], $body);
+
     }
 }

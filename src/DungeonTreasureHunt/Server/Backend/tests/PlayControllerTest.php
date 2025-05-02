@@ -13,37 +13,38 @@ class PlayControllerTest extends TestCase
     #[Test]
     public function it_should_return_path_when_valid_grid_is_provided()
     {
-        $mockRequest = $this->createMock(Request::class);
-
-        $mockRequest->method('parseBodyAsJson')->willReturn([
+        $request = new Request([], [], json_encode([
             ['P', '.', '.'],
             ['#', '#', '.'],
             ['.', '.', 'T']
-        ]);
+        ]));
 
         $controller = new PlayController(new DungeonTreasureHuntExplorer());
-        $response = $controller($mockRequest);
+        $response = $controller($request);
 
         $this->assertEquals(200, $response->getStatus());
 
         $body = json_decode($response->getBody(), true);
         $this->assertIsArray($body);
         $this->assertNotEmpty($body);
+
     }
 
     #[Test]
     public function it_should_return_400_if_no_body_provided()
     {
-        $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('parseBodyAsJson')->willReturn([]);
+        $request = new Request([], [], json_encode([]));
 
         $controller = new PlayController(new DungeonTreasureHuntExplorer());
-        $response = $controller($mockRequest);
+        $response = $controller($request);
 
         $this->assertEquals(400, $response->getStatus());
 
-        $body = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('error', $body);
-        $this->assertEquals('No se pudo procesar el grid', $body['error']);
+        $expectedBody = [
+            'error' => 'No se pudo procesar el grid'
+        ];
+
+        $actualBody = json_decode($response->getBody(), true);
+        $this->assertEquals($expectedBody, $actualBody);
     }
 }

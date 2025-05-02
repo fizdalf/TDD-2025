@@ -51,7 +51,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['status' => 'success'], $body);
     }
 
     #[Test]
@@ -65,9 +65,14 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
+
         $this->assertEquals(401, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals([
+            'error' => 'Invalid Token',
+            'status' => 'error'
+        ], $body);
+
     }
 
     #[Test]
@@ -83,7 +88,8 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(401, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['error' => 'Invalid Token','status' => 'error'], $body);
+
     }
 
     #[Test]
@@ -98,7 +104,8 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['error' => 'ID no proporcionado','status' => 'error'], $body);
+
     }
 
     #[Test]
@@ -118,6 +125,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['error' => 'Grid no encontrado', 'status' => 'error'], $body);
+
     }
 }

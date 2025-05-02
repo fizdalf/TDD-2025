@@ -57,7 +57,8 @@ class GridsPostControllerTest extends TestCase
         $response = $controller($request);
         $this->assertEquals(200, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['status' => 'success'], $body);
+
     }
 
     #[Test]
@@ -77,7 +78,8 @@ class GridsPostControllerTest extends TestCase
         $response = $controller($request);
         $this->assertEquals(401, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['error' => 'Token no proporcionado o mal formado','status' => 'error'], $body);
+
     }
 
     #[Test]
@@ -97,7 +99,8 @@ class GridsPostControllerTest extends TestCase
         $response = $controller($request);
         $this->assertEquals(401, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['error' => 'Token no proporcionado o mal formado','status' => 'error'], $body);
+
     }
 
     #[Test]
@@ -119,7 +122,8 @@ class GridsPostControllerTest extends TestCase
         $response = $controller($request);
         $this->assertEquals(400, $response->getStatus());
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+        $this->assertEquals(['error' => 'Faltan datos','status' => 'error'], $body);
+
     }
 
     #[Test]
@@ -150,6 +154,9 @@ class GridsPostControllerTest extends TestCase
 
         $response = $controller($request);
         $this->assertEquals(500, $response->getStatus());
+        $body = json_decode($response->getBody(), true);
+        $this->assertEquals(['error' => 'No se pudo guardar','status' => 'error'], $body);
+
     }
 
     private function createRequestWithMockedJsonParsing(array $headers, array $params, array $bodyData): Request

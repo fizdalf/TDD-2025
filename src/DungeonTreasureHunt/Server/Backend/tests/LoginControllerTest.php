@@ -3,10 +3,8 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\LoginController;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilderAdapter;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
-use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\services\TokenGenerator;
 use DungeonTreasureHunt\Backend\services\UserAuthenticator;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,21 +12,14 @@ use PHPUnit\Framework\TestCase;
 
 class LoginControllerTest extends TestCase
 {
-
     private TokenGenerator $tokenGenerator;
     private UserAuthenticator $userAuthenticator;
 
     protected function setUp(): void
     {
-
-
-
-
         $this->tokenGenerator = $this->createMock(TokenGenerator::class);
         $this->tokenGenerator->method('generateToken')->willReturnCallback(
-            function($payload) {
-                return JwtHandler::generateToken($payload);
-            }
+            fn($payload) => JwtHandler::generateToken($payload)
         );
 
         $this->userAuthenticator = $this->createMock(UserAuthenticator::class);
@@ -38,23 +29,20 @@ class LoginControllerTest extends TestCase
     public function it_should_login_successfully_with_valid_credentials()
     {
         $this->userAuthenticator->method('authenticate')->willReturnCallback(
-            function($username, $password) {
-                return $username === 'admin' && $password === '1234';
-            }
+            fn($username, $password) => $username === 'admin' && $password === '1234'
         );
 
-        $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('parseBodyAsJson')->willReturn([
+        $request = new Request([], [], json_encode([
             'username' => 'admin',
             'password' => '1234'
-        ]);
+        ]));
 
         $controller = new LoginController(
             $this->tokenGenerator,
             $this->userAuthenticator
         );
 
-        $response = $controller($mockRequest);
+        $response = $controller($request);
 
         $this->assertEquals(200, $response->getStatus());
 
@@ -69,20 +57,26 @@ class LoginControllerTest extends TestCase
     #[Test]
     public function it_should_return_400_if_username_or_password_missing()
     {
-        $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('parseBodyAsJson')->willReturn([
+        $request = new Request([], [], json_encode([
             'username' => 'admin'
-        ]);
+        ]));
 
         $controller = new LoginController(
             $this->tokenGenerator,
             $this->userAuthenticator
         );
 
-        $response = $controller($mockRequest);
+        $response = $controller($request);
 
         $this->assertEquals(400, $response->getStatus());
-        // body?
+
+        $expectedBody = [
+            'status' => 'error',
+            'error' => 'Faltan datos'
+        ];
+
+        $actualBody = json_decode($response->getBody(), true);
+        $this->assertEquals($expectedBody, $actualBody);
     }
 
     #[Test]
@@ -90,22 +84,27 @@ class LoginControllerTest extends TestCase
     {
         $this->userAuthenticator->method('authenticate')->willReturn(false);
 
-        $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('parseBodyAsJson')->willReturn([
+        $request = new Request([], [], json_encode([
             'username' => 'not_a_user',
             'password' => 'whatever'
-        ]);
+        ]));
 
         $controller = new LoginController(
             $this->tokenGenerator,
             $this->userAuthenticator
         );
 
-        $response = $controller($mockRequest);
+        $response = $controller($request);
 
         $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+
+        $expectedBody = [
+            'status' => 'error',
+            'error' => 'Credenciales incorrectas'
+        ];
+
+        $actualBody = json_decode($response->getBody(), true);
+        $this->assertEquals($expectedBody, $actualBody);
     }
 
     #[Test]
@@ -113,21 +112,26 @@ class LoginControllerTest extends TestCase
     {
         $this->userAuthenticator->method('authenticate')->willReturn(false);
 
-        $mockRequest = $this->createMock(Request::class);
-        $mockRequest->method('parseBodyAsJson')->willReturn([
+        $request = new Request([], [], json_encode([
             'username' => 'admin',
             'password' => 'wrong_password'
-        ]);
+        ]));
 
         $controller = new LoginController(
             $this->tokenGenerator,
             $this->userAuthenticator
         );
 
-        $response = $controller($mockRequest);
+        $response = $controller($request);
 
         $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
+
+        $expectedBody = [
+            'status' => 'error',
+            'error' => 'Credenciales incorrectas'
+        ];
+
+        $actualBody = json_decode($response->getBody(), true);
+        $this->assertEquals($expectedBody, $actualBody);
     }
 }
