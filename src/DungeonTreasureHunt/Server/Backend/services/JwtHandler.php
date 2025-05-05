@@ -30,5 +30,11 @@ class JwtHandler
             return false;
         }
     }
+
+    public function verify(string $token): ?array
+    {
+        $result = self::verifyToken($token);
+        return $result === false ? null : $result;
+    }
 }
 

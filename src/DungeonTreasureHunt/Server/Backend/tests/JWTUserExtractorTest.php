@@ -3,32 +3,36 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
-use DungeonTreasureHunt\Backend\services\JwtHandler;
+use DungeonTreasureHunt\Backend\services\JwtVerifier;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-// TODO: see how we can stop relying on JwtHandler instance ...maybe interface???
+
 class JWTUserExtractorTest extends TestCase
 {
     #[Test]
     public function it_should_extract_username_from_valid_token()
     {
-        $token = JwtHandler::generateToken(["username" => "admin"]);
+        $mockVerifier = $this->createMock(JwtVerifier::class);
+        $mockVerifier->method('verify')
+            ->willReturn(['username' => 'admin']);
 
-        $sut = new JWTUserExtractor(new JwtHandler());
+        $sut = new JWTUserExtractor($mockVerifier);
 
-        $username = $sut->extractUsername($token);
+        $username = $sut->extractUsername('dummy-token');
 
-        $this->assertEquals("admin", $username);
+        $this->assertEquals('admin', $username);
     }
 
     #[Test]
     public function it_should_return_null_if_token_is_invalid()
     {
-        $token = "goofy token";
+        $mockVerifier = $this->createMock(JwtVerifier::class);
+        $mockVerifier->method('verify')
+            ->willReturn(false);
 
-        $sut = new JWTUserExtractor(new JwtHandler());
+        $sut = new JWTUserExtractor($mockVerifier);
 
-        $username = $sut->extractUsername($token);
+        $username = $sut->extractUsername('invalid-token');
 
         $this->assertNull($username);
     }
@@ -36,13 +40,14 @@ class JWTUserExtractorTest extends TestCase
     #[Test]
     public function it_should_return_null_if_token_has_no_username()
     {
-        $token = JwtHandler::generateToken(["no_username" => "oops"]);
+        $mockVerifier = $this->createMock(JwtVerifier::class);
+        $mockVerifier->method('verify')
+            ->willReturn(['no_username' => 'oops']);
 
-        $extractor = new JWTUserExtractor(new JwtHandler());
+        $sut = new JWTUserExtractor($mockVerifier);
 
-        $username = $extractor->extractUsername($token);
+        $username = $sut->extractUsername('token-without-username');
 
         $this->assertNull($username);
     }
-
 }

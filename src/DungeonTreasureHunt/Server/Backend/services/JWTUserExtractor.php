@@ -4,16 +4,16 @@ namespace DungeonTreasureHunt\Backend\services;
 
 class JWTUserExtractor
 {
-    private JwtHandler $jwtHandler;
+    private JwtVerifier $jwtVerifier;
 
-    public function __construct(JwtHandler $jwtHandler)
+    public function __construct(JwtVerifier $jwtVerifier)
     {
-        $this->jwtHandler = $jwtHandler;
+        $this->jwtVerifier = $jwtVerifier;
     }
 
     public function extractUsername(string $token): ?string
     {
-        $payload = $this->jwtHandler->verifyToken($token);
+        $payload = $this->jwtVerifier->verify($token);
         if (!$payload || !isset($payload['username'])) {
             return null;
         }
@@ -22,8 +22,7 @@ class JWTUserExtractor
 
     public function extractUserInfo(string $token): ?array
     {
-        $payload = $this->jwtHandler->verifyToken($token);
+        $payload = $this->jwtVerifier->verify($token);
         return $payload ?: null;
     }
-
 }
