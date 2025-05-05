@@ -6,12 +6,18 @@ use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\models\UserGrids;
 
-//TODO: make the path a dependency, so we can pass it instead of hardcoding it
 class GridFileSystemRepository implements GridRepository
 {
+    private string $basePath;
+
+    public function __construct(string $basePath = null)
+    {
+        $this->basePath = $basePath ?? __DIR__ . "/../data";
+    }
+
     private function getPath(string $username): string
     {
-        return __DIR__ . "/../data/{$username}_gridSaved.txt";
+        return "{$this->basePath}/{$username}_gridSaved.txt";
     }
 
     public function loadGrids(string $username): array
