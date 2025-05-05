@@ -5,7 +5,6 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\LoginController;
 use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\services\JsonResponse;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\TokenGenerator;
 use DungeonTreasureHunt\Backend\services\UserAuthenticator;
@@ -28,36 +27,33 @@ class LoginControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_should_login_successfully_with_valid_credentials()
+    public function test_it_should_login_successfully_with_valid_credentials(): void
     {
-        $this->userAuthenticator
-            ->expects($this->once())
+        $tokenGeneratorMock = $this->createMock(TokenGenerator::class);
+        $userAuthenticatorMock = $this->createMock(UserAuthenticator::class);
+        $requestMock = $this->createMock(Request::class);
+
+        $requestMock->method('parseBodyAsJson')->willReturn([
+            'username' => 'admin',
+            'password' => 'secret',
+        ]);
+
+        $userAuthenticatorMock
             ->method('authenticate')
-            ->with('admin', '1234')
+            ->with('admin', 'secret')
             ->willReturn(true);
 
-        $this->tokenGenerator
-            ->expects($this->once())
+        $tokenGeneratorMock
             ->method('generateToken')
-            ->with(["username" => 'admin'])
+            ->with(['username' => 'admin'])
             ->willReturn('token---');
 
+        $controller = new LoginController($tokenGeneratorMock, $userAuthenticatorMock);
 
-        $request = new Request([], [], json_encode([
-            'username' => 'admin',
-            'password' => '1234'
-        ]));
+        $response = $controller($requestMock);
 
-        $controller = new LoginController(
-            $this->tokenGenerator,
-            $this->userAuthenticator
-        );
-
-        $response = $controller($request);
-
-        $expectedResponse = APIResponse::success(['token' => 'token---']);
-
-        $this->assertEquals($expectedResponse, $response);
+        $expected = ApiResponse::success(['token' => 'token---']);
+        $this->assertEquals($expected, $response);
     }
 
     #[Test]
