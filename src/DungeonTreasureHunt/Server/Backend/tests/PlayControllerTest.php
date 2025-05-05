@@ -5,6 +5,9 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
 use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\Direction;
+use DungeonTreasureHunt\Backend\models\Position;
+use DungeonTreasureHunt\Backend\models\PossibleMovement;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\JsonResponse;
 use PHPUnit\Framework\Attributes\Test;
@@ -24,23 +27,35 @@ class PlayControllerTest extends TestCase
         $controller = new PlayController(new DungeonTreasureHuntExplorer());
         $response = $controller($request);
 
-        //TODO: maybe we should replace dependency with mock?
-        $body = json_decode($response->getBody(), true);
-        $expectedResponse = APIResponse::success($body);
+        $expectedPath = [
+            ["playerPosition" => ["x" => 0, "y" => 0], "direction" => "Right"],
+            ["playerPosition" => ["x" => 1, "y" => 0], "direction" => "Right"],
+            ["playerPosition" => ["x" => 2, "y" => 0], "direction" => "Down"],
+            ["playerPosition" => ["x" => 2, "y" => 1], "direction" => "Down"]
+        ];
 
+        $expectedResponse = APIResponse::success(["data" => $expectedPath]);
         $this->assertEquals($expectedResponse, $response);
-
     }
 
     #[Test]
     public function it_should_return_400_if_no_body_provided()
     {
+
+        $explorerMock = $this->createMock(DungeonTreasureHuntExplorer::class);
+
+
+        $controller = new PlayController($explorerMock);
+
+
         $request = new Request([], [], json_encode([]));
 
-        $controller = new PlayController(new DungeonTreasureHuntExplorer());
+
         $response = $controller($request);
 
+
         $expectedResponse = APIResponse::error('No se pudo procesar el grid');
+
 
         $this->assertEquals($expectedResponse, $response);
     }
