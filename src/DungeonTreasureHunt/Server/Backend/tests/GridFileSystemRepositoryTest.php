@@ -22,7 +22,7 @@ class GridFileSystemRepositoryTest extends TestCase
     #[Test]
     public function it_should_return_empty_array_when_no_file_exists()
     {
-        $repo = new GridFileSystemRepository($this->username);
+        $repo = new GridFileSystemRepository();
         $grids = $repo->loadGrids($this->username);
 
         $this->assertIsArray($grids);
@@ -32,7 +32,7 @@ class GridFileSystemRepositoryTest extends TestCase
     #[Test]
     public function it_should_save_and_load_a_grid()
     {
-        $repo = new GridFileSystemRepository($this->username);
+        $repo = new GridFileSystemRepository();
         $gridItem = new GridItem('MyGrid', [[1, 0], [0, 1]], $this->username);
         $repo->saveGrid($gridItem);
 
@@ -47,7 +47,7 @@ class GridFileSystemRepositoryTest extends TestCase
     #[Test]
     public function it_should_delete_a_specific_grid()
     {
-        $repo = new GridFileSystemRepository($this->username);
+        $repo = new GridFileSystemRepository();
 
         $gridItem1 = new GridItem('Grid1', [[1]], $this->username);
         $repo->saveGrid($gridItem1);
@@ -71,7 +71,7 @@ class GridFileSystemRepositoryTest extends TestCase
     #[Test]
     public function it_should_get_a_specific_grid(): void
     {
-        $repo = new GridFileSystemRepository($this->username);
+        $repo = new GridFileSystemRepository();
         $gridItem = new GridItem('GridX', [[1,1]], $this->username);
         $repo->saveGrid($gridItem);
 
