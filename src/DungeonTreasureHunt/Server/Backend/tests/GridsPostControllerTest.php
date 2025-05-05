@@ -157,7 +157,7 @@ class GridsPostControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $expectedResponse = APIResponse::error('No se pudo guardaar', 500);
+        $expectedResponse = APIResponse::error('No se pudo guardar', 500);
 
         $this->assertEquals($expectedResponse, $response);
 
