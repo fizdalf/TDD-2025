@@ -3,7 +3,6 @@
 namespace DungeonTreasureHunt\Backend\http;
 
 use DungeonTreasureHunt\Backend\services\JsonResponse;
-//TODO: test this!
 class APIResponse extends JsonResponse
 {
 
