@@ -50,11 +50,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $expectedResponse = new JsonResponse(200,
-            [
-                "status" => "success",
-            ]
-        );
+        $expectedResponse = new JsonResponse(200, ["status" => "success"]);
         $this->assertEquals($expectedResponse, $response);
     }
 
@@ -69,14 +65,13 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
+        $expectedResponse = new JsonResponse(401, [
+            'status' => 'error',
+            'error' => 'Invalid Token'
+        ]);
 
-        $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals([
-            'error' => 'Invalid Token',
-            'status' => 'error'
-        ], $body);
 
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
@@ -90,10 +85,12 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Invalid Token', 'status' => 'error'], $body);
+        $expectedResponse = new JsonResponse(401, [
+            'status' => 'error',
+            'error' => 'Invalid Token'
+        ]);
 
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
@@ -106,10 +103,12 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $this->assertEquals(400, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'ID no proporcionado', 'status' => 'error'], $body);
+        $expectedResponse = new JsonResponse(400, [
+            'status' => 'error',
+            'error' => 'ID no proporcionado'
+        ]);
 
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
@@ -119,17 +118,17 @@ class GridsDeleteControllerTest extends TestCase
         $gridId = "999";
 
         $this->authenticatedUserExtractor->method('extractUser')->willReturn(['username' => $username]);
-
-
         $this->gridRepository->method('getGrid')->willReturn(null);
 
         $request = new Request(['Authorization' => "Bearer valid_token"], ['id' => $gridId]);
 
         $response = $this->sut->__invoke($request);
 
-        $this->assertEquals(404, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Grid no encontrado', 'status' => 'error'], $body);
+        $expectedResponse = new JsonResponse(404, [
+            'status' => 'error',
+            'error' => 'Grid no encontrado'
+        ]);
 
+        $this->assertEquals($expectedResponse, $response);
     }
 }
