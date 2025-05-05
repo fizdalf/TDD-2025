@@ -9,6 +9,7 @@ use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\models\UserGrids;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Backend\services\JsonResponse;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -46,29 +47,28 @@ class GridsGetControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertEquals(200, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals([
+        $expectedResponse = new JsonResponse(200, [
             'status' => 'success',
             'grids' => [
                 [
-                    'grid' => [],
                     'id' => 1,
-                    'name' => 'Grid 1'
+                    'name' => 'Grid 1',
+                    'grid' => []
                 ],
                 [
-                    'grid' => [],
                     'id' => 2,
-                    'name' => 'Grid 2'
+                    'name' => 'Grid 2',
+                    'grid' => []
                 ]
             ]
-        ], $body);
+        ]);
+
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
     public function test_it_returns_unauthorized_if_no_token(): void
     {
-
         $this->authenticatedUserExtractor
             ->method('extractUser')
             ->willThrowException(new InvalidTokenException('Invalid Token'));
@@ -81,18 +81,18 @@ class GridsGetControllerTest extends TestCase
         );
 
         $response = $controller($request);
-        $body = json_decode($response->getBody(), true);
 
-        $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Invalid Token','status' => 'error'], $body);
+        $expectedResponse = new JsonResponse(401, [
+            'status' => 'error',
+            'error' => 'Invalid Token'
+        ]);
 
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
     public function test_it_returns_unauthorized_if_token_is_invalid(): void
     {
-
         $this->authenticatedUserExtractor
             ->method('extractUser')
             ->willThrowException(new InvalidTokenException('Invalid Token'));
@@ -105,11 +105,12 @@ class GridsGetControllerTest extends TestCase
         );
 
         $response = $controller($request);
-        $body = json_decode($response->getBody(), true);
 
-        $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Invalid Token','status' => 'error'], $body);
+        $expectedResponse = new JsonResponse(401, [
+            'status' => 'error',
+            'error' => 'Invalid Token'
+        ]);
 
+        $this->assertEquals($expectedResponse, $response);
     }
 }
