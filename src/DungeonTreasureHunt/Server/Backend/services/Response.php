@@ -35,23 +35,9 @@ class Response
         $this->body = $body;
     }
 
-    public function setJsonBody(array $body): void
-    {
-        $this->body = json_encode($body);
-        $this->setHeader("Content-Type", "application/json");
-    }
-
-
     public function withStatus(int $code): self
     {
         $this->setStatusCode($code);
-        return $this;
-    }
-
-    public function withJson(array $data): self
-    {
-        $this->setHeader("Content-Type", "application/json");
-        $this->setBody(json_encode($data));
         return $this;
     }
 
@@ -72,15 +58,5 @@ class Response
     public function getBody(): string
     {
         return $this->body;
-    }
-
-    public static function success(array $data): self
-    {
-        return (new self(200))->withJson($data);
-    }
-
-    public static function error(string $message, int $statusCode = 400): self
-    {
-        return (new self($statusCode))->withJson(["error" => $message]);
     }
 }
