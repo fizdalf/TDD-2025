@@ -8,6 +8,7 @@ use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Backend\services\JsonResponse;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -55,9 +56,9 @@ class GridsPostControllerTest extends TestCase
         );
 
         $response = $controller($request);
-        $this->assertEquals(200, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['status' => 'success'], $body);
+
+        $expectedResponse = new JsonResponse(200, ['status' => 'success']);
+        $this->assertEquals($expectedResponse,$response);
 
     }
 
@@ -76,10 +77,13 @@ class GridsPostControllerTest extends TestCase
         );
 
         $response = $controller($request);
-        $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Token no proporcionado o mal formado','status' => 'error'], $body);
 
+        $expectedResponse = new JsonResponse(401, [
+            'status' => 'error',
+            'error' => 'Token no proporcionado o mal formado'
+        ]);
+
+        $this->assertEquals($expectedResponse,$response);
     }
 
     #[Test]
@@ -97,9 +101,12 @@ class GridsPostControllerTest extends TestCase
         );
 
         $response = $controller($request);
-        $this->assertEquals(401, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Token no proporcionado o mal formado','status' => 'error'], $body);
+        $expectedResponse = new JsonResponse(401, [
+            'status' => 'error',
+            'error' => 'Token no proporcionado o mal formado'
+        ]);
+
+        $this->assertEquals($expectedResponse,$response);
 
     }
 
@@ -120,9 +127,13 @@ class GridsPostControllerTest extends TestCase
         );
 
         $response = $controller($request);
-        $this->assertEquals(400, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'Faltan datos','status' => 'error'], $body);
+
+        $expectedResponse = new JsonResponse(400, [
+            'status' => 'error',
+            'error' => 'Faltan datos'
+        ]);
+
+        $this->assertEquals($expectedResponse,$response);
 
     }
 
@@ -153,9 +164,13 @@ class GridsPostControllerTest extends TestCase
         );
 
         $response = $controller($request);
-        $this->assertEquals(500, $response->getStatus());
-        $body = json_decode($response->getBody(), true);
-        $this->assertEquals(['error' => 'No se pudo guardar','status' => 'error'], $body);
+
+        $expectedResponse = new JsonResponse(500, [
+            'status' => 'error',
+            'error' => 'No se pudo guardar'
+        ]);
+
+        $this->assertEquals($expectedResponse,$response);
 
     }
 
