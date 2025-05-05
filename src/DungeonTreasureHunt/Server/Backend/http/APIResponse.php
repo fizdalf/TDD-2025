@@ -2,7 +2,6 @@
 
 namespace DungeonTreasureHunt\Backend\http;
 
-use DungeonTreasureHunt\Backend\services\JsonResponse;
 class APIResponse extends JsonResponse
 {
 

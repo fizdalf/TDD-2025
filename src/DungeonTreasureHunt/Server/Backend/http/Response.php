@@ -1,6 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\services;
+namespace DungeonTreasureHunt\Backend\http;
 
 class Response
 {

@@ -8,11 +8,9 @@ use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\ApiResponse;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\http\Response;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
-use DungeonTreasureHunt\Backend\services\JsonResponse;
-use DungeonTreasureHunt\Backend\services\Response;
-
 use Exception;
 
 class GridsPostController

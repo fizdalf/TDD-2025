@@ -3,7 +3,7 @@
 
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\services\Response;
+use DungeonTreasureHunt\Backend\http\Response;
 
 
 require_once __DIR__ . '/../../../vendor/autoload.php';

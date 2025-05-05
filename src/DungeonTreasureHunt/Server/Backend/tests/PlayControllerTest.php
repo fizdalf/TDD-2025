@@ -5,11 +5,7 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
 use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\models\Direction;
-use DungeonTreasureHunt\Backend\models\Position;
-use DungeonTreasureHunt\Backend\models\PossibleMovement;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
-use DungeonTreasureHunt\Backend\services\JsonResponse;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

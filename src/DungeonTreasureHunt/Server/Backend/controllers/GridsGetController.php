@@ -6,13 +6,9 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\ApiResponse;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-
 use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\models\UserGrids;
+use DungeonTreasureHunt\Backend\http\Response;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
-use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
-use DungeonTreasureHunt\Backend\services\Response;
-use Exception;
 
 class GridsGetController
 {

@@ -2,6 +2,8 @@
 
 namespace DungeonTreasureHunt\Backend\services;
 
+use DungeonTreasureHunt\Backend\http\Response;
+
 interface ResponseBuilder
 {
     public function success(array $data = []): Response;
