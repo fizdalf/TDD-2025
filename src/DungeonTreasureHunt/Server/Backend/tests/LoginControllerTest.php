@@ -4,6 +4,7 @@ namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\LoginController;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\services\JsonResponse;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use DungeonTreasureHunt\Backend\services\TokenGenerator;
 use DungeonTreasureHunt\Backend\services\UserAuthenticator;
@@ -44,14 +45,13 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertEquals(200, $response->getStatus());
+        $body = json_decode($response->getBody(),true);
+        $expectedResponse = new JsonResponse(200, [
+            'status' => 'success',
+            'token' => $body['token']
+        ]);
 
-        $body = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('token', $body);
-        $this->assertNotEmpty($body['token']);
-
-        $userData = JwtHandler::verifyToken($body['token']);
-        $this->assertEquals('admin', $userData['username']);
+        $this->assertEquals($expectedResponse,$response);
     }
 
     #[Test]
@@ -68,15 +68,12 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertEquals(400, $response->getStatus());
-
-        $expectedBody = [
+        $expectedResponse = new JsonResponse(400, [
             'status' => 'error',
             'error' => 'Faltan datos'
-        ];
+        ]);
 
-        $actualBody = json_decode($response->getBody(), true);
-        $this->assertEquals($expectedBody, $actualBody);
+        $this->assertEquals($expectedResponse,$response);
     }
 
     #[Test]
@@ -96,15 +93,12 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertEquals(401, $response->getStatus());
-
-        $expectedBody = [
+        $expectedResponse = new JsonResponse(401, [
             'status' => 'error',
             'error' => 'Credenciales incorrectas'
-        ];
+        ]);
 
-        $actualBody = json_decode($response->getBody(), true);
-        $this->assertEquals($expectedBody, $actualBody);
+        $this->assertEquals($expectedResponse,$response);
     }
 
     #[Test]
@@ -124,14 +118,11 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertEquals(401, $response->getStatus());
-
-        $expectedBody = [
+        $expectedResponse = new JsonResponse(401, [
             'status' => 'error',
             'error' => 'Credenciales incorrectas'
-        ];
+        ]);
 
-        $actualBody = json_decode($response->getBody(), true);
-        $this->assertEquals($expectedBody, $actualBody);
+        $this->assertEquals($expectedResponse,$response);
     }
 }

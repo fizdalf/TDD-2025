@@ -2,6 +2,7 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\http\Request;
@@ -20,12 +21,12 @@ class PlayController
         $input = $this->extractGridData($request);
 
         if (!$this->isGridDataValid($input)) {
-            return Response::error("No se pudo procesar el grid");
+            return JsonResponseBuilder::error("No se pudo procesar el grid");
         }
 
         $path = $this->explorer->findPathToTreasure($input);
 
-        return Response::success($path);
+        return JsonResponseBuilder::success($path);
     }
 
     private function extractGridData(Request $request): mixed

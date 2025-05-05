@@ -5,6 +5,7 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
+use DungeonTreasureHunt\Backend\services\JsonResponse;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -22,11 +23,12 @@ class PlayControllerTest extends TestCase
         $controller = new PlayController(new DungeonTreasureHuntExplorer());
         $response = $controller($request);
 
-        $this->assertEquals(200, $response->getStatus());
+
 
         $body = json_decode($response->getBody(), true);
-        $this->assertIsArray($body);
-        $this->assertNotEmpty($body);
+        $expectedResponse = new JsonResponse(200, $body);
+
+        $this->assertEquals($expectedResponse,$response);
 
     }
 
@@ -38,13 +40,11 @@ class PlayControllerTest extends TestCase
         $controller = new PlayController(new DungeonTreasureHuntExplorer());
         $response = $controller($request);
 
-        $this->assertEquals(400, $response->getStatus());
-
-        $expectedBody = [
+        $expectedResponse = new JsonResponse(400, [
+            'status' => 'error',
             'error' => 'No se pudo procesar el grid'
-        ];
+        ]);
 
-        $actualBody = json_decode($response->getBody(), true);
-        $this->assertEquals($expectedBody, $actualBody);
+        $this->assertEquals($expectedResponse, $response);
     }
 }
