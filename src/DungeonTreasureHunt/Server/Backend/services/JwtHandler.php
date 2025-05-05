@@ -5,7 +5,7 @@ namespace DungeonTreasureHunt\Backend\services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class JwtHandler implements TokenHandlerInterface
+class JwtHandler implements TokenHandlerInterface, \DungeonTreasureHunt\Backend\services\JwtVerifier
 {
     private string $secretKey;
     private string $algorithm;
