@@ -5,26 +5,35 @@ namespace DungeonTreasureHunt\Backend\services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// TODO: Qué podríamos hacer para mejorar el uso de ésta clase, y no depender de una librería externa en nuestros tests
-class JwtHandler
+class JwtHandler implements TokenHandlerInterface
 {
-    private static $SECRET_KEY = "secretKey";
-    private static $ALGORITHM = "HS256";
+    private string $secretKey;
+    private string $algorithm;
 
-    public static function generateToken(mixed $user, $expTime = 3600): string
+    public function __construct(?string $secretKey = null, ?string $algorithm = null)
+    {
+        $this->secretKey = $secretKey ?? $_ENV['JWT_SECRET_KEY'] ?? 'secretKey';
+        $this->algorithm = $algorithm ?? $_ENV['JWT_ALGORITHM'] ?? 'HS256';
+    }
+
+    public function generateToken(mixed $user, int $expTime = 3600): string
     {
         $payload = [
             "iat" => time(),
             "exp" => time() + $expTime,
             "user" => $user
         ];
-        return JWT::encode($payload, self::$SECRET_KEY, self::$ALGORITHM);
+
+        return JWT::encode($payload, $this->secretKey, $this->algorithm);
     }
 
-    public static function verifyToken($token): false|array
+    private function verifyToken(string $token): array|false
     {
         try {
-            $decoded = JWT::decode($token, new Key(self::$SECRET_KEY, self::$ALGORITHM));
+            $decoded = JWT::decode(
+                $token,
+                new Key($this->secretKey, $this->algorithm)
+            );
             return (array)$decoded->user;
         } catch (\Exception $e) {
             return false;
@@ -33,7 +42,7 @@ class JwtHandler
 
     public function verify(string $token): ?array
     {
-        $result = self::verifyToken($token);
+        $result = $this->verifyToken($token);
         return $result === false ? null : $result;
     }
 }
