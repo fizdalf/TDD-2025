@@ -3,6 +3,7 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\PlayController;
+use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\JsonResponse;
@@ -23,12 +24,11 @@ class PlayControllerTest extends TestCase
         $controller = new PlayController(new DungeonTreasureHuntExplorer());
         $response = $controller($request);
 
-
-
+        //TODO: maybe we should replace dependency with mock?
         $body = json_decode($response->getBody(), true);
-        $expectedResponse = new JsonResponse(200, $body);
+        $expectedResponse = APIResponse::success($body);
 
-        $this->assertEquals($expectedResponse,$response);
+        $this->assertEquals($expectedResponse, $response);
 
     }
 
@@ -40,10 +40,7 @@ class PlayControllerTest extends TestCase
         $controller = new PlayController(new DungeonTreasureHuntExplorer());
         $response = $controller($request);
 
-        $expectedResponse = new JsonResponse(400, [
-            'status' => 'error',
-            'error' => 'No se pudo procesar el grid'
-        ]);
+        $expectedResponse = APIResponse::error('No se pudo procesar el grid');
 
         $this->assertEquals($expectedResponse, $response);
     }

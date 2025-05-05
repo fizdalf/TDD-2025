@@ -5,6 +5,7 @@ namespace DungeonTreasureHunt\Backend\services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+// TODO: Qué podríamos hacer para mejorar el uso de ésta clase, y no depender de una librería externa en nuestros tests
 class JwtHandler
 {
     private static $SECRET_KEY = "secretKey";

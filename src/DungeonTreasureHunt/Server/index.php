@@ -37,7 +37,7 @@ try {
 
     $result = $controllerFunction($request);
 } catch (Exception $exception) {
-    $result = JsonResponseBuilder::internalServerError();
+    $result = \DungeonTreasureHunt\Backend\http\APIResponse::error('Internal Server Error', 500);
 }
 if ($result instanceof Response) {
     $result->send();

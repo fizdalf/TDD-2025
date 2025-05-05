@@ -20,13 +20,14 @@ $router = new Router();
 
 $jwtHandler = new JwtHandler();
 $jwtUserExtractor = new JWTUserExtractor($jwtHandler);
-$AuthenticatedUserExtractor = new AuthenticatedUserExtractor($jwtUserExtractor);
+$authenticatedUserExtractor = new AuthenticatedUserExtractor($jwtUserExtractor);
 $explorer = new DungeonTreasureHuntExplorer();
 
 
 $gridRepository = new GridFileSystemRepository();
 $tokenGenerator = new JwtTokenGenerator($jwtHandler);
 $userAuthenticator = new SimpleUserAuthenticator();
+
 
 $router->register('/login', 'POST', new LoginController(
     $tokenGenerator,
@@ -38,16 +39,16 @@ $router->register('/play', 'POST', new PlayController(
 ));
 
 $router->register('/grids', 'POST', new GridsPostController(
-    $AuthenticatedUserExtractor,
+    $authenticatedUserExtractor,
     $gridRepository
 ));
 
 $router->register('/grids', 'GET', new GridsGetController(
-    $jwtUserExtractor,
+    $authenticatedUserExtractor,
     $gridRepository
 ));
 
 $router->register('/grids/{id}', 'DELETE', new GridsDeleteController(
-    $jwtUserExtractor,
+    $authenticatedUserExtractor,
     $gridRepository,
 ));

@@ -5,11 +5,11 @@ namespace DungeonTreasureHunt\Backend\tests;
 use DungeonTreasureHunt\Backend\controllers\GridsGetController;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
+use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\models\UserGrids;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
-use DungeonTreasureHunt\Backend\services\JsonResponse;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -47,21 +47,21 @@ class GridsGetControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $expectedResponse = new JsonResponse(200, [
-            'status' => 'success',
-            'grids' => [
-                [
-                    'id' => 1,
-                    'name' => 'Grid 1',
-                    'grid' => []
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Grid 2',
-                    'grid' => []
+        $expectedResponse = APIResponse::success(
+            [
+                'grids' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Grid 1',
+                        'grid' => []
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Grid 2',
+                        'grid' => []
+                    ]
                 ]
-            ]
-        ]);
+            ]);
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -82,10 +82,7 @@ class GridsGetControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $expectedResponse = new JsonResponse(401, [
-            'status' => 'error',
-            'error' => 'Invalid Token'
-        ]);
+        $expectedResponse = APIResponse::error('Invalid Token', 401);
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -106,11 +103,7 @@ class GridsGetControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $expectedResponse = new JsonResponse(401, [
-            'status' => 'error',
-            'error' => 'Invalid Token'
-        ]);
-
+        $expectedResponse = APIResponse::error('Invalid Token', 401);
         $this->assertEquals($expectedResponse, $response);
     }
 }

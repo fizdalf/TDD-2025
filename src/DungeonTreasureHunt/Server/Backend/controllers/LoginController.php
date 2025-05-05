@@ -2,7 +2,7 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
+use DungeonTreasureHunt\Backend\http\ApiResponse;
 use DungeonTreasureHunt\Backend\services\Response;
 use DungeonTreasureHunt\Backend\services\TokenGenerator;
 use DungeonTreasureHunt\Backend\services\UserAuthenticator;
@@ -16,9 +16,10 @@ class LoginController
 
     public function __construct(
 
-        TokenGenerator $tokenGenerator,
+        TokenGenerator    $tokenGenerator,
         UserAuthenticator $userAuthenticator
-    ) {
+    )
+    {
 
         $this->tokenGenerator = $tokenGenerator;
         $this->userAuthenticator = $userAuthenticator;
@@ -29,14 +30,15 @@ class LoginController
         $credentials = $this->extractCredentials($request);
 
         if (!$this->areCredentialsComplete($credentials)) {
-            return $this->handleIncompleteCredentials();
+            return APIResponse::error("Faltan datos", 400);
         }
 
         if (!$this->userAuthenticator->authenticate($credentials['username'], $credentials['password'])) {
-            return $this->handleInvalidCredentials();
+            return APIResponse::error("Credenciales incorrectas", 401);
         }
 
-        return $this->generateSuccessResponse($credentials['username']);
+        $token = $this->tokenGenerator->generateToken(["username" => $credentials['username']]);
+        return APIResponse::success(["token" => $token]);
     }
 
     private function extractCredentials(Request $request): array
@@ -49,19 +51,4 @@ class LoginController
         return isset($credentials['username'], $credentials['password']);
     }
 
-    private function handleIncompleteCredentials(): Response
-    {
-        return JsonResponseBuilder::error("Faltan datos", 400);
-    }
-
-    private function handleInvalidCredentials(): Response
-    {
-        return JsonResponseBuilder::error("Credenciales incorrectas", 401);
-    }
-
-    private function generateSuccessResponse(string $username): Response
-    {
-        $token = $this->tokenGenerator->generateToken(["username" => $username]);
-        return JsonResponseBuilder::success(["token" => $token]);
-    }
 }

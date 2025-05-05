@@ -17,7 +17,6 @@ document.Tester.registerTest('[Api][Grid] should save a grid and retrieve it', a
 
     const token = loginData.token;
 
-
     const grid = [
         ['.', '.', '#', '.'],
         ['#', 'P', '#', '.'],
@@ -37,7 +36,7 @@ document.Tester.registerTest('[Api][Grid] should save a grid and retrieve it', a
     });
 
     const data = await response.json();
-    if (!data.success) {
+    if (data.status !== 'success') {
         throw new Error('Failed to save grid: ' + data.error);
     }
 
@@ -52,17 +51,17 @@ document.Tester.registerTest('[Api][Grid] should save a grid and retrieve it', a
 
     const retrieveGridData = await retrieveGridResponse.json();
 
-    if (!retrieveGridData.success) {
+    if (retrieveGridData.status !== 'success') {
         throw new Error('Failed to retrieve grid: ' + retrieveGridData.error);
     }
 
-    const expected = {
-        "1": {
-            "gridName": gridName,
-            grid
+    const expected = [
+        {
+            id: 1,
+            name: gridName,
+            grid: grid
         }
-    }
-
+    ];
 
     if (JSON.stringify(retrieveGridData.grids) !== JSON.stringify(expected)) {
         throw new Error(`Expected grid ${JSON.stringify(expected)} is not equals to ${JSON.stringify(retrieveGridData.grids)}`);

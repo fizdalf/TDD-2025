@@ -2,7 +2,7 @@
 
 namespace DungeonTreasureHunt\Backend\services;
 
-class JwtTokenGenerator implements TokenGenerator, \DungeonTreasureHunt\Backend\services\UserAuthenticator
+class JwtTokenGenerator implements TokenGenerator
 {
     private JwtHandler $jwtHandler;
 

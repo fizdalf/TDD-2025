@@ -6,7 +6,7 @@ use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-
+// TODO: see how we can stop relying on JwtHandler instance ...maybe interface???
 class JWTUserExtractorTest extends TestCase
 {
     #[Test]

@@ -3,6 +3,7 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\LoginController;
+use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\JsonResponse;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
@@ -29,9 +30,18 @@ class LoginControllerTest extends TestCase
     #[Test]
     public function it_should_login_successfully_with_valid_credentials()
     {
-        $this->userAuthenticator->method('authenticate')->willReturnCallback(
-            fn($username, $password) => $username === 'admin' && $password === '1234'
-        );
+        $this->userAuthenticator
+            ->expects($this->once())
+            ->method('authenticate')
+            ->with('admin', '1234')
+            ->willReturn(true);
+
+        $this->tokenGenerator
+            ->expects($this->once())
+            ->method('generateToken')
+            ->with(["username" => 'admin'])
+            ->willReturn('token---');
+
 
         $request = new Request([], [], json_encode([
             'username' => 'admin',
@@ -45,13 +55,9 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $body = json_decode($response->getBody(),true);
-        $expectedResponse = new JsonResponse(200, [
-            'status' => 'success',
-            'token' => $body['token']
-        ]);
+        $expectedResponse = APIResponse::success(['token' => 'token---']);
 
-        $this->assertEquals($expectedResponse,$response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
@@ -68,12 +74,9 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $expectedResponse = new JsonResponse(400, [
-            'status' => 'error',
-            'error' => 'Faltan datos'
-        ]);
+        $expectedResponse = APIResponse::error('Faltan datos');
 
-        $this->assertEquals($expectedResponse,$response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
@@ -93,12 +96,9 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $expectedResponse = new JsonResponse(401, [
-            'status' => 'error',
-            'error' => 'Credenciales incorrectas'
-        ]);
+        $expectedResponse = APIResponse::error('Credenciales incorrectas', 401);
 
-        $this->assertEquals($expectedResponse,$response);
+        $this->assertEquals($expectedResponse, $response);
     }
 
     #[Test]
@@ -118,11 +118,8 @@ class LoginControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $expectedResponse = new JsonResponse(401, [
-            'status' => 'error',
-            'error' => 'Credenciales incorrectas'
-        ]);
+        $expectedResponse = APIResponse::error('Credenciales incorrectas', 401);
 
-        $this->assertEquals($expectedResponse,$response);
+        $this->assertEquals($expectedResponse, $response);
     }
 }

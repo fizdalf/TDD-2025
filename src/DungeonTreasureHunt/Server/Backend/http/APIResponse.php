@@ -3,37 +3,32 @@
 namespace DungeonTreasureHunt\Backend\http;
 
 use DungeonTreasureHunt\Backend\services\JsonResponse;
-use DungeonTreasureHunt\Backend\services\Response;
-
-class APIResponse extends JsonResponseBuilder
+//TODO: test this!
+class APIResponse extends JsonResponse
 {
-    public static function success(array $data = [], int $statusCode = 200): Response
+
+    private function __construct(int $statusCode = 200, mixed $data = null)
     {
-        return parent::success($data, $statusCode);
+        parent::__construct($statusCode, $data);
     }
 
-    public static function error(string $message, int $statusCode = 400): JsonResponse
+    public static function success(?array $data = []): self
     {
-        return parent::error($message, $statusCode);
+        if ($data === null) {
+            $data = [];
+        }
+        return new self(200, [
+                "status" => "success",
+                ...$data,
+            ]
+        );
     }
 
-    public static function unauthorized(string $message = "No autorizado"): Response
+    public static function error(string $message, int $statusCode = 400): self
     {
-        return parent::unauthorized($message);
-    }
-
-    public static function notFound(string $message = "No encontrado"): Response
-    {
-        return parent::notFound($message);
-    }
-
-    public static function badRequest(string $message = "Petición incorrecta"): Response
-    {
-        return parent::badRequest($message);
-    }
-
-    public static function internalServerError(): Response
-    {
-        return parent::internalServerError();
+        return new self($statusCode, [
+            'status' => 'error',
+            'error' => $message
+        ]);
     }
 }

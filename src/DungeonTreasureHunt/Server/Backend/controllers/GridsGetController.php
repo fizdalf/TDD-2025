@@ -4,6 +4,7 @@ namespace DungeonTreasureHunt\Backend\controllers;
 
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
+use DungeonTreasureHunt\Backend\http\ApiResponse;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 
 use DungeonTreasureHunt\Backend\http\Request;
@@ -12,8 +13,6 @@ use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Response;
 use Exception;
-
-require_once __DIR__ . '/../../../../../vendor/autoload.php';
 
 class GridsGetController
 {
@@ -36,13 +35,13 @@ class GridsGetController
 
             $grids = $this->gridRepository->getAllGrids($username);
 
-            return JsonResponseBuilder::success([
+            return APIResponse::success([
                 "grids" => $grids->toArray()
             ]);
         } catch (InvalidTokenException $e) {
-            return JsonResponseBuilder::unauthorized($e->getMessage());
+            return APIResponse::error($e->getMessage(), 401);
         } catch (\Exception) {
-            return JsonResponseBuilder::internalServerError();
+            return APIResponse::error('Internal Server Error', 500);
         }
     }
 }

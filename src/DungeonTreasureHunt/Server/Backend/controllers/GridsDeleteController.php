@@ -6,6 +6,7 @@ use DungeonTreasureHunt\Backend\exceptions\GridNotFoundException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
+use DungeonTreasureHunt\Backend\http\ApiResponse;
 use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
@@ -34,13 +35,13 @@ class GridsDeleteController
             $idToDelete = $this->validateAndGetId($request);
             $this->deleteGrid($username, $idToDelete);
 
-            return JsonResponseBuilder::success();
+            return APIResponse::success([]);
         } catch (InvalidTokenException $e) {
-            return JsonResponseBuilder::unauthorized($e->getMessage());
+            return APIResponse::error($e->getMessage(), 401);
         } catch (InvalidRequestException $e) {
-            return JsonResponseBuilder::badRequest($e->getMessage());
+            return APIResponse::error($e->getMessage(), 400);
         } catch (GridNotFoundException $e) {
-            return JsonResponseBuilder::notFound($e->getMessage());
+            return APIResponse::error($e->getMessage(), 404);
         }
     }
 

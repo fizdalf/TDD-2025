@@ -6,7 +6,7 @@ class Response
 {
     private array $headers = [];
     private int $statusCode;
-    private mixed $body;
+    protected mixed $body;
 
     public function __construct(int $statusCode = 200, mixed $body = null)
     {
@@ -30,7 +30,7 @@ class Response
         $this->statusCode = $code;
     }
 
-    public function setBody(string $body): void
+    protected function setBody(string $body): void
     {
         $this->body = $body;
     }
@@ -55,7 +55,7 @@ class Response
         return $this->statusCode;
     }
 
-    public function getBody(): string
+    public function getBody(): ?string
     {
         return $this->body;
     }

@@ -4,10 +4,10 @@ namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
+use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
-use DungeonTreasureHunt\Backend\services\JsonResponse;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
@@ -49,8 +49,7 @@ class GridsDeleteControllerTest extends TestCase
         );
 
         $response = $this->sut->__invoke($request);
-
-        $expectedResponse = new JsonResponse(200, ["status" => "success"]);
+        $expectedResponse = APIResponse::success();
         $this->assertEquals($expectedResponse, $response);
     }
 
@@ -65,11 +64,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $expectedResponse = new JsonResponse(401, [
-            'status' => 'error',
-            'error' => 'Invalid Token'
-        ]);
-
+        $expectedResponse = APIResponse::error('Invalid Token', 401);
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -85,10 +80,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $expectedResponse = new JsonResponse(401, [
-            'status' => 'error',
-            'error' => 'Invalid Token'
-        ]);
+        $expectedResponse = ApiResponse::error('Invalid Token', 401);
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -103,10 +95,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $expectedResponse = new JsonResponse(400, [
-            'status' => 'error',
-            'error' => 'ID no proporcionado'
-        ]);
+        $expectedResponse = APIResponse::error('ID no proporcionado');
 
         $this->assertEquals($expectedResponse, $response);
     }
@@ -124,10 +113,7 @@ class GridsDeleteControllerTest extends TestCase
 
         $response = $this->sut->__invoke($request);
 
-        $expectedResponse = new JsonResponse(404, [
-            'status' => 'error',
-            'error' => 'Grid no encontrado'
-        ]);
+        $expectedResponse = APIResponse::error('Grid no encontrado', 404);
 
         $this->assertEquals($expectedResponse, $response);
     }

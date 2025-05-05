@@ -3,5 +3,7 @@ export function resolveGrid(grid) {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(grid)
-    }).then(response => response.json());
+    })
+        .then(response => response.json())
+        .then(jsonResponse => jsonResponse.data);
 }
