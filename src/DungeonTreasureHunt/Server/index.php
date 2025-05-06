@@ -18,7 +18,6 @@ global $router;
 $controller = $router->getController($uri, $method);
 
 if (!$controller) {
-    //TODO: see how we can replace this with an abstraction we know!
     APIResponse::error("Ruta no encontrada", 404)->send();
     exit;
 }
