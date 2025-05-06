@@ -12,7 +12,6 @@ class JWTUserExtractor
     {
         $this->jwtVerifier = $jwtVerifier;
     }
-    //TODO: Test this!
     public function userFromToken(string $token): ?AuthenticatedUser
     {
         $payload = $this->jwtVerifier->verify($token);
