@@ -1,8 +1,8 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\services;
+namespace DungeonTreasureHunt\Framework\services;
 
-use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
+use DungeonTreasureHunt\Framework\models\AuthenticatedUser;
 
 class JWTUserExtractor
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\tests;
+namespace DungeonTreasureHunt\Framework\tests;
 
-use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
-use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
-use DungeonTreasureHunt\Backend\services\JwtVerifier;
+use DungeonTreasureHunt\Framework\models\AuthenticatedUser;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use DungeonTreasureHunt\Framework\services\JWTUserExtractor;
+use DungeonTreasureHunt\Framework\services\JwtVerifier;
 
 class JWTUserExtractorTest extends TestCase
 {

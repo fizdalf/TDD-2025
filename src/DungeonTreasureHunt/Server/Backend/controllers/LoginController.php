@@ -2,11 +2,11 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\http\ApiResponse;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\http\Response;
-use DungeonTreasureHunt\Backend\services\TokenGenerator;
-use DungeonTreasureHunt\Backend\services\UserAuthenticator;
+use DungeonTreasureHunt\Framework\http\ApiResponse;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\http\Response;
+use DungeonTreasureHunt\Framework\services\TokenGenerator;
+use DungeonTreasureHunt\Framework\services\UserAuthenticator;
 
 class LoginController
 {

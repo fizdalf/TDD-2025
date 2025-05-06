@@ -1,8 +1,9 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\tests;
+namespace DungeonTreasureHunt\Framework\tests;
 
-use DungeonTreasureHunt\Backend\http\APIResponse;
+
+use DungeonTreasureHunt\Framework\http\APIResponse;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -12,6 +13,7 @@ class APIResponseTest extends TestCase
     public function it_should_return_success_response_with_data()
     {
         $response = APIResponse::success(['key' => 'value']);
+
 
         $this->assertEquals(200, $response->getStatus());
 

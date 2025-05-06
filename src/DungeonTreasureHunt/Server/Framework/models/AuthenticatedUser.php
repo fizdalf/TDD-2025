@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DungeonTreasureHunt\Backend\models;
+namespace DungeonTreasureHunt\Framework\models;
 
 class AuthenticatedUser
 {

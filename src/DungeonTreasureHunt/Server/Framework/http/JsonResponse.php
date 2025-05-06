@@ -1,8 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\http;
-
-use function json_encode;
+namespace DungeonTreasureHunt\Framework\http;
 
 class JsonResponse extends Response
 {

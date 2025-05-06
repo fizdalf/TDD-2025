@@ -2,13 +2,12 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Framework\http\ApiResponse;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
-use DungeonTreasureHunt\Backend\http\ApiResponse;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\http\Response;
-use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\http\Response;
+use DungeonTreasureHunt\Framework\services\AuthenticatedUserExtractor;
 
 class GridsGetController
 {

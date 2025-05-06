@@ -2,13 +2,13 @@
 
 namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt\Framework\http\APIResponse;
 use DungeonTreasureHunt\Backend\controllers\LoginController;
-use DungeonTreasureHunt\Backend\http\APIResponse;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\services\TokenGenerator;
-use DungeonTreasureHunt\Backend\services\UserAuthenticator;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\services\TokenGenerator;
+use DungeonTreasureHunt\Framework\services\UserAuthenticator;
 
 class LoginControllerTest extends TestCase
 {
