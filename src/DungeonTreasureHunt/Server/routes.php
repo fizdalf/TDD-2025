@@ -9,11 +9,11 @@ use DungeonTreasureHunt\Backend\controllers\LoginController;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
-use DungeonTreasureHunt\Backend\services\JwtHandler;
-use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
-use DungeonTreasureHunt\Backend\services\Router;
-use DungeonTreasureHunt\Backend\services\SimpleUserAuthenticator;
-use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Framework\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Framework\services\JwtHandler;
+use DungeonTreasureHunt\Framework\services\JWTUserExtractor;
+use DungeonTreasureHunt\Framework\services\Router;
+use DungeonTreasureHunt\Framework\services\SimpleUserAuthenticator;
 
 $router = new Router();
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\tests;
+namespace DungeonTreasureHunt\Framework\tests;
 
-use DungeonTreasureHunt\Backend\services\Router;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use DungeonTreasureHunt\Framework\services\Router;
 
 class RouterTest extends TestCase
 {

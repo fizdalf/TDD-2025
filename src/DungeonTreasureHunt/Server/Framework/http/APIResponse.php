@@ -1,6 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\http;
+namespace DungeonTreasureHunt\Framework\http;
 
 class APIResponse extends JsonResponse
 {

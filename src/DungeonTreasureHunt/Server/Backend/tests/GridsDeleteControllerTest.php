@@ -2,16 +2,16 @@
 
 namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt\Framework\http\APIResponse;
 use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
+use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
-use DungeonTreasureHunt\Backend\http\APIResponse;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
 use DungeonTreasureHunt\Backend\models\GridItem;
-use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Framework\models\AuthenticatedUser;
+use DungeonTreasureHunt\Framework\services\AuthenticatedUserExtractor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
+use DungeonTreasureHunt\Framework\http\Request;
 
 class GridsDeleteControllerTest extends TestCase
 {

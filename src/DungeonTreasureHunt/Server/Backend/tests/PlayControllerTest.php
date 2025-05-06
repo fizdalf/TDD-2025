@@ -2,12 +2,12 @@
 
 namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt\Framework\http\APIResponse;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
-use DungeonTreasureHunt\Backend\http\APIResponse;
-use DungeonTreasureHunt\Backend\http\Request;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use DungeonTreasureHunt\Framework\http\Request;
 
 class PlayControllerTest extends TestCase
 {

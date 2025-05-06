@@ -1,10 +1,9 @@
 <?php
 
 
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\http\Response;
-
+use DungeonTreasureHunt\Framework\http\APIResponse;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\http\Response;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/routes.php';
@@ -19,9 +18,7 @@ global $router;
 $controller = $router->getController($uri, $method);
 
 if (!$controller) {
-    header("Content-Type: application/json");
-    http_response_code(404);
-    echo json_encode(["error" => "Ruta no encontrada"]);
+    APIResponse::error("Ruta no encontrada", 404)->send();
     exit;
 }
 
@@ -37,9 +34,8 @@ try {
 
     $result = $controllerFunction($request);
 } catch (Exception $exception) {
-    $result = \DungeonTreasureHunt\Backend\http\APIResponse::error('Internal Server Error', 500);
+    $result = APIResponse::error('Internal Server Error', 500);
 }
 if ($result instanceof Response) {
     $result->send();
 }
-

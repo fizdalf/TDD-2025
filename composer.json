@@ -24,7 +24,8 @@
   },
   "autoload": {
     "psr-4": {
-      "DungeonTreasureHunt\\Backend\\": "src/DungeonTreasureHunt/Server/Backend/"
+      "DungeonTreasureHunt\\Backend\\": "src/DungeonTreasureHunt/Server/Backend/",
+      "DungeonTreasureHunt\\Framework\\": "src/DungeonTreasureHunt/Server/Framework"
     }
   }
 }

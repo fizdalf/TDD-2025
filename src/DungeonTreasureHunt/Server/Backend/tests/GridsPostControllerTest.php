@@ -2,17 +2,17 @@
 
 namespace DungeonTreasureHunt\Backend\tests;
 
+use DungeonTreasureHunt\Framework\http\APIResponse;
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
-use DungeonTreasureHunt\Backend\http\APIResponse;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
 use DungeonTreasureHunt\Backend\models\GridItem;
-use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Framework\services\AuthenticatedUserExtractor;
 use Exception;
+use DungeonTreasureHunt\Framework\models\AuthenticatedUser;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use DungeonTreasureHunt\Framework\http\Request;
 
 class GridsPostControllerTest extends TestCase
 {

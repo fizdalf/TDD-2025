@@ -1,10 +1,11 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\services;
+namespace DungeonTreasureHunt\Framework\services;
 
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
+use DungeonTreasureHunt\Framework\models\AuthenticatedUser;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\services\JWTUserExtractor;
 
 class AuthenticatedUserExtractor
 {

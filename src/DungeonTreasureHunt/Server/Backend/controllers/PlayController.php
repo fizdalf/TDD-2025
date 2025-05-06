@@ -2,10 +2,10 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
-use DungeonTreasureHunt\Backend\http\ApiResponse;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\http\Response;
+use DungeonTreasureHunt\Framework\http\ApiResponse;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\http\Response;
 
 class PlayController
 {

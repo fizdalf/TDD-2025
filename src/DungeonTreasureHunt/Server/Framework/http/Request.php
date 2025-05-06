@@ -1,8 +1,6 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\http;
-
-use DungeonTreasureHunt\Backend\models\GridItem;
+namespace DungeonTreasureHunt\Framework\http;
 
 class Request
 {

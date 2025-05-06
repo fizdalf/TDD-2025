@@ -2,16 +2,15 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Framework\http\ApiResponse;
 use DungeonTreasureHunt\Backend\exceptions\InvalidRequestException;
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
-use DungeonTreasureHunt\Backend\http\ApiResponse;
-use DungeonTreasureHunt\Backend\http\JsonResponseBuilder;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\http\Response;
 use DungeonTreasureHunt\Backend\models\GridItem;
-use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
+use DungeonTreasureHunt\Framework\services\AuthenticatedUserExtractor;
 use Exception;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\http\Response;
 
 class GridsPostController
 {
@@ -20,8 +19,9 @@ class GridsPostController
 
     public function __construct(
         AuthenticatedUserExtractor $authenticatedUserExtractor,
-        GridRepository $gridRepository
-    ) {
+        GridRepository             $gridRepository
+    )
+    {
         $this->authenticatedUserExtractor = $authenticatedUserExtractor;
         $this->gridRepository = $gridRepository;
 

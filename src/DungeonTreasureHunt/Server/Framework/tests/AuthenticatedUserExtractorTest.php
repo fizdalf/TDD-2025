@@ -1,15 +1,15 @@
 <?php
 
-namespace DungeonTreasureHunt\Backend\tests;
+namespace DungeonTreasureHunt\Framework\tests;
 
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
-use DungeonTreasureHunt\Backend\http\Request;
-use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
-use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
-use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
+use DungeonTreasureHunt\Framework\models\AuthenticatedUser;
+use DungeonTreasureHunt\Framework\services\AuthenticatedUserExtractor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
+use DungeonTreasureHunt\Framework\http\Request;
+use DungeonTreasureHunt\Framework\services\JWTUserExtractor;
 
 class AuthenticatedUserExtractorTest extends TestCase
 {
