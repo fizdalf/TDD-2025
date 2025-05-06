@@ -10,7 +10,6 @@ use DungeonTreasureHunt\Backend\controllers\PlayController;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Backend\services\JwtHandler;
-use DungeonTreasureHunt\Backend\services\JwtTokenGenerator;
 use DungeonTreasureHunt\Backend\services\JWTUserExtractor;
 use DungeonTreasureHunt\Backend\services\Router;
 use DungeonTreasureHunt\Backend\services\SimpleUserAuthenticator;
@@ -25,12 +24,11 @@ $explorer = new DungeonTreasureHuntExplorer();
 
 
 $gridRepository = new GridFileSystemRepository();
-$tokenGenerator = new JwtTokenGenerator($jwtHandler);
 $userAuthenticator = new SimpleUserAuthenticator();
 
 
 $router->register('/login', 'POST', new LoginController(
-    $tokenGenerator,
+    $jwtHandler,
     $userAuthenticator
 ));
 

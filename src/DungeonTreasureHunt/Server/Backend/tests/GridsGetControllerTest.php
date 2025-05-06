@@ -7,6 +7,7 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\models\UserGrids;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
@@ -28,7 +29,7 @@ class GridsGetControllerTest extends TestCase
     #[Test]
     public function it_should_return_grids_when_authorized()
     {
-        $this->authenticatedUserExtractor->method('extractUser')->willReturn(['username' => $this->username]);
+        $this->authenticatedUserExtractor->method('extractUser')->willReturn(new AuthenticatedUser($this->username));
 
         $this->gridRepository->method('getAllGrids')->with($this->username)->willReturn(
             new UserGrids(

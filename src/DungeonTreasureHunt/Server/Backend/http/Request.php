@@ -8,16 +8,13 @@ class Request
 {
     private array $headers;
     private array $params;
-    private array $body;
-    private ?string $realBody;
+    private ?string $body;
 
     public function __construct(array $headers = [], array $params = [], string $body = "")
-
-
     {
         $this->headers = $headers;
         $this->params = $params;
-        $this->realBody = $body;
+        $this->body = $body;
     }
 
     public function getHeaders(string $name): ?string
@@ -29,19 +26,9 @@ class Request
     {
         return $this->params[$name] ?? null;
     }
-    /** @deprecated Use parseBodyAsJson instead! */
-    public function getBody(): array
-    {
-        return $this->body;
-    }
-
-    public function getRealBody(): string
-    {
-        return $this->realBody;
-    }
 
     public function parseBodyAsJson(): array
     {
-        return json_decode($this->realBody, true) ?? [];
+        return json_decode($this->body, true) ?? [];
     }
 }

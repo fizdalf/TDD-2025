@@ -27,16 +27,15 @@ class GridsGetController
     {
         try {
             $user = $this->authenticatedUserExtractor->extractUser($request);
-            $username = $user['username'];
-
-            $grids = $this->gridRepository->getAllGrids($username);
+            $grids = $this->gridRepository->getAllGrids($user->name);
 
             return APIResponse::success([
                 "grids" => $grids->toArray()
             ]);
         } catch (InvalidTokenException $e) {
             return APIResponse::error($e->getMessage(), 401);
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            var_dump($e);
             return APIResponse::error('Internal Server Error', 500);
         }
     }

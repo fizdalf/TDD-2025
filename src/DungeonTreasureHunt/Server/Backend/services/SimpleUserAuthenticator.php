@@ -8,7 +8,7 @@ class SimpleUserAuthenticator implements UserAuthenticator
         "admin" => "1234",
         "user" => "abcd"
     ];
-
+    // TODO: test!
     public function authenticate(string $username, string $password): bool
     {
         return isset($this->users[$username]) && $this->users[$username] === $password;

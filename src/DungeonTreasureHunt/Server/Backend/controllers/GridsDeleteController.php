@@ -29,10 +29,8 @@ class GridsDeleteController
     {
         try {
             $user = $this->authenticatedUserExtractor->extractUser($request);
-            $username = $user['username'];
-
             $idToDelete = $this->validateAndGetId($request);
-            $this->deleteGrid($username, $idToDelete);
+            $this->deleteGrid($user->name, $idToDelete);
 
             return APIResponse::success([]);
         } catch (InvalidTokenException $e) {

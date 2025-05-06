@@ -7,6 +7,7 @@ use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\gridRepository\GridRepository;
 use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
 use Exception;
@@ -29,7 +30,7 @@ class GridsPostControllerTest extends TestCase
     {
         $username = "testuser";
 
-        $this->authenticatedUserExtractor->method('extractUser')->willReturn(["username" => $username]);
+        $this->authenticatedUserExtractor->method('extractUser')->willReturn(new AuthenticatedUser($username));
 
         $this->gridRepository->expects($this->once())->method('saveGrid')->with(
             new GridItem(
@@ -109,7 +110,7 @@ class GridsPostControllerTest extends TestCase
     {
         $username = "testuser";
 
-        $this->authenticatedUserExtractor->method('extractUser')->willReturn(["username" => $username]);
+        $this->authenticatedUserExtractor->method('extractUser')->willReturn(new AuthenticatedUser($username));
 
         $request = $this->createMock(Request::class);
         $request->method('getHeaders')->willReturn("Bearer valid_token");
@@ -133,7 +134,7 @@ class GridsPostControllerTest extends TestCase
     {
         $username = "testuser";
 
-        $this->authenticatedUserExtractor->method('extractUser')->willReturn(["username" => $username]);
+        $this->authenticatedUserExtractor->method('extractUser')->willReturn(new AuthenticatedUser($username));
 
         $this->gridRepository->method('saveGrid')
             ->willThrowException(new Exception("Database error"));

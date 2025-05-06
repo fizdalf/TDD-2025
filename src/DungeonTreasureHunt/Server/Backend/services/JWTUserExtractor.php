@@ -2,6 +2,8 @@
 
 namespace DungeonTreasureHunt\Backend\services;
 
+use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
+
 class JWTUserExtractor
 {
     private JwtVerifier $jwtVerifier;
@@ -10,19 +12,17 @@ class JWTUserExtractor
     {
         $this->jwtVerifier = $jwtVerifier;
     }
-
-    public function extractUsername(string $token): ?string
+    //TODO: Test this!
+    public function userFromToken(string $token): ?AuthenticatedUser
     {
         $payload = $this->jwtVerifier->verify($token);
-        if (!$payload || !isset($payload['username'])) {
+        if (!$payload) {
             return null;
         }
-        return $payload['username'];
-    }
-
-    public function extractUserInfo(string $token): ?array
-    {
-        $payload = $this->jwtVerifier->verify($token);
-        return $payload ?: null;
+        try {
+            return AuthenticatedUser::fromRaw($payload);
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

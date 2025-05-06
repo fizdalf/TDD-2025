@@ -4,6 +4,7 @@ namespace DungeonTreasureHunt\Backend\services;
 
 use DungeonTreasureHunt\Backend\exceptions\InvalidTokenException;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
 
 class AuthenticatedUserExtractor
 {
@@ -17,7 +18,7 @@ class AuthenticatedUserExtractor
     /**
      * @throws InvalidTokenException
      */
-    public function extractUser(Request $request): array
+    public function extractUser(Request $request): AuthenticatedUser
     {
         $authHeader = $request->getHeaders('Authorization') ?? null;
 
@@ -26,9 +27,9 @@ class AuthenticatedUserExtractor
         }
 
         $token = substr($authHeader, 7);
-        $user = $this->jwtUserExtractor->extractUserInfo($token);
 
-        if (!isset($user) || !isset($user['username'])) {
+        $user = $this->jwtUserExtractor->userFromToken($token);
+        if (!isset($user)) {
             throw new InvalidTokenException('Invalid Token');
         }
 

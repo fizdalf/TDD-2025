@@ -30,9 +30,9 @@ class GridsPostController
     public function __invoke(Request $request): Response
     {
         try {
-            $username = $this->processAuthentication($request);
+            $user = $this->authenticatedUserExtractor->extractUser($request);
             $gridData = $this->processRequestData($request);
-            $this->saveGrid($username, $gridData);
+            $this->saveGrid($user->name, $gridData);
 
             return APIResponse::success([]);
         } catch (InvalidTokenException) {
@@ -42,15 +42,6 @@ class GridsPostController
         } catch (Exception) {
             return APIResponse::error("No se pudo guardar", 500);
         }
-    }
-
-    /**
-     * @throws InvalidTokenException
-     */
-    private function processAuthentication(Request $request): string
-    {
-        $user = $this->authenticatedUserExtractor->extractUser($request);
-        return $user['username'];
     }
 
     /**

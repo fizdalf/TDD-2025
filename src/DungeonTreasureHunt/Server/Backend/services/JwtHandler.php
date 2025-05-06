@@ -5,7 +5,7 @@ namespace DungeonTreasureHunt\Backend\services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class JwtHandler implements TokenHandlerInterface, \DungeonTreasureHunt\Backend\services\JwtVerifier
+class JwtHandler implements TokenGenerator, JwtVerifier
 {
     private string $secretKey;
     private string $algorithm;
@@ -16,15 +16,15 @@ class JwtHandler implements TokenHandlerInterface, \DungeonTreasureHunt\Backend\
         $this->algorithm = $algorithm ?? $_ENV['JWT_ALGORITHM'] ?? 'HS256';
     }
 
-    public function generateToken(mixed $user, int $expTime = 3600): string
+    public function generateToken(mixed $payload, int $expTime = 3600): string
     {
-        $payload = [
+        $tokenPayload = [
             "iat" => time(),
             "exp" => time() + $expTime,
-            "user" => $user
+            "user" => $payload
         ];
 
-        return JWT::encode($payload, $this->secretKey, $this->algorithm);
+        return JWT::encode($tokenPayload, $this->secretKey, $this->algorithm);
     }
 
     private function verifyToken(string $token): array|false

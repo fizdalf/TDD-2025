@@ -6,6 +6,7 @@ use DungeonTreasureHunt\Backend\controllers\GridsDeleteController;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\http\APIResponse;
 use DungeonTreasureHunt\Backend\http\Request;
+use DungeonTreasureHunt\Backend\models\AuthenticatedUser;
 use DungeonTreasureHunt\Backend\models\GridItem;
 use DungeonTreasureHunt\Backend\services\AuthenticatedUserExtractor;
 use PHPUnit\Framework\Attributes\Test;
@@ -35,7 +36,7 @@ class GridsDeleteControllerTest extends TestCase
         $username = "testuser";
         $gridId = "1";
 
-        $this->authenticatedUserExtractor->method('extractUser')->willReturn(['username' => $username]);
+        $this->authenticatedUserExtractor->method('extractUser')->willReturn(new AuthenticatedUser($username));
 
         $this->gridRepository->method('getGrid')->willReturn(new GridItem(
             'Test Grid',
@@ -89,7 +90,7 @@ class GridsDeleteControllerTest extends TestCase
     public function it_should_return_400_if_id_missing()
     {
         $username = "testuser";
-        $this->authenticatedUserExtractor->method('extractUser')->willReturn(['username' => $username]);
+        $this->authenticatedUserExtractor->method('extractUser')->willReturn(new AuthenticatedUser($username));
 
         $request = new Request(['Authorization' => "Bearer valid_token"], []);
 
@@ -106,7 +107,7 @@ class GridsDeleteControllerTest extends TestCase
         $username = "testuser";
         $gridId = "999";
 
-        $this->authenticatedUserExtractor->method('extractUser')->willReturn(['username' => $username]);
+        $this->authenticatedUserExtractor->method('extractUser')->willReturn(new AuthenticatedUser($username));
         $this->gridRepository->method('getGrid')->willReturn(null);
 
         $request = new Request(['Authorization' => "Bearer valid_token"], ['id' => $gridId]);
