@@ -50,12 +50,31 @@ class LoginControllerTest extends TestCase
         $expected = ApiResponse::success(['token' => 'token---']);
         $this->assertEquals($expected, $response);
     }
-    //TODO: test with password missing
     #[Test]
-    public function it_should_return_400_if_username_or_password_missing()
+    public function it_should_return_400_if_password_missing()
     {
         $request = new Request([], [], json_encode([
             'username' => 'admin'
+        ]));
+
+        $controller = new LoginController(
+            $this->tokenGenerator,
+            $this->userAuthenticator
+        );
+
+        $response = $controller($request);
+
+        $expectedResponse = APIResponse::error('Faltan datos');
+
+        $this->assertEquals($expectedResponse, $response);
+    }
+
+    #[Test]
+    public function it_should_return_400_if_username_missing()
+    {
+        $request = new Request([], [], json_encode([
+            'password' => 'secret123'
+            // username intentionally missing
         ]));
 
         $controller = new LoginController(
