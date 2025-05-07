@@ -1,5 +1,3 @@
-import {SessionManager} from "../logic/SessionManager.js";
-
 export class AuthService {
 
     #sessionManager;
@@ -33,6 +31,26 @@ export class AuthService {
         }
 
         this.#sessionManager.saveSession(username, data.token, rememberMe);
+        return data;
+    }
+
+    async register(username, password){
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username, password}),
+        });
+
+        if (!response.ok){
+            throw new Error(`HTTP error: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error){
+            throw new Error(data.error);
+        }
+
         return data;
     }
 

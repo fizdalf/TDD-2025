@@ -107,6 +107,35 @@ if (botonLogin) {
     });
 }
 
+const botonRegister = document.querySelector(".boton-register");
+if (botonRegister) {
+    botonRegister.addEventListener("click", (event) => {
+        event.preventDefault();
+        const username = document.querySelector(".register input[type='text']").value;
+        const password = document.querySelector(".register input[type='password']").value;
+        const aceptTerms = document.querySelector(".register input[type='checkbox']").checked;
+
+        if (!aceptTerms){
+            alert("Debes aceptar los términos y condiciones para registrarte")
+            return;
+        }
+
+        authService.register(username, password)
+            .then(() => {
+                sesionIniciada();
+                cerrar();
+            })
+            .catch(error => {
+                alert('Hubo un error al intentar registrarse: ' + error);
+            })
+            .finally(() => {
+                document.querySelector(".register input[type='text']").value = "";
+                document.querySelector(".register input[type='password']").value = "";
+                document.querySelector(".register input[type='checkbox']").checked = false;
+            });
+    });
+}
+
 function checkAlreadyLogged() {
     if (sessionManager.isLoggedIn()) {
         sesionIniciada();
