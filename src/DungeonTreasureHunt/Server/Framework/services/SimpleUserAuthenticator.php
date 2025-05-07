@@ -4,12 +4,20 @@ namespace DungeonTreasureHunt\Framework\services;
 
 class SimpleUserAuthenticator implements UserAuthenticator
 {
-    private array $users = [
-        "admin" => "1234",
-        "user" => "abcd"
-    ];
+    private UserRepository $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
     public function authenticate(string $username, string $password): bool
     {
-        return isset($this->users[$username]) && $this->users[$username] === $password;
+        $users = $this->userRepository->getUsers();
+
+        if (!isset($users[$username])) {
+            return false;
+        }
+
+        return password_verify($password, $users[$username]);
     }
 }
