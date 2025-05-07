@@ -7,6 +7,7 @@ use DungeonTreasureHunt\Backend\controllers\GridsGetController;
 use DungeonTreasureHunt\Backend\controllers\GridsPostController;
 use DungeonTreasureHunt\Backend\controllers\LoginController;
 use DungeonTreasureHunt\Backend\controllers\PlayController;
+use DungeonTreasureHunt\Backend\controllers\RegisterController;
 use DungeonTreasureHunt\Backend\gridRepository\GridFileSystemRepository;
 use DungeonTreasureHunt\Backend\services\DungeonTreasureHuntExplorer;
 use DungeonTreasureHunt\Framework\services\AuthenticatedUserExtractor;
@@ -14,6 +15,7 @@ use DungeonTreasureHunt\Framework\services\JwtHandler;
 use DungeonTreasureHunt\Framework\services\JWTUserExtractor;
 use DungeonTreasureHunt\Framework\services\Router;
 use DungeonTreasureHunt\Framework\services\SimpleUserAuthenticator;
+use DungeonTreasureHunt\Framework\services\UserRepository;
 
 $router = new Router();
 
@@ -24,8 +26,13 @@ $explorer = new DungeonTreasureHuntExplorer();
 
 
 $gridRepository = new GridFileSystemRepository();
-$userAuthenticator = new SimpleUserAuthenticator();
 
+$userRepository = new UserRepository();
+$userAuthenticator = new SimpleUserAuthenticator($userRepository);
+
+
+
+$router->register('/register','POST',new RegisterController($userRepository));
 
 $router->register('/login', 'POST', new LoginController(
     $jwtHandler,
