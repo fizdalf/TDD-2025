@@ -14,7 +14,16 @@ class SimpleUserAuthenticatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->authenticator = new SimpleUserAuthenticator();
+        $this->testFilePath = sys_get_temp_dir() . '/test_users.txt';
+
+        $hashedPassword = password_hash('1234', PASSWORD_DEFAULT);
+
+        file_put_contents($this->testFilePath, json_encode([
+            'admin' => $hashedPassword
+        ]));
+
+        $userRepository = new UserRepository($this->testFilePath);
+        $this->authenticator = new SimpleUserAuthenticator($userRepository);
     }
 
     protected function tearDown(): void
