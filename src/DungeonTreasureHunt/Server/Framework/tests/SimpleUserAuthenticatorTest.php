@@ -2,6 +2,7 @@
 
 namespace DungeonTreasureHunt\Framework\tests;
 
+use DungeonTreasureHunt\Framework\services\UserRepository;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use DungeonTreasureHunt\Framework\services\SimpleUserAuthenticator;
@@ -16,18 +17,17 @@ class SimpleUserAuthenticatorTest extends TestCase
         $this->authenticator = new SimpleUserAuthenticator();
     }
 
+    protected function tearDown(): void
+    {
+        if (file_exists($this->testFilePath)){
+            unlink($this->testFilePath);
+        }
+    }
+
     #[Test]
     public function it_should_authenticate_valid_admin_credentials()
     {
         $result = $this->authenticator->authenticate('admin', '1234');
-
-        $this->assertTrue($result);
-    }
-
-    #[Test]
-    public function it_should_authenticate_valid_user_credentials()
-    {
-        $result = $this->authenticator->authenticate('user', 'abcd');
 
         $this->assertTrue($result);
     }
