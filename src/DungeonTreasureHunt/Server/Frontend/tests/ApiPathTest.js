@@ -1,20 +1,17 @@
 document.Tester.registerTest('[Api][Grid] should save a grid and retrieve it', async function () {
 
     const loginResponse = await fetch('/login', {
-            method: 'POST',
-            headers:
-                {
-                    'Content-Type': 'application/json',
-                },
-            body: JSON.stringify({
-                username: 'admin',
-                password: '1234'
-            })
-        }
-    );
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: 'admin',
+            password: '1234'
+        })
+    });
 
     const loginData = await loginResponse.json();
-
     const token = loginData.token;
 
     const grid = [
@@ -22,9 +19,9 @@ document.Tester.registerTest('[Api][Grid] should save a grid and retrieve it', a
         ['#', 'P', '#', '.'],
         ['.', '.', 'T', '.'],
         ['.', '.', '.', '.']
-    ]
+    ];
 
-    const gridName = "TestName"
+    const gridName = "TestName";
 
     const response = await fetch('/grids', {
         method: 'POST',
@@ -40,7 +37,6 @@ document.Tester.registerTest('[Api][Grid] should save a grid and retrieve it', a
         throw new Error('Failed to save grid: ' + data.error);
     }
 
-
     const retrieveGridResponse = await fetch('/grids', {
         method: 'GET',
         headers: {
@@ -55,17 +51,34 @@ document.Tester.registerTest('[Api][Grid] should save a grid and retrieve it', a
         throw new Error('Failed to retrieve grid: ' + retrieveGridData.error);
     }
 
+    const retrievedGrid = retrieveGridData.grids.find(g => g.name === gridName);
+
+    if (!retrievedGrid) {
+        throw new Error('Saved grid not found in retrieval');
+    }
+
     const expected = [
         {
-            id: 1,
+            id: retrievedGrid.id,
             name: gridName,
             grid: grid
         }
     ];
 
-    if (JSON.stringify(retrieveGridData.grids) !== JSON.stringify(expected)) {
-        throw new Error(`Expected grid ${JSON.stringify(expected)} is not equals to ${JSON.stringify(retrieveGridData.grids)}`);
+    if (JSON.stringify([retrievedGrid]) !== JSON.stringify(expected)) {
+        throw new Error(`Expected grid ${JSON.stringify(expected)} is not equal to ${JSON.stringify([retrievedGrid])}`);
     }
 
-    // añadir borrar el grid creado y confirmar que está borrado
+    const deleteResponse = await fetch(`/grids/${retrievedGrid.id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const deleteData = await deleteResponse.json();
+
+    if (deleteData.status !== 'success') {
+        throw new Error(`Failed to delete grid: ${deleteData.error}`);
+    }
 });
