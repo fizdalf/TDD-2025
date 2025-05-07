@@ -24,7 +24,7 @@ class UserRepositoryTest extends TestCase
     }
 
     #[Test]
-    public function it_should_returns_Empty_Array_If_File_Does_Not_Exist(): void
+    public function it_should_returns_empty_array_if_file_does_not_exist(): void
     {
         unlink($this->tempFile);
         $repository = new UserRepository($this->tempFile);
@@ -33,7 +33,7 @@ class UserRepositoryTest extends TestCase
     }
 
     #[Test]
-    public function it_should_Save_And_Retrieve_User(): void
+    public function it_should_save_and_retrieve_user(): void
     {
         $repository = new UserRepository($this->tempFile);
 
@@ -45,7 +45,7 @@ class UserRepositoryTest extends TestCase
     }
 
     #[Test]
-    public function it_should_Returns_True_For_Existing_User(): void
+    public function it_should_returns_true_for_existing_user(): void
     {
         $repository = new UserRepository($this->tempFile);
         $repository->saveUser('testuser', 'hashed_password');
@@ -54,7 +54,7 @@ class UserRepositoryTest extends TestCase
     }
 
     #[Test]
-    public function it_should_Returns_False_For_Non_Existing_User(): void
+    public function it_should_returns_false_for_non_existing_user(): void
     {
         $repository = new UserRepository($this->tempFile);
 

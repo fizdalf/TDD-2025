@@ -10,9 +10,9 @@ class GridFileSystemRepository implements GridRepository
 {
     private string $basePath;
 
-    public function __construct(string $basePath = null)
+    public function __construct(string $basePath)
     {
-        $this->basePath = $basePath ?? __DIR__ . "/../data";
+        $this->basePath = $basePath;
     }
 
     private function getPath(string $username): string

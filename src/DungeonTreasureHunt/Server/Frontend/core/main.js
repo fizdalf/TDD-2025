@@ -113,16 +113,15 @@ if (botonRegister) {
         event.preventDefault();
         const username = document.querySelector(".register input[type='text']").value;
         const password = document.querySelector(".register input[type='password']").value;
-        const aceptTerms = document.querySelector(".register input[type='checkbox']").checked;
+        const acceptTerms = document.querySelector(".register input[type='checkbox']").checked;
 
-        if (!aceptTerms){
+        if (!acceptTerms){
             alert("Debes aceptar los términos y condiciones para registrarte")
             return;
         }
 
         authService.register(username, password)
             .then(() => {
-                sesionIniciada();
                 cerrar();
             })
             .catch(error => {

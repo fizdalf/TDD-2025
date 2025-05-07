@@ -25,9 +25,9 @@ $authenticatedUserExtractor = new AuthenticatedUserExtractor($jwtUserExtractor);
 $explorer = new DungeonTreasureHuntExplorer();
 
 
-$gridRepository = new GridFileSystemRepository();
+$gridRepository = new GridFileSystemRepository(__DIR__ . '/Backend/data');
 
-$userRepository = new UserRepository();
+$userRepository = new UserRepository(__DIR__ . '/Backend/data/users.txt');
 $userAuthenticator = new SimpleUserAuthenticator($userRepository);
 
 

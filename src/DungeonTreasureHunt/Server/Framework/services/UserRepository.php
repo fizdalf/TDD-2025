@@ -6,9 +6,9 @@ class UserRepository
 {
     private string $path;
 
-    public function __construct(string $path = null)
+    public function __construct(string $path)
     {
-        $this->path = $path ?? __DIR__ . '/../../Backend/data/users.txt';
+        $this->path = $path;
     }
 
     public function getUsers(): array

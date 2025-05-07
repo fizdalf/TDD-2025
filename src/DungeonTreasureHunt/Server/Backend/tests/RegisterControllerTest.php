@@ -12,46 +12,44 @@ use Exception;
 
 class RegisterControllerTest extends TestCase
 {
-   private UserRepository $userRepository;
+    private UserRepository $userRepository;
+    private RegisterController $sut;
 
-   protected function setUp(): void
-   {
+    protected function setUp(): void
+    {
         $this->userRepository = $this->createMock(UserRepository::class);
-   }
+        $this->sut = new RegisterController($this->userRepository);
+    }
 
-   #[Test]
+    #[Test]
     public function it_should_return_400_if_missing_credentials()
-   {
-       $request = new Request([], [], json_encode([
-           'password' => 'securepass'
-       ]));
+    {
+        $request = new Request([], [], json_encode([
+            'password' => 'securepass'
+        ]));
 
-       $controller = new RegisterController($this->userRepository);
+        $response = $this->sut->__invoke($request);
 
-       $response = $controller($request);
+        $expected = APIResponse::error('Faltan datos', 400);
 
-       $expected = APIResponse::error('Faltan datos',400);
-
-       $this->assertEquals($expected,$response);
-   }
+        $this->assertEquals($expected, $response);
+    }
 
     #[Test]
     public function it_should_return_409_if_user_already_exists()
     {
         $this->userRepository->method('userExists')->with('admin')->willReturn(true);
 
-        $request = new Request([],[], json_encode([
+        $request = new Request([], [], json_encode([
             'username' => 'admin',
             'password' => '1234'
         ]));
 
-        $controller = new RegisterController($this->userRepository);
+        $response = $this->sut->__invoke($request);
 
-        $response = $controller($request);
+        $expected = APIResponse::error('El usuario ya existe', 409);
 
-        $expected = APIResponse::error('El usuario ya existe',409);
-
-        $this->assertEquals($expected,$response);
+        $this->assertEquals($expected, $response);
     }
 
     #[Test]
@@ -65,9 +63,7 @@ class RegisterControllerTest extends TestCase
             'password' => 'contraseña'
         ]));
 
-        $controller = new RegisterController($this->userRepository);
-
-        $response = $controller($request);
+        $response = $this->sut->__invoke($request);
 
         $expected = ApiResponse::error('Error del servidor: Error writing file', 500);
 
@@ -90,9 +86,7 @@ class RegisterControllerTest extends TestCase
             'password' => 'securepass'
         ]));
 
-        $controller = new RegisterController($this->userRepository);
-
-        $response = $controller($request);
+        $response = $this->sut->__invoke($request);
 
         $expected = ApiResponse::success(['message' => 'Usuario registrado con éxito'], 201);
         $this->assertEquals($expected, $response);

@@ -10,12 +10,12 @@ class APIResponse extends JsonResponse
         parent::__construct($statusCode, $data);
     }
 
-    public static function success(?array $data = []): self
+    public static function success(?array $data = [], int $statusCode = 200): self
     {
         if ($data === null) {
             $data = [];
         }
-        return new self(200, [
+        return new self($statusCode, [
                 "status" => "success",
                 ...$data,
             ]

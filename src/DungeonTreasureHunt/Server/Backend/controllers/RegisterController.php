@@ -33,7 +33,8 @@ class RegisterController
 
         try {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $this->userRepository->saveUser($username, $hashedPassword);
+            //TODO: Investigate about "primitive obsession", and how to improve this bit of code
+            $this->userRepository->saveUser($hashedPassword, $username);
         } catch (\Exception $e) {
             return ApiResponse::error("Error del servidor: " . $e->getMessage(), 500);
         }
