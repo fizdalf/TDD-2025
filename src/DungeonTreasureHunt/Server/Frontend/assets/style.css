@@ -175,6 +175,29 @@ h3{
     color: #162938
 }
 
+.boton-register-popup{
+    position: absolute;
+    top: 3%;
+    right: 2%;
+    width: 130px;
+    height: 50px;
+    background-color: transparent;
+    border: 2px solid white;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: white;
+    font-weight: 500;
+    margin-left: 40px;
+    transition: 0.3s;
+}
+
+.boton-register-popup:hover{
+    background-color: white;
+    color: #162938
+}
+
 .contenedor{
     align-self: center;
     position: fixed;
@@ -319,6 +342,19 @@ h3{
 }
 
 .boton-login{
+    width: 100%;
+    height: 45px;
+    background: rgb(224, 224, 224);
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    color: black;
+    font-weight: 500;
+}
+
+.boton-register{
     width: 100%;
     height: 45px;
     background: rgb(224, 224, 224);
