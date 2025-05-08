@@ -2,6 +2,8 @@
 
 namespace DungeonTreasureHunt\Framework\tests;
 
+use DungeonTreasureHunt\Backend\services\Password;
+use DungeonTreasureHunt\Backend\services\Username;
 use DungeonTreasureHunt\Framework\services\UserRepository;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +39,7 @@ class UserRepositoryTest extends TestCase
     {
         $repository = new UserRepository($this->tempFile);
 
-        $repository->saveUser('testuser', 'hashed_password');
+        $repository->saveUser(new Username('testuser'), new Password('hashed_password'));
         $users = $repository->getUsers();
 
         $this->assertArrayHasKey('testuser', $users);
@@ -45,19 +47,21 @@ class UserRepositoryTest extends TestCase
     }
 
     #[Test]
-    public function it_should_returns_true_for_existing_user(): void
+    public function it_should_returns_true_for_existing_user_using_Username(): void
     {
         $repository = new UserRepository($this->tempFile);
-        $repository->saveUser('testuser', 'hashed_password');
+        $repository->saveUser(new Username('testuser'), new Password('hashed_password'));
 
-        $this->assertTrue($repository->userExists('testuser'));
+        $this->assertTrue($repository->userExists(new Username('testuser')));
     }
 
     #[Test]
-    public function it_should_returns_false_for_non_existing_user(): void
+    public function it_should_returns_false_for_non__using_Username(): void
     {
         $repository = new UserRepository($this->tempFile);
 
-        $this->assertFalse($repository->userExists('unknown'));
+        $this->assertFalse($repository->userExists(new Username('unknown')));
     }
+
+
 }

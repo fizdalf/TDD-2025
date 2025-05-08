@@ -2,6 +2,8 @@
 
 namespace DungeonTreasureHunt\Backend\controllers;
 
+use DungeonTreasureHunt\Backend\services\Password;
+use DungeonTreasureHunt\Backend\services\Username;
 use DungeonTreasureHunt\Framework\http\ApiResponse;
 use DungeonTreasureHunt\Framework\http\Request;
 use DungeonTreasureHunt\Framework\http\Response;
@@ -24,17 +26,19 @@ class RegisterController
             return ApiResponse::error("Faltan datos", 400);
         }
 
-        $username = $credentials['username'];
-        $password = $credentials['password'];
+        $usernameValue = $credentials['username'];
+        $passwordValue = $credentials['password'];
+
+        $username = new Username($usernameValue);
 
         if ($this->userRepository->userExists($username)) {
             return ApiResponse::error("El usuario ya existe", 409);
         }
 
         try {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            //TODO: Investigate about "primitive obsession", and how to improve this bit of code
-            $this->userRepository->saveUser($username, $hashedPassword);
+            $hashedPassword = password_hash($passwordValue, PASSWORD_DEFAULT);
+            $password = new Password($hashedPassword);
+            $this->userRepository->saveUser($username, $password);
         } catch (\Exception $e) {
             return ApiResponse::error("Error del servidor: " . $e->getMessage(), 500);
         }

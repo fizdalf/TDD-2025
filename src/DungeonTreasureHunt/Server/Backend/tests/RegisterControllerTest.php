@@ -3,12 +3,13 @@
 namespace DungeonTreasureHunt\Backend\tests;
 
 use DungeonTreasureHunt\Backend\controllers\RegisterController;
+use DungeonTreasureHunt\Backend\services\Username;
 use DungeonTreasureHunt\Framework\http\APIResponse;
 use DungeonTreasureHunt\Framework\http\Request;
 use DungeonTreasureHunt\Framework\services\UserRepository;
+use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Exception;
 
 class RegisterControllerTest extends TestCase
 {
@@ -38,7 +39,11 @@ class RegisterControllerTest extends TestCase
     #[Test]
     public function it_should_return_409_if_user_already_exists()
     {
-        $this->userRepository->method('userExists')->with('admin')->willReturn(true);
+        $this->userRepository
+            ->expects($this->once())
+            ->method('userExists')
+            ->with(new Username('admin'))
+            ->willReturn(true);
 
         $request = new Request([], [], json_encode([
             'username' => 'admin',
@@ -55,7 +60,7 @@ class RegisterControllerTest extends TestCase
     #[Test]
     public function it_should_return_500_if_save_fails()
     {
-        $this->userRepository->method('userExists')->with('newUser')->willReturn(false);
+        $this->userRepository->method('userExists')->with(new Username('newUser'))->willReturn(false);
         $this->userRepository->method('saveUser')->willThrowException(new Exception('Error writing file'));
 
         $request = new Request([], [], json_encode([
@@ -74,11 +79,11 @@ class RegisterControllerTest extends TestCase
     #[Test]
     public function it_should_register_user_successfully()
     {
-        $this->userRepository->method('userExists')->with('newuser')->willReturn(false);
+        $this->userRepository->method('userExists')->with(new Username('newuser'))->willReturn(false);
 
         $this->userRepository->expects($this->once())->method('saveUser')
-            ->with('newuser', $this->callback(function ($hashedPassword) {
-                return password_verify('securepass', $hashedPassword);
+            ->with(new Username('newuser'), $this->callback(function ($password) {
+                return password_verify('securepass', $password->value());
             }));
 
         $request = new Request([], [], json_encode([

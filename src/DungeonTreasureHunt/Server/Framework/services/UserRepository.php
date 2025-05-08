@@ -1,6 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace DungeonTreasureHunt\Framework\services;
+
+use DungeonTreasureHunt\Backend\services\Password;
+use DungeonTreasureHunt\Backend\services\Username;
 
 class UserRepository
 {
@@ -20,16 +24,16 @@ class UserRepository
         return json_decode(file_get_contents($this->path), true) ?? [];
     }
 
-    public function saveUser(string $username, string $hashedPassword): void
+    public function saveUser(Username $username, Password $hashedPassword): void
     {
         $users = $this->getUsers();
-        $users[$username] = $hashedPassword;
+        $users[$username->value()] = $hashedPassword->value();
         file_put_contents($this->path, json_encode($users, JSON_PRETTY_PRINT));
     }
 
-    public function userExists(string $username): bool
+    public function userExists(Username $username): bool
     {
         $users = $this->getUsers();
-        return isset($users[$username]);
+        return isset($users[$username->value()]);
     }
 }
