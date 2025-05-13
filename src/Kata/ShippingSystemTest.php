@@ -98,5 +98,22 @@ class ShippingSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('MEDIA', $result['priority']);
     }
 
+    #[Test]
+    public function test_prioridad_baja()
+    {
+        $system = new ShippingSystem();
+        $shipment = [
+            'id' => 'STD005',
+            'customer' => 'Elena Soto',
+            'type' => 'ESTANDAR',
+            'weight' => 2,
+            'distance' => 30,
+            'deliveryDays' => 5,
+            'address' => 'Camino Viejo 23'
+        ];
 
+        $result = $system->process($shipment);
+
+        $this->assertEquals('BAJA', $result['priority']);
+    }
 }
