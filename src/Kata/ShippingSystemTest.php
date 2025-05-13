@@ -52,5 +52,28 @@ class ShippingSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('ALTA', $result['priority']);
     }
 
+    #[Test]
+    public function test_internacional_con_distancia_alta()
+    {
+        $system = new ShippingSystem();
+        $shipment = [
+            'id' => 'INT003',
+            'customer' => 'Lucía Fernández',
+            'type' => 'INTERNACIONAL',
+            'weight' => 8,
+            'distance' => 4000,
+            'deliveryDays' => 1,
+            'address' => 'Plaza del Sol 9'
+        ];
+
+        $base = 25 + (4000 * 0.50) + (8 * 1.00); // 25 + 2000 + 8 = 2033
+        $expectedPrice = $base + ($base * 0.2); // 2033 + 406.6 = 2439.6
+
+        $result = $system->process($shipment);
+
+        $this->assertEquals(round($expectedPrice, 2), $result['price']);
+        $this->assertEquals('ALTA', $result['priority']);
+    }
+
 
 }
