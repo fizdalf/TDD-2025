@@ -75,5 +75,28 @@ class ShippingSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('ALTA', $result['priority']);
     }
 
+    #[Test]
+    public function test_fragil_con_peso_extra()
+    {
+        $system = new ShippingSystem();
+        $shipment = [
+            'id' => 'FRG004',
+            'customer' => 'Carlos Ruiz',
+            'type' => 'FRAGIL',
+            'weight' => 6,
+            'distance' => 80,
+            'deliveryDays' => 3,
+            'address' => 'Calle Fragata 89'
+        ];
+
+        $base = 8 + (80 * 0.15) + (6 * 0.70); // 8 + 12 + 4.2 = 24.2
+        $expectedPrice = $base + 5; // 29.2
+
+        $result = $system->process($shipment);
+
+        $this->assertEquals(round($expectedPrice, 2), $result['price']);
+        $this->assertEquals('MEDIA', $result['priority']);
+    }
+
 
 }
