@@ -29,5 +29,28 @@ class ShippingSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertStringContainsString('STD001 - Ana García', $result['label']);
     }
 
+    #[Test]
+    public function test_express_con_peso_alto()
+    {
+        $system = new ShippingSystem();
+        $shipment = [
+            'id' => 'EXP002',
+            'customer' => 'Luis Torres',
+            'type' => 'EXPRESS',
+            'weight' => 15,
+            'distance' => 50,
+            'deliveryDays' => 2,
+            'address' => 'Calle Luna 45'
+        ];
+
+        $base = 10 + (50 * 0.20) + (15 * 0.80); // 10 + 10 + 12 = 32
+        $expectedPrice = $base * 1.1; // 32 * 1.1 = 35.2
+
+        $result = $system->process($shipment);
+
+        $this->assertEquals(round($expectedPrice, 2), $result['price']);
+        $this->assertEquals('ALTA', $result['priority']);
+    }
+
 
 }
