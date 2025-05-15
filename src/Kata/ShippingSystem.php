@@ -18,26 +18,24 @@ class ShippingSystem {
 
     private function calcularPrecio($shipment) {
         $type = $shipment['type'];
-        $weight = $shipment['weight'];
-        $distance = $shipment['distance'];
 
         if ($type === "ESTANDAR") {
-            return 5 + ($distance * 0.10) + ($weight * 0.50);
+            return (new EstandarCalculator())->calcular($shipment);
         } else if ($type === "EXPRESS") {
-            $cost = 10 + ($distance * 0.20) + ($weight * 0.80);
-            if ($weight > 10) {
+            $cost = 10 + ($shipment['distance'] * 0.20) + ($shipment['weight'] * 0.80);
+            if ($shipment['weight'] > 10) {
                 $cost *= 1.1;
             }
             return $cost;
         } else if ($type === "INTERNACIONAL") {
-            $cost = 25 + ($distance * 0.50) + ($weight * 1.00);
-            if ($distance > 3000) {
+            $cost = 25 + ($shipment['distance'] * 0.50) + ($shipment['weight'] * 1.00);
+            if ($shipment['distance'] > 3000) {
                 $cost += $cost * 0.2;
             }
             return $cost;
         } else if ($type === "FRAGIL") {
-            $cost = 8 + ($distance * 0.15) + ($weight * 0.70);
-            if ($weight > 5) {
+            $cost = 8 + ($shipment['distance'] * 0.15) + ($shipment['weight'] * 0.70);
+            if ($shipment['weight'] > 5) {
                 $cost += 5;
             }
             return $cost;
