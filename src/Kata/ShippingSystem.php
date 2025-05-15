@@ -24,11 +24,7 @@ class ShippingSystem {
         } else if ($type === "EXPRESS") {
             return (new ExpressCalculator())->calcular($shipment);
         } else if ($type === "INTERNACIONAL") {
-            $cost = 25 + ($shipment['distance'] * 0.50) + ($shipment['weight'] * 1.00);
-            if ($shipment['distance'] > 3000) {
-                $cost += $cost * 0.2;
-            }
-            return $cost;
+            return (new InternacionalCalculator())->calcular($shipment);
         } else if ($type === "FRAGIL") {
             $cost = 8 + ($shipment['distance'] * 0.15) + ($shipment['weight'] * 0.70);
             if ($shipment['weight'] > 5) {
@@ -39,6 +35,7 @@ class ShippingSystem {
 
         return 0;
     }
+
 
 
     private function determinarPrioridad($shipment) {
