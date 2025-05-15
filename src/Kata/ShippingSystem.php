@@ -26,17 +26,11 @@ class ShippingSystem {
         } else if ($type === "INTERNACIONAL") {
             return (new InternacionalCalculator())->calcular($shipment);
         } else if ($type === "FRAGIL") {
-            $cost = 8 + ($shipment['distance'] * 0.15) + ($shipment['weight'] * 0.70);
-            if ($shipment['weight'] > 5) {
-                $cost += 5;
-            }
-            return $cost;
+            return (new FragilCalculator())->calcular($shipment);
         }
 
         return 0;
     }
-
-
 
     private function determinarPrioridad($shipment) {
         $type = $shipment['type'];
