@@ -22,11 +22,7 @@ class ShippingSystem {
         if ($type === "ESTANDAR") {
             return (new EstandarCalculator())->calcular($shipment);
         } else if ($type === "EXPRESS") {
-            $cost = 10 + ($shipment['distance'] * 0.20) + ($shipment['weight'] * 0.80);
-            if ($shipment['weight'] > 10) {
-                $cost *= 1.1;
-            }
-            return $cost;
+            return (new ExpressCalculator())->calcular($shipment);
         } else if ($type === "INTERNACIONAL") {
             $cost = 25 + ($shipment['distance'] * 0.50) + ($shipment['weight'] * 1.00);
             if ($shipment['distance'] > 3000) {
@@ -43,6 +39,7 @@ class ShippingSystem {
 
         return 0;
     }
+
 
     private function determinarPrioridad($shipment) {
         $type = $shipment['type'];
